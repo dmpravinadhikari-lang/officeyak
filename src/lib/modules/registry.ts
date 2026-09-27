@@ -30,11 +30,19 @@ export const MODULES: ModuleDef[] = [
 
   // Built next. Listed now so students and consultancies can see what is
   // coming, and so the plan gating is already written when they arrive.
-  // Zero-cost tools. Also served publicly at /tools with no account at all.
+  /*
+   * Zero-cost tools. Each is also served publicly at /tools with no account
+   * at all, which is how a student who has never heard of OfficeYak finds it.
+   *
+   * These routes point at the in-app copy, not the public one. They used to
+   * point at /tools, so tapping one of these four from a student's own
+   * dashboard or sidebar dropped them onto the marketing site with no
+   * navigation and no obvious way back into the product.
+   */
   {
     id: "eligibility", name: "Eligibility Check",
     summary: "Whether you qualify to get in and to get the visa, answered honestly.",
-    icon: "✅", route: "/tools/eligibility",
+    icon: "✅", route: "/app/eligibility",
     plans: ["starter", "growth", "pro", "student_free", "student_premium"],
     roles: ["student", "counsellor", "tenant_admin", "super_admin"],
     credits: {}, status: "live", phase: 4, group: "Decide",
@@ -43,7 +51,7 @@ export const MODULES: ModuleDef[] = [
   {
     id: "loan-calculator", name: "Education Loan EMI",
     summary: "What a Nepali education loan really costs, including interest during the course.",
-    icon: "🏦", route: "/tools/loan",
+    icon: "🏦", route: "/app/loan",
     plans: ["starter", "growth", "pro", "student_free", "student_premium"],
     roles: ["student", "counsellor", "tenant_admin", "super_admin"],
     credits: {}, status: "live", phase: 4, group: "Decide",
@@ -52,7 +60,7 @@ export const MODULES: ModuleDef[] = [
   {
     id: "cv-maker", name: "CV Maker",
     summary: "A CV laid out the way admissions offices abroad expect to read it.",
-    icon: "📄", route: "/tools/cv-maker",
+    icon: "📄", route: "/app/cv-maker",
     plans: ["starter", "growth", "pro", "student_free", "student_premium"],
     roles: ["student", "counsellor", "tenant_admin", "super_admin"],
     credits: { complete: 1, read_document: 3 }, status: "live", phase: 4, group: "Apply",
@@ -61,7 +69,7 @@ export const MODULES: ModuleDef[] = [
   {
     id: "destination-compare", name: "Compare Destinations",
     summary: "Two countries side by side on cost, visa, work rights and funds required.",
-    icon: "⚖️", route: "/tools/compare",
+    icon: "⚖️", route: "/app/compare",
     plans: ["starter", "growth", "pro", "student_free", "student_premium"],
     roles: ["student", "counsellor", "tenant_admin", "super_admin"],
     credits: {}, status: "live", phase: 4, group: "Decide",

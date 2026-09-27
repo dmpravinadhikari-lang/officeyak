@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { Icon } from "@/components/Icon";
 import { LinkButton } from "@/components/ui";
 import { BRAND } from "@/lib/brand";
 import { currentUser } from "@/lib/auth/current";
@@ -35,6 +36,30 @@ export default async function ToolsLayout({ children }: { children: React.ReactN
               </div>}
         </div>
       </header>
+
+      {/*
+        The way back, for somebody who is signed in.
+
+        These pages are the public site: no rail, no bottom bar, nothing of
+        the product's navigation. A student who arrives here from a search
+        result or an old link had only the small "My dashboard" button in the
+        top corner, and people did not find it. This is a full width bar
+        directly under the header with an arrow on it, which is where a person
+        looks for the way back.
+      */}
+      {user && (
+        <div className="border-b border-line bg-wash/60">
+          <div className="mx-auto max-w-5xl px-5 py-2">
+            <Link
+              href="/app"
+              className="oy-press inline-flex min-h-[40px] items-center gap-2 rounded-[10px] px-2.5 text-[13.5px] font-semibold text-ink-2 transition-colors hover:bg-panel hover:text-brand-600"
+            >
+              <Icon name="arrow" size={15} className="rotate-180" />
+              Back to my dashboard
+            </Link>
+          </div>
+        </div>
+      )}
 
       <main className="mx-auto max-w-5xl px-5 py-8">
         <PageTransition>{children}</PageTransition>

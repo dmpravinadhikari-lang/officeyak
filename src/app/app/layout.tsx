@@ -134,18 +134,30 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             )}
           </nav>
 
-          {/* credits */}
+          {/*
+            Credits.
+
+            A student is told what is left and nothing else. The allowance and
+            the bar under it describe how much of the consultancy's monthly
+            pool has been spent, which is the office's business: a student
+            cannot act on it, and watching a bar fill up as they practise is a
+            reason to stop practising.
+          */}
           <div className="px-4 py-3">
             <div className="flex items-baseline justify-between text-[11.5px]">
-              <span className="font-medium text-white/80">AI credits</span>
-              <span className="num text-rail-ink">{budget.remaining} / {budget.allowance}</span>
+              <span className="font-medium text-white/80">{staff ? "AI credits" : "Practice credits"}</span>
+              <span className="num text-rail-ink">
+                {staff ? `${budget.remaining} / ${budget.allowance}` : `${budget.remaining} left`}
+              </span>
             </div>
-            <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-white/15">
-              <div
-                className={`h-full rounded-full ${budget.remaining === 0 ? "bg-danger-600" : budget.remaining < budget.allowance * 0.2 ? "bg-accent-500" : "bg-brand-500"}`}
-                style={{ width: `${budget.allowance ? Math.min(100, (budget.used / budget.allowance) * 100) : 0}%` }}
-              />
-            </div>
+            {staff && (
+              <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-white/15">
+                <div
+                  className={`h-full rounded-full ${budget.remaining === 0 ? "bg-danger-600" : budget.remaining < budget.allowance * 0.2 ? "bg-accent-500" : "bg-brand-500"}`}
+                  style={{ width: `${budget.allowance ? Math.min(100, (budget.used / budget.allowance) * 100) : 0}%` }}
+                />
+              </div>
+            )}
           </div>
 
           <div className="border-t border-white/10 px-4 py-3.5">

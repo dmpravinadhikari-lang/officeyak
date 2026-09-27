@@ -126,17 +126,25 @@ export function MobileNav({
             </div>
 
             <div className="border-t border-white/12 px-5 py-4">
+              {/* The same rule as the desktop rail: a student sees what is
+                  left, not how much of the office's pool has gone. */}
               <div className="flex items-baseline justify-between text-[12px]">
-                <span className="font-medium text-white">AI credits</span>
-                <span className="mono text-rail-ink">{credits.remaining} / {credits.allowance}</span>
+                <span className="font-medium text-white">{isStaff ? "AI credits" : "Practice credits"}</span>
+                <span className="mono text-rail-ink">
+                  {isStaff ? `${credits.remaining} / ${credits.allowance}` : `${credits.remaining} left`}
+                </span>
               </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/15">
-                <div
-                  className={`h-full rounded-full ${low ? "bg-accent-500" : "bg-brand-500"}`}
-                  style={{ width: `${credits.allowance ? Math.min(100, ((credits.allowance - credits.remaining) / credits.allowance) * 100) : 0}%` }}
-                />
-              </div>
-              <p className="mt-2 text-[11.5px] text-rail-ink">Resets on the 1st · {credits.scopeLabel}</p>
+              {isStaff && (
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/15">
+                  <div
+                    className={`h-full rounded-full ${low ? "bg-accent-500" : "bg-brand-500"}`}
+                    style={{ width: `${credits.allowance ? Math.min(100, ((credits.allowance - credits.remaining) / credits.allowance) * 100) : 0}%` }}
+                  />
+                </div>
+              )}
+              <p className="mt-2 text-[11.5px] text-rail-ink">
+                {isStaff ? `Resets on the 1st · ${credits.scopeLabel}` : "Resets on the 1st · paid for by your consultancy"}
+              </p>
               <div className="mt-3 border-t border-white/12 pt-3">
                 <Link href="/app/profile" className="text-[13px] font-semibold text-white">{userName}</Link>
                 <div className="text-[11.5px] text-rail-ink">
