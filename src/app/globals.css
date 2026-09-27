@@ -465,3 +465,92 @@ button:not(:disabled), [role="button"], summary, select, label[for], input[type=
   0%, 100% { box-shadow: 0 0 0 0 rgba(33,197,93,0) }
   45%      { box-shadow: 0 0 0 4px rgba(33,197,93,.42) }
 }
+
+/* ---------------------------------------------------------------------------
+   Motion.
+
+   One motif, the bell, and one curve. The motion sheet gives the whole
+   grammar in a line: ease-out cubic, two hundred to six hundred milliseconds,
+   and the bell is the only thing that moves on its own.
+
+   Every rule here is inside a prefers-reduced-motion guard at the bottom,
+   which switches all of it off. Somebody who has asked their device for less
+   movement has asked us too.
+--------------------------------------------------------------------------- */
+
+/* The curve the whole product eases on. */
+:root { --oy-ease: cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* A bell hangs from its strap, so that is where it turns. */
+.oy-bell-body { transform-origin: 32px 6px; }
+
+@keyframes oy-swing {
+  0%, 100% { transform: rotate(-12deg); }
+  50%      { transform: rotate(12deg); }
+}
+.oy-bell-swing .oy-bell-body { animation: oy-swing 1.6s ease-in-out infinite; }
+
+/* The ring: one sharp swing that decays, the way a struck bell actually does,
+   rather than a loop. It fires when the Yak has something for you. */
+@keyframes oy-strike {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(14deg); }
+  35%  { transform: rotate(-10deg); }
+  55%  { transform: rotate(6deg); }
+  75%  { transform: rotate(-3deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes oy-arcs {
+  0%   { opacity: 0; transform: scale(0.7); }
+  30%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+.oy-bell-ring .oy-bell-body { animation: oy-strike 1.1s var(--oy-ease) both; }
+.oy-bell-ring .oy-bell-arcs {
+  transform-origin: 32px 32px;
+  animation: oy-arcs 1.1s var(--oy-ease) both;
+}
+
+/* The splash: the mark lifts and settles while it waits. */
+@keyframes oy-bob { 0%, 100% { transform: translateY(-4px); } 50% { transform: translateY(4px); } }
+.oy-bob { animation: oy-bob 1.6s ease-in-out infinite; }
+
+/* The loading bar sweeps once per swing, in the brand's own order. */
+@keyframes oy-sweep { 0% { width: 4%; } 70% { width: 88%; } 100% { width: 100%; } }
+.oy-sweep { animation: oy-sweep 2.8s var(--oy-ease) infinite; }
+
+/* A badge arriving. Used on the notification count, so a new number lands
+   rather than simply being a different number than it was a second ago. */
+@keyframes oy-pop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  60%  { transform: scale(1.12); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.oy-pop { animation: oy-pop 0.4s var(--oy-ease) both; }
+
+/* Content arriving on a page: a short rise, staggered by a step so a row of
+   things reads left to right rather than appearing as a block. */
+@keyframes oy-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.oy-rise { animation: oy-rise 0.5s var(--oy-ease) both; }
+.oy-step-1 { animation-delay: 0.06s; }
+.oy-step-2 { animation-delay: 0.12s; }
+.oy-step-3 { animation-delay: 0.18s; }
+.oy-step-4 { animation-delay: 0.24s; }
+
+/* The ridge drawing itself in, for the one place it introduces a page. */
+@keyframes oy-draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.oy-draw { animation: oy-draw 1.1s var(--oy-ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .oy-bell-swing .oy-bell-body,
+  .oy-bell-ring .oy-bell-body,
+  .oy-bell-ring .oy-bell-arcs,
+  .oy-bob, .oy-sweep, .oy-pop, .oy-rise, .oy-draw {
+    animation: none !important;
+  }
+  /* Anything that animates in must still be visible when it does not. */
+  .oy-rise, .oy-pop { opacity: 1; transform: none; }
+  .oy-draw { clip-path: none; }
+  /* A bar that cannot sweep should at least look like it is working. */
+  .oy-sweep { width: 40%; }
+}

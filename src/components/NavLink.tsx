@@ -52,7 +52,7 @@ export function NavLink({
         )}
       </span>
       {badge ? (
-        <span className="rounded-full bg-accent-500 px-1.5 py-0.5 text-[11px] font-bold tabular-nums text-ink">
+        <span className="oy-pop rounded-full bg-accent-500 px-1.5 py-0.5 text-[11px] font-bold tabular-nums text-ink">
           {badge > 99 ? "99+" : badge}
         </span>
       ) : null}

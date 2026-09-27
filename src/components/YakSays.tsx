@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { BRAND } from "@/lib/brand";
+import { BellMotion } from "@/components/motion/BellMotion";
 
 /**
  * The one place the product speaks as the machine rather than as a colleague.
@@ -30,11 +31,16 @@ export function YakSays({
 }) {
   return (
     <aside className="flex flex-wrap items-start gap-3 rounded-2xl border border-accent-300/60 bg-accent-50 px-4 py-3.5">
-      {/* The rotated square, which is the mark's own geometry at small size. */}
-      <span
-        aria-hidden
-        className="mt-1 h-3.5 w-3.5 shrink-0 rotate-45 rounded-[3px] bg-brand-500"
-      />
+      {/*
+        The bell, ringing once, rather than a static square.
+
+        The motion sheet gives this exact state a name: "the Yak has something
+        for you". It is the one place in the product where the mark is doing
+        the thing the mark is of, and it fires once on arrival rather than
+        looping, because a callout that keeps moving is a callout people put
+        their hand over.
+      */}
+      <BellMotion size={22} state="ring" className="mt-0.5 shrink-0" />
       <p className="min-w-0 flex-1 text-[14px] leading-snug text-ink">
         <span className="font-semibold">{BRAND.aiVoicePrefix}</span>{" "}
         {says}{" "}

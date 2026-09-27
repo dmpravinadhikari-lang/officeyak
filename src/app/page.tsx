@@ -293,22 +293,22 @@ export default async function Home() {
             552. Three ragged lines instead of two is a different headline. */}
         <div className="relative z-10 mx-auto grid max-w-[1200px] items-center gap-12 px-6 pb-[200px] pt-16 lg:grid-cols-[1.09fr_1fr]">
           <div className="flex flex-col items-start gap-[22px]">
-            <Eyebrow tag>AI-powered consultancy OS</Eyebrow>
+            <span className="oy-rise"><Eyebrow tag>AI-powered consultancy OS</Eyebrow></span>
             <h1
-              className="display text-[clamp(40px,5vw,64px)] leading-[1.02] text-ink"
+              className="oy-rise oy-step-1 display text-[clamp(40px,5vw,64px)] leading-[1.02] text-ink"
               style={{ textWrap: "pretty", letterSpacing: "-0.035em" }}
             >
               Every branch, carried like your best branch.
             </h1>
-            <p className="max-w-[480px] text-[18px] leading-[1.5] text-ink-2">
+            <p className="oy-rise oy-step-2 max-w-[480px] text-[18px] leading-[1.5] text-ink-2">
               Leads, classes, mock tests, SOPs, HR and payroll ride on one system, and the Yak
               rings when something needs you.
             </p>
-            <div className="flex flex-wrap gap-2.5">
+            <div className="oy-rise oy-step-3 flex flex-wrap gap-2.5">
               <Btn href="/signup">Start free</Btn>
               <Btn href="#product" tone="secondary">See the product</Btn>
             </div>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
+            <div className="oy-rise oy-step-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] text-muted">
               {/* The separator travels with the item before it, so a wrap
                   never starts a line with a lone dot. */}
               {["Built in Nepal", "Nepali-month payroll", "Works on mobile data"].map((t, i, all) => (
@@ -330,7 +330,7 @@ export default async function Home() {
         {/* The ridge across the foot of the hero, at full size and full
             colour. It is the page's one large piece of brand, and the
             statement band lands directly underneath it. */}
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0">
+        <div aria-hidden className="oy-draw pointer-events-none absolute inset-x-0 bottom-0">
           <Ridge height={170} />
         </div>
       </section>

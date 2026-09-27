@@ -113,7 +113,7 @@ export function MobileNav({
                       <Icon name={it.icon} size={19} className={active(it.href) ? "text-ink" : "text-rail-ink"} />
                       <span className="flex-1 truncate">{it.label}</span>
                       {it.badge ? (
-                        <span className="rounded-full bg-accent-500 px-1.5 py-0.5 text-[10.5px] font-bold text-ink">{it.badge}</span>
+                        <span className="oy-pop rounded-full bg-accent-500 px-1.5 py-0.5 text-[10.5px] font-bold text-ink">{it.badge}</span>
                       ) : null}
                       {it.state === "soon" && (
                         <span className="rounded-full bg-white/15 px-1.5 py-0.5 text-[9.5px] font-semibold uppercase text-rail-ink">Soon</span>
@@ -166,7 +166,7 @@ export function MobileNav({
             <span className={`relative grid h-7 w-16 place-items-center rounded-full transition-colors ${active(it.href) ? "bg-rail-3" : ""}`}>
               <Icon name={it.icon} size={21} />
               {it.badge ? (
-                <span className="absolute -right-2 -top-1 min-w-[16px] rounded-full bg-accent-500 px-1 text-[10px] font-bold leading-4 text-ink">
+                <span className="oy-pop absolute -right-2 -top-1 min-w-[16px] rounded-full bg-accent-500 px-1 text-[10px] font-bold leading-4 text-ink">
                   {it.badge > 9 ? "9+" : it.badge}
                 </span>
               ) : null}
