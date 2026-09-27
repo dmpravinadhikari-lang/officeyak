@@ -124,3 +124,17 @@ export function applicationSummary(scope: Scope, today = localDay()) {
   const offers = rows.filter((r) => r.status === "offer" || r.status === "conditional");
   return { rows, dueSoon, silent, offers };
 }
+
+/**
+ * Whether anybody has marked the register for a class on a day.
+ *
+ * One row is enough. An instructor who has marked half the room has opened
+ * the register, and telling them again is nagging rather than reminding.
+ */
+export function registerTaken(scope: Scope, classId: string, day: string): boolean {
+  return all<{ n: number }>(
+    `SELECT COUNT(*) AS n FROM class_attendance
+      WHERE tenant_id = ? AND class_id = ? AND on_date = ?`,
+    scope.tenantId, classId, day,
+  )[0]?.n > 0;
+}

@@ -11,7 +11,8 @@ import { openShift, whoIsIn } from "@/modules/attendance/data";
 import { myTasks, dueState } from "@/modules/tasks/data";
 import { listPipeline } from "@/modules/pipeline/data";
 import { stalledSummary } from "@/modules/pipeline/stalled";
-import { applicationSummary, documentsWaiting } from "@/modules/desk/queues";
+import { applicationSummary, documentsWaiting, registerTaken } from "@/modules/desk/queues";
+import { timetableFor } from "@/modules/classes/data";
 import { leadCounts, listLeads } from "@/modules/leads/data";
 import { feeSummary } from "@/modules/fees/data";
 import { commissionSummary } from "@/modules/partners/commission";
@@ -86,7 +87,25 @@ export function StaffHome({ user }: { user: SessionUser }) {
    * everybody else sees their own. Nothing is hidden either way; the board
    * one press away still shows everything.
    */
-  const handsWorkOut = positionOf(user.position).oversees === true && scope.see !== "own";
+  /*
+   * Whether this page narrows to "mine".
+   *
+   * Two reasons not to, and both are real jobs.
+   *
+   * Somebody who hands work out sees the office, because that is what their
+   * day is: an owner, a branch manager, a senior counsellor.
+   *
+   * And somebody who cannot own work in the first place also sees the office,
+   * because narrowing to their own leaves them with nothing. A marketing
+   * officer has leads:view and not leads:manage: no enquiry is ever theirs.
+   * Narrowing showed her "0 open" above a board of six, on the page whose
+   * whole point for her is where enquiries come from. That was my own doing
+   * when I narrowed this for counsellors, and it is the flaw in reading a
+   * screen's audience off one flag.
+   */
+  const ownsWork = caps.has("leads:manage") || caps.has("students:manage");
+  const handsWorkOut =
+    (positionOf(user.position).oversees === true && scope.see !== "own") || !ownsWork;
   const desk = positionOf(user.position).desk;
   const mineOnly = <T extends { counsellor_id?: string | null }>(rows: T[]) =>
     handsWorkOut ? rows : rows.filter((r) => r.counsellor_id === user.id);
@@ -126,6 +145,22 @@ export function StaffHome({ user }: { user: SessionUser }) {
    * about enquiries, follow-ups and unowned files. Neither of them works on
    * any of those.
    */
+  /*
+   * The instructor's day.
+   *
+   * An IELTS instructor opened this page and was told "9 students on file,
+   * and nothing overdue", which is a counsellor's sentence about files he
+   * does not work on. His day is one thing: the batch in the room this
+   * morning and whether anybody has taken the register for it. That was two
+   * presses away on the classes page and nowhere on the screen he opens
+   * first.
+   */
+  const teaches = caps.has("tests:manage");
+  const todayClasses = teaches
+    ? timetableFor(scope).filter((c) => c.status === "running" && (!c.teacher_id || c.teacher_id === user.id))
+    : [];
+  const unregistered = todayClasses.filter((c) => !registerTaken(scope, c.id, today));
+
   const checksPapers = caps.has("students:documents");
   const runsApplications = caps.has("applications:manage");
   const waitingDocs = checksPapers ? documentsWaiting(scope) : [];
@@ -303,6 +338,8 @@ export function StaffHome({ user }: { user: SessionUser }) {
     // Whoever's desk is the paperwork gets the paperwork first, even when an
     // application deadline is nearer, because that deadline is somebody
     // else's to chase and the unread certificate is theirs.
+    : unregistered.length > 0
+      ? { key: "register", label: unregistered.length === 1 ? "Class today" : "Classes today", n: unregistered.length, said: unregistered.length === 1 ? `batch to teach, and its register is not taken: ${unregistered[0].name} at ${unregistered[0].start_time ?? "the usual time"}` : "batches to teach, and their registers are not taken", cta: "Take the register", href: `/app/classes/${unregistered[0].id}`, bar: "bg-tint-mint-ink", ink: "text-tint-mint-ink" }
     : desk === "papers" && waitingDocs.length > 0
       ? { key: "papers", label: "Papers to check", n: waitingDocs.length, said: waitingDocs.length === 1 ? `document is waiting, the oldest ${waitingDocs[0].waiting} days` : `documents are waiting, the oldest ${waitingDocs[0].waiting} days`, cta: "Start checking", href: "/app/documents", bar: "bg-tint-sky-ink", ink: "text-tint-sky-ink" }
     : apps && apps.dueSoon.length > 0 && !handsWorkOut
