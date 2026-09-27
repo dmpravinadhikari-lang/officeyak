@@ -30,19 +30,30 @@ export type BellState = "swing" | "ring" | "still";
 export function BellMotion({
   size = 72,
   state = "still",
-  tone = "brand",
+  tone = "light",
   className = "",
   style,
 }: {
   size?: number;
   state?: BellState;
-  /** brand keeps the three colours; mono draws the whole mark in currentColor. */
-  tone?: "brand" | "mono" | "white";
+  /**
+   * light  on Paper: brand colours, Navy strap and clapper.
+   * dark   on Navy: brand colours, white strap and clapper.
+   * mono   the whole mark in currentColor, for a tight or single-colour spot.
+   *
+   * The first version had "white" collapse into the mono branch, which drew
+   * the body, the pink and the yellow band in currentColor. On the splash
+   * that inherited Ink from the body element, so the bell rendered as navy on
+   * navy and all a person saw were the strap and the clapper floating on a
+   * dark card. The guidelines are explicit that the mark is full colour on
+   * Paper and on Navy, and only the strap and clapper change with the ground.
+   */
+  tone?: "light" | "dark" | "mono";
   className?: string;
   style?: CSSProperties;
 }) {
-  const mono = tone !== "brand";
-  const ink = tone === "white" ? "#fff" : tone === "mono" ? "currentColor" : "#15133A";
+  const mono = tone === "mono";
+  const ink = tone === "dark" ? "#fff" : tone === "mono" ? "currentColor" : "#15133A";
   const c = (colour: string) => (mono ? "currentColor" : colour);
 
   return (
@@ -83,7 +94,7 @@ export function Splash({ caption = "Loading your office" }: { caption?: string }
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-8 rounded-2xl bg-ink px-6 py-16">
       <div className="oy-bob">
-        <BellMotion size={120} state="swing" tone="white" />
+        <BellMotion size={120} state="swing" tone="dark" />
       </div>
       <p className="text-[18px] font-medium text-white">{caption}</p>
       <div className="h-1 w-[280px] overflow-hidden rounded-full bg-white/15">
