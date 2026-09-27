@@ -1,6 +1,17 @@
 import type { NextConfig } from "next";
 
 const config: NextConfig = {
+  /*
+   * Where the build is written.
+   *
+   * Normally .next, which the running server is reading from. Deploying by
+   * stopping the server, building in place and starting it again means any
+   * interruption during the build leaves the site down with a half written
+   * .next, which is exactly what happened once. The deploy script builds into
+   * a scratch directory with this set, then swaps it in and restarts, so the
+   * old build keeps serving until the new one is complete.
+   */
+  distDir: process.env.OFFICEYAK_DIST_DIR || ".next",
   // The dev-mode badge sits on top of the sidebar footer; off so demos are clean.
   devIndicators: false,
   // node:sqlite is a built-in module; keep it out of the bundler's way.
