@@ -12,6 +12,7 @@ import { all, scalar } from "@/lib/db";
 import { Logo, Ridge } from "@/components/Logo";
 import { Initials } from "@/components/ui";
 import { ROLE_LABEL } from "@/lib/auth/roles";
+import { positionOf } from "@/lib/auth/positions";
 import { NavLink } from "@/components/NavLink";
 import { NavSection } from "@/components/NavSection";
 import { MobileNav } from "@/components/MobileNav";
@@ -79,6 +80,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const onShift = staff ? Boolean(openShift(scope)) : false;
 
   const caps = capabilitiesFor(user);
+  /*
+   * The job, not the system word for it.
+   *
+   * Everybody who is not the owner is a "counsellor" underneath, because that
+   * is the role the permissions hang off. So a visa and admissions officer
+   * signed in and their own sidebar called them a counsellor, and so did a
+   * documentation officer, an accountant and the front desk. The position is
+   * what they were hired as and what the staff screen already calls them.
+   */
+  const jobTitle = user.position ? positionOf(user.position).label : ROLE_LABEL[user.role];
   const groups = buildNav({ role: user.role, plan: user.tenantPlan, enabledIds, caps }, badges);
   const primary = primaryTabs(user.role, badges);
 
@@ -94,7 +105,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         primary={primary}
         credits={{ remaining: budget.remaining, allowance: budget.allowance, scopeLabel: budget.scopeLabel }}
         userName={user.fullName}
-        userRole={ROLE_LABEL[user.role]}
+        userRole={jobTitle}
         tenantName={user.branchName ? `${user.tenantName} · ${user.branchName}` : user.tenantName}
         planLabel={planOf(user.tenantPlan).label}
         isStaff={staff}
@@ -176,7 +187,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
               <span className="min-w-0">
                 <span className="block truncate text-[13px] font-medium text-white">{user.fullName}</span>
                 <span className="block truncate text-[11.5px] text-rail-ink">
-                  {staff ? (onShift ? "Clocked in" : ROLE_LABEL[user.role]) : ROLE_LABEL[user.role]}
+                  {staff && onShift ? "Clocked in" : jobTitle}
                 </span>
               </span>
             </Link>

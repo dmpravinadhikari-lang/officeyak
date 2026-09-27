@@ -54,6 +54,17 @@ export type Position = {
    * ring enquiries their colleagues already owned.
    */
   oversees?: boolean;
+  /**
+   * What this person's desk is first about, when they hold more than one kind
+   * of work.
+   *
+   * A documentation officer and a visa officer both carry students:documents
+   * and applications:manage, so capabilities alone cannot say which queue
+   * belongs at the top of their screen. Without this the documentation
+   * officer opened on application deadlines, which are real but are somebody
+   * else's to chase.
+   */
+  desk?: "papers" | "applications";
   tint: string;
   ink: string;
 };
@@ -140,6 +151,7 @@ export const POSITIONS: Position[] = [
       ...SELF, "students:view", "students:manage", "students:documents",
       "applications:manage", "hr:view",
     ],
+    desk: "papers",
     tint: "bg-tint-sky", ink: "text-tint-sky-ink",
   },
   {
@@ -151,6 +163,7 @@ export const POSITIONS: Position[] = [
       ...SELF, "students:view", "students:manage", "students:documents",
       "applications:manage", "partners:view", "partners:manage", "reports:branch",
     ],
+    desk: "applications",
     tint: "bg-tint-lilac", ink: "text-tint-lilac-ink",
   },
   {

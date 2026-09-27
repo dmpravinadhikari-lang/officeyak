@@ -127,6 +127,16 @@ export function buildNav(
     ] },
     { group: "Office", fold: true, hint: "Files, numbers, partners", items: [
       ...(may("students:documents") ? fromModule("documents", "Documents") : []),
+      /*
+         The applications board.
+
+         It sits with the daily work rather than in a fold, because for a visa
+         and admissions officer it is the daily work. It was previously not
+         anywhere: applications could only be read one student at a time, on
+         the file they belonged to. */
+      ...(may("applications:manage")
+        ? [{ href: "/app/applications", icon: "cap" as const, label: "Applications", hint: "Sent, and waiting on an answer", state: "open" as const }]
+        : []),
       ...(may("reports:branch") ? fromModule("reports", "Reports") : []),
       ...(has("market") && may("market:view") ? [{ href: "/app/market", icon: "chart" as const, label: "Market", state: "open" as const }] : []),
       ...(has("partners") && may("partners:view") ? [{ href: "/app/partners", icon: "partners" as const, label: "Universities & partners", state: "open" as const }] : []),

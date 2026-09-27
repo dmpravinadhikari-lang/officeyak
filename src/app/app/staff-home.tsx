@@ -11,6 +11,7 @@ import { openShift, whoIsIn } from "@/modules/attendance/data";
 import { myTasks, dueState } from "@/modules/tasks/data";
 import { listPipeline } from "@/modules/pipeline/data";
 import { stalledSummary } from "@/modules/pipeline/stalled";
+import { applicationSummary, documentsWaiting } from "@/modules/desk/queues";
 import { leadCounts, listLeads } from "@/modules/leads/data";
 import { feeSummary } from "@/modules/fees/data";
 import { commissionSummary } from "@/modules/partners/commission";
@@ -86,6 +87,7 @@ export function StaffHome({ user }: { user: SessionUser }) {
    * one press away still shows everything.
    */
   const handsWorkOut = positionOf(user.position).oversees === true && scope.see !== "own";
+  const desk = positionOf(user.position).desk;
   const mineOnly = <T extends { counsellor_id?: string | null }>(rows: T[]) =>
     handsWorkOut ? rows : rows.filter((r) => r.counsellor_id === user.id);
 
@@ -115,6 +117,20 @@ export function StaffHome({ user }: { user: SessionUser }) {
    * page every morning to the fees screen, which means this page was not
    * doing its one job for them.
    */
+  /*
+   * The two desks whose work is neither leads nor students-in-general.
+   *
+   * A documentation officer checks paperwork; a visa officer chases
+   * institutions. Both were shown "9 students on file, and nothing overdue",
+   * which is a counsellor's sentence, because the ladder below only knew
+   * about enquiries, follow-ups and unowned files. Neither of them works on
+   * any of those.
+   */
+  const checksPapers = caps.has("students:documents");
+  const runsApplications = caps.has("applications:manage");
+  const waitingDocs = checksPapers ? documentsWaiting(scope) : [];
+  const apps = runsApplications ? applicationSummary(scope) : null;
+
   const seesMoney = caps.has("money:view");
   const fees = seesMoney ? feeSummary(scope) : null;
   const commission = caps.has("partners:money") ? commissionSummary(scope) : null;
@@ -284,6 +300,17 @@ export function StaffHome({ user }: { user: SessionUser }) {
   const focus =
     followUps > 0 && seesStudents
       ? { key: "followups", label: "Follow-ups missed", n: followUps, said: followUps === 1 ? "student was promised a call that has not happened" : "students were promised a call that has not happened", cta: "See who", href: "/app/pipeline?late=1", bar: "bg-danger-600", ink: "text-danger-600" }
+    // Whoever's desk is the paperwork gets the paperwork first, even when an
+    // application deadline is nearer, because that deadline is somebody
+    // else's to chase and the unread certificate is theirs.
+    : desk === "papers" && waitingDocs.length > 0
+      ? { key: "papers", label: "Papers to check", n: waitingDocs.length, said: waitingDocs.length === 1 ? `document is waiting, the oldest ${waitingDocs[0].waiting} days` : `documents are waiting, the oldest ${waitingDocs[0].waiting} days`, cta: "Start checking", href: "/app/documents", bar: "bg-tint-sky-ink", ink: "text-tint-sky-ink" }
+    : apps && apps.dueSoon.length > 0 && !handsWorkOut
+      ? { key: "deadlines", label: "Deadlines close", n: apps.dueSoon.length, said: apps.dueSoon.length === 1 ? "application closes within a fortnight" : "applications close within a fortnight", cta: "Open the board", href: "/app/applications", bar: "bg-danger-600", ink: "text-danger-600" }
+    : waitingDocs.length > 0 && !handsWorkOut
+      ? { key: "papers", label: "Papers to check", n: waitingDocs.length, said: waitingDocs.length === 1 ? `document is waiting, the oldest ${waitingDocs[0].waiting} days` : `documents are waiting, the oldest ${waitingDocs[0].waiting} days`, cta: "Start checking", href: "/app/documents", bar: "bg-tint-sky-ink", ink: "text-tint-sky-ink" }
+    : apps && apps.silent.length > 0 && !handsWorkOut
+      ? { key: "silent", label: "Gone quiet", n: apps.silent.length, said: apps.silent.length === 1 ? "application has had no answer in three weeks" : "applications have had no answer in three weeks", cta: "Chase them", href: "/app/applications", bar: "bg-tint-amber-ink", ink: "text-tint-amber-ink" }
     : stalled.count > 0 && seesStudents
       ? { key: "stalled", label: "Not moving", n: stalled.count, said: stalled.count === 1 ? "file has sat in one stage past the time it should" : "files have sat in one stage past the time they should", cta: "See which", href: "/app/pipeline?stalled=1", bar: "bg-tint-amber-ink", ink: "text-tint-amber-ink" }
     : leads.open > 0 && seesLeads
