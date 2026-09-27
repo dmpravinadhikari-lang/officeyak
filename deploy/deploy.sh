@@ -25,12 +25,24 @@ echo "    now at $(git log --oneline -1)"
 set -a; . /etc/officeyak/officeyak.env; set +a
 export NODE_ENV=production
 
+# The full output of both steps is kept, because the one time you need it is
+# the time the deploy failed and the summary told you nothing.
+LOG=/var/log/officeyak-deploy.log
+: > "$LOG"
+
 echo "==> installing any new dependencies"
-npm ci --no-audit --no-fund 2>&1 | tail -2
+npm ci --no-audit --no-fund >>"$LOG" 2>&1 || { echo "!!  npm ci failed:"; tail -25 "$LOG"; exit 1; }
+tail -2 "$LOG"
 
 echo "==> building into a scratch directory, the site stays up"
 rm -rf .next-build
-OFFICEYAK_DIST_DIR=.next-build npm run build 2>&1 | tail -3
+if ! OFFICEYAK_DIST_DIR=.next-build npm run build >>"$LOG" 2>&1; then
+  echo "!!  build failed. The site is still on the old version. Last of $LOG:"
+  tail -30 "$LOG"
+  rm -rf .next-build
+  exit 1
+fi
+grep -E "✓ Compiled|✓ Generating" "$LOG" | tail -2
 
 # A build that did not produce this file is not a build. Checking for it is
 # what makes the swap safe rather than hopeful.

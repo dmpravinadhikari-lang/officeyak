@@ -1246,3 +1246,73 @@ CREATE TABLE IF NOT EXISTS student_payments (
 );
 CREATE INDEX IF NOT EXISTS idx_payments_student ON student_payments(student_id);
 CREATE INDEX IF NOT EXISTS idx_payments_tenant  ON student_payments(tenant_id);
+
+
+-- ===========================================================================
+-- Classes
+--
+-- Test preparation is half of what a consultancy sells and the product could
+-- not describe a single class. Mock tests existed; the six weeks of teaching
+-- that come before them did not.
+--
+-- Classes are batches, which is how Nepali consultancies actually run them:
+-- "IELTS morning, starts 1 Kartik, six to eight, Sunday to Friday". Rolling
+-- enrolment is the same model with batches started more often, so batches
+-- cover both and continuous enrolment does not cover batches.
+--
+-- `days` is a comma separated list of weekday numbers with Sunday as 0,
+-- because the Nepali working week runs Sunday to Friday and Saturday is the
+-- day off. Storing the pattern rather than generating rows means a class that
+-- runs for six weeks is one row, and a session only becomes real when
+-- somebody marks a register against a date.
+CREATE TABLE IF NOT EXISTS classes (
+  id          TEXT PRIMARY KEY,
+  tenant_id   TEXT NOT NULL REFERENCES tenants(id),
+  branch_id   TEXT REFERENCES branches(id),
+  name        TEXT NOT NULL,
+  subject     TEXT NOT NULL DEFAULT 'ielts',    -- ielts | pte | toefl | duolingo | other
+  teacher_id  TEXT REFERENCES users(id),
+  starts_on   TEXT,
+  ends_on     TEXT,
+  days        TEXT NOT NULL DEFAULT '0,1,2,3,4',
+  start_time  TEXT,                              -- "06:00", local
+  end_time    TEXT,
+  room        TEXT,
+  capacity    INTEGER,
+  status      TEXT NOT NULL DEFAULT 'running',   -- planned | running | finished | cancelled
+  note        TEXT,
+  created_at  TEXT NOT NULL,
+  updated_at  TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_classes_tenant ON classes(tenant_id, status);
+
+CREATE TABLE IF NOT EXISTS class_enrolments (
+  id         TEXT PRIMARY KEY,
+  tenant_id  TEXT NOT NULL REFERENCES tenants(id),
+  class_id   TEXT NOT NULL REFERENCES classes(id),
+  student_id TEXT NOT NULL REFERENCES users(id),
+  joined_on  TEXT NOT NULL,
+  left_on    TEXT,
+  status     TEXT NOT NULL DEFAULT 'active',     -- active | left | completed
+  created_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_enrol_unique ON class_enrolments(class_id, student_id);
+CREATE INDEX IF NOT EXISTS idx_enrol_student ON class_enrolments(student_id, status);
+
+-- One row per student per session. Absent is recorded as a row rather than as
+-- a missing one: "nobody marked the register" and "the student did not come"
+-- are different facts, and a parent asking why their child is failing needs
+-- the difference.
+CREATE TABLE IF NOT EXISTS class_attendance (
+  id         TEXT PRIMARY KEY,
+  tenant_id  TEXT NOT NULL REFERENCES tenants(id),
+  class_id   TEXT NOT NULL REFERENCES classes(id),
+  student_id TEXT NOT NULL REFERENCES users(id),
+  on_date    TEXT NOT NULL,
+  present    INTEGER NOT NULL DEFAULT 1,
+  note       TEXT,
+  marked_by  TEXT REFERENCES users(id),
+  created_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_classatt_unique ON class_attendance(class_id, student_id, on_date);
+CREATE INDEX IF NOT EXISTS idx_classatt_student ON class_attendance(student_id, on_date);

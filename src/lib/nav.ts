@@ -113,6 +113,9 @@ export function buildNav(
         : []),
       { href: "/app/tasks", icon: "tasks", label: "Tasks", state: "open", hint: "What you owe today", badge: badges.tasks },
       { href: "/app/attendance", icon: "clock", label: "Attendance", state: "open", hint: "Clock in and out" },
+      // Beside staff attendance, because they are the same question asked of
+      // two different people: who was here today.
+      ...(may("tests:manage") ? [{ href: "/app/classes", icon: "cap" as const, label: "Classes", state: "open" as const, hint: "Batches and the register" }] : []),
     ] },
     { group: "Office", fold: true, hint: "Files, numbers, partners", items: [
       ...(may("students:documents") ? fromModule("documents", "Documents") : []),

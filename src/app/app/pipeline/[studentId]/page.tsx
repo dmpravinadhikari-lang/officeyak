@@ -20,6 +20,7 @@ import { applicationsFor, statusOf, APPLICATION_STATUSES } from "@/modules/partn
 import { partnersForStaff } from "@/modules/partners/data";
 import { can } from "@/lib/auth/access";
 import { ledgerFor } from "@/modules/fees/data";
+import { classesForStudent, attendanceRate, daysLabel, SUBJECTS } from "@/modules/classes/data";
 import { FeesCard } from "./fees-card";
 import { addApplication, moveApplication } from "@/modules/partners/actions";
 import { setStudentModule } from "@/modules/pipeline/module-actions";
@@ -55,6 +56,8 @@ export default async function StudentPage({ params }: { params: Promise<{ studen
    * taking a payment, belong to whoever handles money.
    */
   const ledger = ledgerFor(scope, studentId);
+  const enrolments = classesForStudent(scope, studentId);
+  const classRate = attendanceRate(scope, studentId);
   const seesFeeDetail = can(user, "money:view");
   const managesFees = can(user, "money:manage");
   const readiness = readinessFor(studentId, scope.tenantId);
@@ -357,6 +360,38 @@ export default async function StudentPage({ params }: { params: Promise<{ studen
           <Button type="submit" variant="secondary">Add application</Button>
         </form>
       </Card>
+
+      {/* ---------------------------------------------------------- classes */}
+      {enrolments.length > 0 && (
+        <Card className="p-5">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="h-tight text-[16px]">Classes</h2>
+            {classRate.pct !== null && (
+              <span className={`mono text-[14px] font-semibold ${classRate.pct < 70 ? "text-danger-600" : "text-teal-700"}`}>
+                {classRate.pct}% attended
+                <span className="ml-1 text-[12px] font-normal text-muted">of {classRate.total} sessions</span>
+              </span>
+            )}
+          </div>
+          {/* Attendance is the earliest sign that a student has stopped
+              trying, and it shows weeks before a mock score does. */}
+          <ul className="mt-3 divide-y divide-line">
+            {enrolments.map((e) => (
+              <li key={e.id} className="flex flex-wrap items-center gap-3 py-2.5">
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[13.5px] text-ink">{e.class_name}</span>
+                  <span className="block text-[12px] text-muted">
+                    {SUBJECTS.find((x) => x.id === e.subject)?.label ?? e.subject}
+                    {e.days ? ` · ${daysLabel(e.days)}` : ""}
+                    {e.start_time ? ` · ${e.start_time}` : ""}
+                  </span>
+                </span>
+                {e.status !== "active" && <Chip tone="grey">{e.status === "left" ? "Left" : "Completed"}</Chip>}
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
 
       {/* ------------------------------------------------------------- fees */}
       <FeesCard
