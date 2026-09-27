@@ -10,6 +10,7 @@ import { STUDENT_JOURNEY, perStudent, studentsCovered } from "@/lib/credits-expl
 import { PricingCards } from "./pricing-cards";
 import { Reveal } from "@/components/Reveal";
 import { PEAK, Shot, type Peak } from "@/components/brand-ui";
+import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 
 /**
  * The homepage, built to the mockup in website/officeyak-homepage.html.
@@ -159,7 +160,6 @@ const PLAN_ROWS = [
 // Kept in step with the NAV in site-chrome.tsx by hand, because the homepage
 // still draws its own header. The anchors stay bare here and carry a leading
 // slash there, which is the only reason the two lists are not one.
-const NAV = [["Software", "/software"], ["Modules", "#modules"], ["Pricing", "#pricing"], ["Guides", "/blog"]];
 
 const FOLD = [
   { id: "compare", title: "Every plan, side by side" },
@@ -242,29 +242,14 @@ export default async function Home() {
         }) }}
       />
 
-      {/* ============================================================ header */}
-      {/* Sticky, Paper at 85% behind a blur, as the reference sets it. */}
-      <header className="sticky top-0 z-30 border-b border-wash bg-canvas/85 backdrop-blur-[14px]">
-        <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-4">
-          <Logo href="/" size={28} />
-          <nav className="hidden items-center gap-7 text-[15px] font-medium text-muted md:flex">
-            {NAV.map(([label, href]) => (
-              <Link key={href} href={href} className="transition-colors hover:text-ink">{label}</Link>
-            ))}
-          </nav>
-          <div className="flex items-center gap-3">
-            {user ? (
-              <Btn href="/app" className="min-h-[44px] text-[15px]">Open my dashboard</Btn>
-            ) : (
-              <>
-                <Link href="/login" className="text-[15px] font-medium text-muted hover:text-ink">Log in</Link>
-                {/* The one orange button above the fold. */}
-                <Btn href="/signup" className="min-h-[44px] text-[15px]">Start free</Btn>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
+      {/*
+        The shared header, not a second copy of it.
+
+        This page drew its own until now, which is precisely the drift
+        site-chrome was written to end: two NAV lists and two footer column
+        lists that had to be edited together and, twice already, were not.
+      */}
+      <SiteHeader signedIn={Boolean(user)} />
 
       {/* ============================================================== hero */}
       <section className="relative overflow-hidden bg-canvas">
@@ -606,47 +591,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ============================================================ footer */}
-      <footer className="relative overflow-hidden bg-ink text-white">
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0">
-          <Ridge flip height={90} opacity={0.18} />
-        </div>
-        <div className="relative mx-auto max-w-[1200px] px-6 pb-12 pt-24">
-          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="flex flex-col gap-3.5">
-              <Logo tone="dark" size={26} />
-              <p className="max-w-[260px] text-[14px] leading-[1.5] text-[#B9B8CC]">
-                The AI-powered operating system for education consultancies. Built in Nepal.
-              </p>
-            </div>
-            {[
-              { head: "Product", links: [["Consultancy CRM", "/software/education-consultancy-crm"], ["Enquiry management", "/software/enquiry-management-software"], ["Staff attendance", "/software/attendance-management-system"], ["Class registers", "/software/student-attendance-management-system"], ["Mock tests and AI interview", "#students"]] },
-              { head: "Company", links: [["Pricing", "#pricing"], ["Security", "#security"], ["Log in", "/login"], ["Start free", "/signup"]] },
-              { head: "Guides", links: [["All guides", "/blog"], ["Free student tools", "/tools"], ["True cost calculator", "/tools/cost"], ["University finder", "/tools/universities"]] },
-            ].map((col) => (
-              <div key={col.head} className="flex flex-col gap-2.5">
-                <span className="text-[15px] font-semibold">{col.head}</span>
-                {col.links.map(([l, h]) => (
-                  <Link key={`${col.head}-${l}`} href={h} className="text-[14px] text-[#B9B8CC] transition-colors hover:text-white">
-                    {l}
-                  </Link>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-14 flex flex-wrap justify-between gap-3 border-t border-white/10 pt-5 text-[13px] text-[#8A899E]">
-            <span>© {new Date().getFullYear()} {BRAND.name} · {BRAND.domain}</span>
-            <span className="flex gap-2">
-              <Link href="/privacy" className="hover:text-white">Privacy</Link>
-              <span aria-hidden>·</span>
-              <Link href="/terms" className="hover:text-white">Terms</Link>
-              <span aria-hidden>·</span>
-              <Link href="#security" className="hover:text-white">Security</Link>
-            </span>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
