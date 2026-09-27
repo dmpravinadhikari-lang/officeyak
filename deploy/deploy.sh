@@ -34,7 +34,16 @@ echo "==> installing any new dependencies"
 # --include=dev is not optional: NODE_ENV=production is exported above, npm
 # honours it by skipping devDependencies, and next.config.ts is TypeScript, so
 # the build cannot even read its own config without the typescript package.
-npm ci --include=dev --no-audit --no-fund >>"$LOG" 2>&1 || { echo "!!  npm ci failed:"; tail -25 "$LOG"; exit 1; }
+#
+# install rather than ci. npm ci was reporting that it had added 86 packages
+# and leaving six directories behind, with no react, no typescript and no
+# next binary, and exiting zero while it did so. install self heals from that
+# state; ci does not, and a deploy step that lies about succeeding is worse
+# than a slower one that does not.
+npm install --include=dev --no-audit --no-fund >>"$LOG" 2>&1 || { echo "!!  npm install failed:"; tail -25 "$LOG"; exit 1; }
+
+# Trust nothing: check the binary the next line is about to call.
+[ -x node_modules/.bin/next ] || { echo "!!  dependencies incomplete, next binary missing. Site untouched."; exit 1; }
 tail -2 "$LOG"
 
 echo "==> building into a scratch directory, the site stays up"
