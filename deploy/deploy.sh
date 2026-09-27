@@ -31,7 +31,10 @@ LOG=/var/log/officeyak-deploy.log
 : > "$LOG"
 
 echo "==> installing any new dependencies"
-npm ci --no-audit --no-fund >>"$LOG" 2>&1 || { echo "!!  npm ci failed:"; tail -25 "$LOG"; exit 1; }
+# --include=dev is not optional: NODE_ENV=production is exported above, npm
+# honours it by skipping devDependencies, and next.config.ts is TypeScript, so
+# the build cannot even read its own config without the typescript package.
+npm ci --include=dev --no-audit --no-fund >>"$LOG" 2>&1 || { echo "!!  npm ci failed:"; tail -25 "$LOG"; exit 1; }
 tail -2 "$LOG"
 
 echo "==> building into a scratch directory, the site stays up"
