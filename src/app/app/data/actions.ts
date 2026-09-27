@@ -14,7 +14,7 @@ import { planImport, runImport, type ImportKind, type Plan } from "@/modules/acc
 export type PlanState = { plan?: Plan; error?: string; done?: number };
 
 export async function previewImport(_prev: PlanState, formData: FormData): Promise<PlanState> {
-  const { scope } = await requireCapability("branch:settings");
+  const { scope } = await requireCapability("consultancy:admin");
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) return { error: "Choose a CSV file first." };
   if (file.size > 8_000_000) return { error: "That file is larger than 8MB. Split it and bring it in two halves." };
@@ -31,7 +31,7 @@ export async function previewImport(_prev: PlanState, formData: FormData): Promi
 }
 
 export async function commitImport(_prev: PlanState, formData: FormData): Promise<PlanState> {
-  const { user, scope } = await requireCapability("branch:settings");
+  const { user, scope } = await requireCapability("consultancy:admin");
   const raw = String(formData.get("plan") ?? "");
   if (!raw) return { error: "The preview expired. Upload the file again." };
 

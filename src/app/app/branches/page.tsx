@@ -25,6 +25,19 @@ export default async function BranchesPage() {
   const user = await requirePermission("branch:settings");
   const scope = scopeOf(user);
 
+  /*
+   * An owner sees every office and may open another. A branch manager sees
+   * the one they work at and may not, because an office they cannot see is
+   * an office they should not be able to rename, move or close.
+   */
+  const everyOffice = scope.see === "all";
+  /*
+   * branchFilter is not usable here: it writes "branch_id = ?", and this is
+   * the branches table itself, whose own key is "id". Using it threw
+   * "no such column: b.branch_id" and the page died outright.
+   */
+  const onlyMine = everyOffice ? null : scope.branchId;
+
   const branches = all<Row>(
     `SELECT b.*,
             (SELECT COUNT(*) FROM users u
@@ -32,16 +45,18 @@ export default async function BranchesPage() {
             (SELECT COUNT(*) FROM users u
               WHERE u.branch_id = b.id AND u.role = 'student' AND u.active = 1) AS students
        FROM branches b
-      WHERE b.tenant_id = ? AND b.active = 1
+      WHERE b.tenant_id = ? AND b.active = 1${onlyMine ? " AND b.id = ?" : ""}
       ORDER BY b.is_head_office DESC, b.name`,
-    scope.tenantId,
+    ...(onlyMine ? [scope.tenantId, onlyMine] : [scope.tenantId]),
   );
 
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Offices"
-        sub="Each one has its own staff, students and attendance."
+        sub={everyOffice
+          ? "Each one has its own staff, students and attendance."
+          : "Your office: when it opens, where it is, and how your staff clock in."}
       />
 
       {/*
@@ -76,10 +91,12 @@ export default async function BranchesPage() {
         </Card>
       ))}
 
-      <Card className="p-5">
-        <h2 className="h-tight mb-4 text-[18px]">Add another office</h2>
-        <BranchForm b={{}} defaultRadius={DEFAULT_RADIUS_M} />
-      </Card>
+      {everyOffice && (
+        <Card className="p-5">
+          <h2 className="h-tight mb-4 text-[18px]">Add another office</h2>
+          <BranchForm b={{}} defaultRadius={DEFAULT_RADIUS_M} />
+        </Card>
+      )}
     </div>
   );
 }

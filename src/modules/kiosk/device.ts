@@ -93,14 +93,20 @@ export const staffAtDevice = (device: Device) =>
     device.tenantId, device.branchId,
   );
 
-/** Devices an admin has enrolled, for the screen that manages them. */
-export const devicesFor = (tenantId: string) =>
+/**
+ * Devices enrolled, for the screen that manages them.
+ *
+ * branchId narrows it to one office. A branch manager may set up the tablet
+ * on their own counter and should not be shown, or able to retire, the tablet
+ * on somebody else's.
+ */
+export const devicesFor = (tenantId: string, branchId?: string | null) =>
   all<{ id: string; label: string; branch_name: string; created_at: string; last_seen_at: string | null }>(
     `SELECT d.id, d.label, b.name AS branch_name, d.created_at, d.last_seen_at
        FROM kiosk_devices d JOIN branches b ON b.id = d.branch_id
-      WHERE d.tenant_id = ? AND d.active = 1
+      WHERE d.tenant_id = ? AND d.active = 1${branchId ? " AND d.branch_id = ?" : ""}
       ORDER BY d.created_at DESC`,
-    tenantId,
+    ...(branchId ? [tenantId, branchId] : [tenantId]),
   );
 
 export const retireDevice = (tenantId: string, id: string) =>

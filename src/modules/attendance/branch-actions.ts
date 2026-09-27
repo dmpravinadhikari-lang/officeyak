@@ -27,9 +27,22 @@ export type BranchState = { ok: boolean; message?: string };
  */
 export async function saveBranch(_prev: BranchState | null, formData: FormData): Promise<BranchState> {
   const { user, scope } = await requireScope();
-  if (!can(user, "branch:settings")) return { ok: false, message: "Only an admin can change office settings." };
+  if (!can(user, "branch:settings")) return { ok: false, message: "You are not allowed to change office settings." };
 
   const id = clean(formData.get("id"));
+  /*
+   * A manager edits their own office and nothing else.
+   *
+   * The capability answers "may this person change office settings at all".
+   * This answers "which office", and it is checked on the server because the
+   * id arrives in the form and a form can be edited. Creating an office is
+   * for whoever can see all of them; a manager sending a blank id is refused
+   * rather than quietly given a second office.
+   */
+  if (scope.see !== "all") {
+    if (!id) return { ok: false, message: "Only the consultancy's owner can open a new office." };
+    if (id !== scope.branchId) return { ok: false, message: "You can only change your own office." };
+  }
   const name = clean(formData.get("name"));
   if (name.length < 2) return { ok: false, message: "Give the office a name." };
 

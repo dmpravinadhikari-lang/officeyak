@@ -17,7 +17,7 @@ export const metadata = { title: "Your data, OfficeYak" };
  * least likely to be.
  */
 export default async function DataPage() {
-  const { scope } = await requireCapability("branch:settings");
+  const { scope } = await requireCapability("consultancy:admin");
 
   const students = scalar("SELECT COUNT(*) FROM users WHERE tenant_id = ? AND role = 'student'", scope.tenantId);
   const leads = scalar("SELECT COUNT(*) FROM leads WHERE tenant_id = ?", scope.tenantId);

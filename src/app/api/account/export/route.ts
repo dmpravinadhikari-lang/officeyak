@@ -21,7 +21,7 @@ import { zip } from "@/lib/zip";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const { user, scope } = await requireCapability("branch:settings");
+  const { user, scope } = await requireCapability("consultancy:admin");
 
   const tenant = one<{ name: string; slug: string }>(
     "SELECT name, slug FROM tenants WHERE id = ?", scope.tenantId,

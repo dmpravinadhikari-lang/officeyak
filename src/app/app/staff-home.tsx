@@ -15,6 +15,7 @@ import { leadCounts, listLeads } from "@/modules/leads/data";
 import { normaliseSource, sourceOf } from "@/modules/pipeline/sources";
 import { myScorecard } from "@/modules/account/scorecard";
 import { capabilitiesFor } from "@/lib/auth/access";
+import { positionOf } from "@/lib/auth/positions";
 import { YakSays } from "@/components/YakSays";
 
 function greeting() {
@@ -65,9 +66,31 @@ export function StaffHome({ user }: { user: SessionUser }) {
   const students = seesStudents ? listPipeline(scope) : [];
   const today = localDay();
   const live = students.filter((r) => r.stage !== "departed" && r.stage !== "lost");
-  const followUps = live.filter(
+
+  /*
+   * Whose work this screen is about.
+   *
+   * The board is shared on purpose: a counsellor can see the whole office's
+   * files, because covering for each other is how an office works. But the
+   * top of this page is not the board, it is the answer to "what should I do
+   * first", and it was answering with the office's work rather than theirs.
+   * Nisha opened the app and was told to ring Sujata, a walk-in that Bibek
+   * owns. She either ignores it, correctly, and learns to ignore this card,
+   * or she rings a family her colleague is already handling.
+   *
+   * So whoever hands work out sees the office, because that is their job, and
+   * everybody else sees their own. Nothing is hidden either way; the board
+   * one press away still shows everything.
+   */
+  const handsWorkOut = positionOf(user.position).oversees === true && scope.see !== "own";
+  const mineOnly = <T extends { counsellor_id?: string | null }>(rows: T[]) =>
+    handsWorkOut ? rows : rows.filter((r) => r.counsellor_id === user.id);
+
+  const myLive = mineOnly(live);
+  const followUps = myLive.filter(
     (r) => r.next_action_due && r.next_action_due.slice(0, 10) < today,
   ).length;
+  // Unowned files are everybody's problem, so this one is never narrowed.
   const unassigned = live.filter((r) => !r.counsellor_id).length;
 
   /*
@@ -79,12 +102,34 @@ export function StaffHome({ user }: { user: SessionUser }) {
    * student sitting at Enquiry for three weeks is the most expensive silence
    * in a consultancy, so it belongs on the screen everybody opens first.
    */
-  const stalled = seesStudents ? stalledSummary(scope) : { count: 0, worst: null, list: [] };
+  const stalledAll = seesStudents ? stalledSummary(scope) : { count: 0, worst: null, list: [] };
+  const stalledList = handsWorkOut
+    ? stalledAll.list
+    : stalledAll.list.filter((f) => f.counsellor_id === user.id);
+  const stalled = { count: stalledList.length, worst: stalledList[0] ?? null, list: stalledList };
 
-  const leads = seesLeads
+  const officeLeads = seesLeads
     ? leadCounts(scope)
     : { open: 0, converted: 0, lost: 0, dueToday: 0, todayNew: 0 } as ReturnType<typeof leadCounts>;
-  const queue = seesLeads ? listLeads(scope).slice(0, 4) : [];
+  /*
+   * The enquiry queue on this card.
+   *
+   * Same rule. A counsellor gets their own and the ones nobody has claimed,
+   * because an unclaimed walk-in is worth anybody picking up, and a colleague's
+   * is not.
+   */
+  const allOpenLeads = seesLeads ? listLeads(scope) : [];
+  const myLeads = handsWorkOut
+    ? allOpenLeads
+    : allOpenLeads.filter((l) => !l.owner_id || l.owner_id === user.id);
+  const queue = myLeads.slice(0, 4);
+  /*
+   * The count has to agree with the list under it. Left alone, the card said
+   * "6 enquiries are still open" above a list of the three that were this
+   * person's, and a number that does not match what is beneath it is a number
+   * people stop trusting.
+   */
+  const leads = handsWorkOut ? officeLeads : { ...officeLeads, open: myLeads.length };
   // With nothing waiting, the card would be a paragraph and a lot of white.
   // The ones that recently became students are the honest thing to put there:
   // it is the same board, showing what it is for.
@@ -270,7 +315,13 @@ export function StaffHome({ user }: { user: SessionUser }) {
       : oldest && seesLeads && focus.key !== "leads"
         ? {
             says: `ring ${oldest.full_name.split(" ")[0]} first.`,
-            because: `${oldest.owner_name ? `${oldest.owner_name.split(" ")[0]} owns it` : "Nobody owns it yet"}, it came in ${whenText(oldest.created_at).toLowerCase()}, and ${leads.open} ${leads.open === 1 ? "enquiry is" : "enquiries are"} still open.`,
+            // "Nisha owns it", said to Nisha, reads like the software has not
+            // noticed who is reading. Their own file is "Yours".
+            because: `${
+              oldest.owner_id === user.id
+                ? "Yours"
+                : oldest.owner_name ? `${oldest.owner_name.split(" ")[0]} owns it` : "Nobody owns it yet"
+            }, it came in ${whenText(oldest.created_at).toLowerCase()}, and ${leads.open} ${leads.open === 1 ? "enquiry is" : "enquiries are"} still open.`,
             action: { label: "Open the board", href: "/app/leads" },
           }
       : unassigned > 0 && seesStudents && focus.key !== "unassigned"

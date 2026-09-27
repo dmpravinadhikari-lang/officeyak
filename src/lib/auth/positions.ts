@@ -42,6 +42,18 @@ export type Position = {
   /** How far they see by default. An admin can narrow or widen one person. */
   scope: DataScope;
   grants: Capability[];
+  /**
+   * Whether this person's job is the office's queue rather than their own
+   * files.
+   *
+   * It decides what the top of the dashboard is about: an office view for
+   * whoever hands work out, and their own work for everybody else. It is
+   * stated here rather than inferred from a capability because the obvious
+   * candidate, leads:assign, is held by a plain counsellor too, so inferring
+   * from it gave every counsellor the supervisor's screen and told them to
+   * ring enquiries their colleagues already owned.
+   */
+  oversees?: boolean;
   tint: string;
   ink: string;
 };
@@ -68,9 +80,10 @@ export const POSITIONS: Position[] = [
       ...COUNSELLING, "leads:assign", "students:share_parent", "reports:branch",
       "tasks:assign", "attendance:view", "attendance:manage", "tests:manage", "market:view",
       "money:view", "money:manage", "partners:manage", "partners:money",
-      "hr:manage", "payroll:run", "branch:settings", "branch:staff",
+      "hr:manage", "payroll:run", "branch:settings", "consultancy:admin", "branch:staff",
       "people:permissions", "audit:view",
     ],
+    oversees: true,
     tint: "bg-tint-sky", ink: "text-tint-sky-ink",
   },
   {
@@ -81,8 +94,16 @@ export const POSITIONS: Position[] = [
     grants: [
       ...COUNSELLING, "leads:assign", "reports:branch", "tasks:assign",
       "attendance:view", "attendance:manage", "market:view", "money:view",
-      "branch:staff", "tests:manage",
+      // Their own office's settings, which the blurb above has always
+      // promised. Without it a manager could not set the hour their office
+      // opens, and so could not be told who arrives late, and could not pin
+      // the location their staff clock in against. Every one of those went
+      // through the owner for an office the owner does not sit in. The page
+      // and the action both narrow it to the office they work at: they never
+      // see another manager's office and cannot create a new one.
+      "branch:settings", "branch:staff", "tests:manage",
     ],
+    oversees: true,
     tint: "bg-tint-lilac", ink: "text-tint-lilac-ink",
   },
   {
@@ -91,6 +112,7 @@ export const POSITIONS: Position[] = [
     blurb: "Counsels, and looks after the desk: hands enquiries out, checks the follow-ups.",
     scope: "office",
     grants: [...COUNSELLING, "leads:assign", "reports:branch", "tasks:assign", "attendance:view"],
+    oversees: true,
     tint: "bg-tint-mint", ink: "text-tint-mint-ink",
   },
   {

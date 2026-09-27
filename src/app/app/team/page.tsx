@@ -39,9 +39,20 @@ export default async function TeamPage({
   searchParams,
 }: { searchParams: Promise<{ days?: string; who?: string }> }) {
   const user = await requireUser();
-  // The same two capabilities that open the staff list. An owner has the
-  // first, a branch manager the second, and a counsellor neither.
-  if (!can(user, "hr:view") && !can(user, "branch:staff")) redirect("/app");
+  /*
+   * Only people who manage other people.
+   *
+   * This first reused the staff list's guard, hr:view, which was wrong: every
+   * counsellor carries hr:view by role, deliberately, so they can look up a
+   * colleague's extension. That quietly opened a page comparing colleagues to
+   * the colleagues being compared, which is the exact thing the personal
+   * scorecard in this product refuses to do, and it would have poisoned a
+   * team faster than any missing feature.
+   *
+   * hr:manage is the owner. branch:staff is the branch manager. A counsellor
+   * has neither, and sees their own month on their own scorecard instead.
+   */
+  if (!can(user, "hr:manage") && !can(user, "branch:staff")) redirect("/app");
   const scope = scopeOf(user);
 
   const sp = await searchParams;

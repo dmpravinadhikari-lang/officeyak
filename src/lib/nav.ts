@@ -143,12 +143,16 @@ export function buildNav(
         ...((may("hr:view") || may("branch:staff")) ? [{ href: "/app/people", icon: "people" as const, label: "Staff & teams", state: "open" as const }] : []),
         // Sits beside the staff list, because "who works here" and "how are
         // they doing" are the same thought a minute apart.
-        ...((may("hr:view") || may("branch:staff")) ? [{ href: "/app/team", icon: "chart" as const, label: "Employee Analysis", hint: "How each person is doing", state: "open" as const }] : []),
+        ...((may("hr:manage") || may("branch:staff")) ? [{ href: "/app/team", icon: "chart" as const, label: "Employee Analysis", hint: "How each person is doing", state: "open" as const }] : []),
         ...(may("people:permissions") ? [{ href: "/app/access", icon: "lock" as const, label: "Who can do what", state: "open" as const }] : []),
         ...(may("audit:view") ? [{ href: "/app/security", icon: "lock" as const, label: "Security", state: "open" as const }] : []),
+        // The office somebody runs: a branch manager has these for theirs.
         ...(may("branch:settings") ? [
           { href: "/app/branches", icon: "building" as const, label: "Offices", state: "open" as const },
           { href: "/app/kiosk", icon: "clock" as const, label: "Front desk clock", state: "open" as const },
+        ] : []),
+        // The consultancy as a whole, which is the owner's alone.
+        ...(may("consultancy:admin") ? [
           { href: "/app/automations", icon: "inbox" as const, label: "Automatic emails", state: "open" as const },
           // Both directions in one place: what you brought in, and what you
           // can take away again.

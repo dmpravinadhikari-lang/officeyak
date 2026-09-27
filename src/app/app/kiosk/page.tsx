@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requirePermission } from "@/lib/auth/current";
+import { requirePermission, scopeOf } from "@/lib/auth/current";
 import { all } from "@/lib/db";
 import { Card, PageHeader, Panel, Button } from "@/components/ui";
 import { Icon } from "@/components/Icon";
@@ -20,17 +20,29 @@ export const dynamic = "force-dynamic";
  */
 export default async function KioskAdminPage() {
   const user = await requirePermission("branch:settings");
+  const scope = scopeOf(user);
+  /*
+   * One office, unless you run all of them.
+   *
+   * A branch manager sets up the tablet on their own counter. Listing every
+   * office's devices here, and every colleague across the consultancy who has
+   * not set a PIN, would be handing them a staff directory of offices they do
+   * not work in.
+   */
+  const onlyMine = scope.see !== "all" ? scope.branchId : null;
   const branches = all<{ id: string; name: string }>(
-    "SELECT id, name FROM branches WHERE tenant_id = ? AND active = 1 ORDER BY is_head_office DESC, name",
-    user.tenantId,
+    `SELECT id, name FROM branches WHERE tenant_id = ? AND active = 1${onlyMine ? " AND id = ?" : ""}
+      ORDER BY is_head_office DESC, name`,
+    ...(onlyMine ? [user.tenantId, onlyMine] : [user.tenantId]),
   );
   const here = await currentDevice();
-  const devices = devicesFor(user.tenantId);
+  const devices = devicesFor(user.tenantId, onlyMine);
   const withoutPin = all<{ full_name: string }>(
     `SELECT full_name FROM users
       WHERE tenant_id = ? AND active = 1 AND role IN ('counsellor','tenant_admin') AND pin_hash IS NULL
+        ${onlyMine ? "AND branch_id = ?" : ""}
       ORDER BY full_name`,
-    user.tenantId,
+    ...(onlyMine ? [user.tenantId, onlyMine] : [user.tenantId]),
   );
 
   return (

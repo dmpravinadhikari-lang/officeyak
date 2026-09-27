@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
  * of yesterday's messages with their delivery state is the evidence.
  */
 export default async function AutomationsPage() {
-  const user = await requirePermission("branch:settings");
+  const user = await requirePermission("consultancy:admin");
   const runs = lastRuns(user.tenantId);
   const tally = mailTally(user.tenantId);
   const mail = recentMail(user.tenantId, 20);

@@ -58,7 +58,22 @@ export const CAPABILITIES = {
   "payroll:run": "See salaries, prepare a pay run and mark it paid",
 
   // --- consultancy administration
-  "branch:settings": "Change the consultancy's own settings and branding",
+  /*
+   * Two different jobs, split apart.
+   *
+   * branch:settings used to mean both "set this office's opening time" and
+   * "download every record this consultancy holds", because the offices page
+   * and the data page happened to be built at the same time. A branch manager
+   * genuinely needs the first, which is why the position's own description
+   * has always said they run their office. Handing them the second would have
+   * let any manager export the whole company: every student, every user row,
+   * every other office.
+   *
+   * So branch:settings is now the office they work at, and consultancy:admin
+   * is the things that reach across all of them.
+   */
+  "branch:settings": "Change an office's hours, location and contact details",
+  "consultancy:admin": "Change consultancy-wide settings, and export or import all its data",
   "branch:staff": "Add and remove counsellor accounts",
   "people:permissions": "Change what colleagues are allowed to do",
   "audit:view": "Read the trail of who saw and changed what",
@@ -94,7 +109,7 @@ const COUNSELLOR: Capability[] = [
 ];
 
 const TENANT_ADMIN: Capability[] = [
-  ...COUNSELLOR, "branch:settings", "branch:staff",
+  ...COUNSELLOR, "branch:settings", "consultancy:admin", "branch:staff",
   "partners:manage", "partners:money",
   "hr:manage", "payroll:run",
   "attendance:view", "attendance:manage", "tests:manage", "market:view",
@@ -140,7 +155,7 @@ export const CAPABILITY_GROUPS: Array<{ group: string; caps: Capability[] }> = [
   { group: "The working day", caps: ["tasks:assign", "attendance:view", "attendance:manage", "tests:manage", "market:view"] },
   { group: "Invoices", caps: ["money:view", "money:manage"] },
   { group: "People and pay", caps: ["hr:view", "hr:manage", "payroll:run"] },
-  { group: "Running the consultancy", caps: ["branch:settings", "branch:staff", "people:permissions", "audit:view"] },
+  { group: "Running the consultancy", caps: ["branch:settings", "consultancy:admin", "branch:staff", "people:permissions", "audit:view"] },
   { group: "Question bank", caps: ["bank:review", "bank:publish"] },
   { group: "Across the whole platform", caps: ["platform:admin", "platform:tenants", "platform:reports"] },
 ];
