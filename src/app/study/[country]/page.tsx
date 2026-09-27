@@ -56,16 +56,22 @@ export default async function DestinationPage({
   const d = destinationBySlug(slug);
   if (!d) notFound();
 
-  const c = country(d.code);
-  const cost = COST[d.code];
-  const rate = FX_NPR[cost.currency];
-  const sym = { GBP: "£", AUD: "A$", NZD: "NZ$", EUR: "€", USD: "$", CAD: "C$" }[cost.currency] ?? "";
+  // A destination either has figures in the cost data or it does not. Where it
+  // does not, the page keeps its shape and drops the cost table, rather than
+  // filling it with numbers nobody sourced.
+  const c = d.code ? country(d.code) : null;
+  const name = c?.name ?? d.standalone?.name ?? d.h1;
+  const flag = c?.flag ?? d.standalone?.flag ?? "";
+  const visaName = c?.visa ?? d.standalone?.visa ?? "Student visa";
 
-  const tuition = cost.tuition.masters.typical;
-  const living = cost.living.typical;
+  const cost = d.code ? COST[d.code] : null;
+  const rate = cost ? FX_NPR[cost.currency] : 0;
+  const sym = cost ? ({ GBP: "£", AUD: "A$", NZD: "NZ$", EUR: "€", USD: "$", CAD: "C$" }[cost.currency] ?? "") : "";
+
+  const tuition = cost ? cost.tuition.masters.typical : 0;
   // The published rule: first year tuition still owed, plus the maintenance
   // figure. Shown alongside its own formula so nobody has to trust the total.
-  const fundsForeign = cost.visaFunds.living + tuition;
+  const fundsForeign = cost ? cost.visaFunds.living + tuition : 0;
 
   const schema = {
     "@context": "https://schema.org",
@@ -82,7 +88,7 @@ export default async function DestinationPage({
         "@type": "BreadcrumbList",
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: `https://${BRAND.domain}` },
-          { "@type": "ListItem", position: 2, name: c.name, item: `https://${BRAND.domain}/study/${d.slug}` },
+          { "@type": "ListItem", position: 2, name, item: `https://${BRAND.domain}/study/${d.slug}` },
         ],
       },
     ],
@@ -99,11 +105,11 @@ export default async function DestinationPage({
           <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-[13px] text-muted">
             <Link href="/" className="hover:text-brand-600">Home</Link>
             <span aria-hidden>/</span>
-            <span className="text-ink-2">{c.name}</span>
+            <span className="text-ink-2">{name}</span>
           </nav>
 
           <span className="mt-5 inline-flex rounded-md bg-tint-orange px-2.5 py-1.5 text-[12px] font-medium uppercase tracking-[0.5px] text-tint-orange-ink">
-            {c.flag} {c.visa}
+            {flag} {visaName}
           </span>
           <h1 className="display mt-4 max-w-[760px] text-[clamp(32px,4vw,50px)] leading-[1.06] tracking-[-0.035em] text-ink">
             {d.h1}
@@ -140,39 +146,56 @@ export default async function DestinationPage({
             What the visa asks you to show
           </h2>
 
-          <div className="mt-9 grid gap-8 sm:grid-cols-3">
-            <Kpi
-              tone="dark" peak="grow" size={30}
-              value={`${sym}${cost.visaFunds.living.toLocaleString("en-US")}`}
-              label="Living costs to evidence"
-              sub={npr(cost.visaFunds.living * rate)}
-            />
-            <Kpi
-              tone="dark" peak="prepare" size={30}
-              value={`${sym}${tuition.toLocaleString("en-US")}`}
-              label="Plus first year tuition still owed"
-              sub={`typical masters, ${npr(tuition * rate)}`}
-            />
-            <Kpi
-              tone="dark" peak="run" size={30}
-              value={npr(fundsForeign * rate)}
-              label="So, roughly, in the bank"
-              sub={`at ${sym}1 = NPR ${rate}, ${RATES_AS_OF}`}
-            />
-          </div>
+          {cost ? (
+            <div className="mt-9 grid gap-8 sm:grid-cols-3">
+              <Kpi
+                tone="dark" peak="grow" size={30}
+                value={`${sym}${cost.visaFunds.living.toLocaleString("en-US")}`}
+                label="Living costs to evidence"
+                sub={npr(cost.visaFunds.living * rate)}
+              />
+              <Kpi
+                tone="dark" peak="prepare" size={30}
+                value={`${sym}${tuition.toLocaleString("en-US")}`}
+                label="Plus first year tuition still owed"
+                sub={`typical masters, ${npr(tuition * rate)}`}
+              />
+              <Kpi
+                tone="dark" peak="run" size={30}
+                value={npr(fundsForeign * rate)}
+                label="So, roughly, in the bank"
+                sub={`at ${sym}1 = NPR ${rate}, ${RATES_AS_OF}`}
+              />
+            </div>
+          ) : d.funds ? (
+            <div className="mt-9">
+              <Kpi
+                tone="dark" peak="grow" size={34}
+                value={d.funds.headline}
+                label="What you must evidence"
+                sub={d.funds.sub}
+              />
+            </div>
+          ) : null}
 
           <div className="mt-9 max-w-[760px] rounded-2xl bg-white/[0.07] p-6">
-            <p className="text-[15px] leading-[1.6] text-white">{cost.visaFunds.formula}</p>
-            <p className="mt-3 text-[15px] leading-[1.6] text-[#B9B8CC]">{cost.visaFunds.holding}</p>
+            <p className="text-[15px] leading-[1.6] text-white">
+              {cost ? cost.visaFunds.formula : d.funds?.formula}
+            </p>
+            <p className="mt-3 text-[15px] leading-[1.6] text-[#B9B8CC]">
+              {cost ? cost.visaFunds.holding : d.funds?.holding}
+            </p>
             <p className="mt-4 border-t border-white/15 pt-3 text-[13px] text-[#8A899E]">
-              Source: {cost.visaFunds.source}. Check the current figure on the government&apos;s own
-              site before you rely on it; it changes, and a page is not an authority.
+              Source: {cost ? cost.visaFunds.source : d.funds?.source}. Check the current figure on
+              the government&apos;s own site before you rely on it; it changes, and a page is not an
+              authority.
             </p>
           </div>
         </div>
       </section>
 
       {/* --------------------------------------------------- what it all costs */}
+      {cost && (
       <section className="bg-wash">
         <div className="mx-auto max-w-[1200px] px-6 py-14 md:py-24">
           <span className="text-[12px] font-medium uppercase tracking-[0.5px] text-brand-600">
@@ -246,6 +269,7 @@ export default async function DestinationPage({
           </Link>
         </div>
       </section>
+      )}
 
       {/* -------------------------------------------------------- the timeline */}
       <section className="bg-canvas">

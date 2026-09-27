@@ -21,14 +21,14 @@ a calculator attached.
 | --- | --- | --- |
 | study in uk | /study/uk | **live** |
 | cost of student visa to uk | /study/uk, the funds section | **live**, covered by the same page |
-| cost of student visa to canada | /study/canada/cost | todo |
-| study in canada | /study/canada | todo |
-| cost of student visa to usa | /study/usa/cost | todo |
-| study in usa | /study/usa | todo |
-| cost of student visa to australia | /study/australia/cost | todo |
-| study in australia | /study/australia | todo |
-| cost of student visa to new zealand | /study/new-zealand/cost | todo |
-| study in new zealand | /study/new-zealand | todo |
+| cost of student visa to canada | /study/canada | **live** |
+| study in canada | /study/canada | **live** |
+| cost of student visa to usa | /study/usa | **live** |
+| study in usa | /study/usa | **live** |
+| cost of student visa to australia | /study/australia | **live** |
+| study in australia | /study/australia | **live** |
+| cost of student visa to new zealand | /study/new-zealand | **live** |
+| study in new zealand | /study/new-zealand | **live** |
 | cost of student visa to ireland | /study/ireland/cost | todo |
 | study in ireland | /study/ireland | todo |
 
@@ -41,7 +41,7 @@ them, and splitting it across two pages would have meant two thin pages
 competing with each other rather than one that answers the question. The
 remaining destinations should follow the same shape.
 
-## Needs research before writing
+## Written without cost data
 
 There is no cost data for these three. Writing the page means first adding
 sourced figures to `src/modules/cost/data.ts`: the published funds
@@ -49,11 +49,22 @@ requirement, the visa fee, and indicative tuition and living ranges, each
 with the government source it came from. Do not guess these numbers. A wrong
 funds figure on a page a family plans around is worse than no page.
 
-| Keyword | Blocked on | Status |
+| Keyword | Page | Status |
 | --- | --- | --- |
-| cost of student visa to japan | Japan cost and funds data | research |
-| cost of student visa to korea | Korea cost and funds data | research |
-| cost of student visa to finland | Finland cost and funds data | research |
+| cost of student visa to japan | /study/japan | **live**, no cost table |
+| cost of student visa to korea | /study/south-korea | **live**, no cost table |
+| cost of student visa to finland | /study/finland | **live**, no cost table |
+
+Japan and Korea publish no national funds figure at all: in Japan the school
+sets it through the Certificate of Eligibility, in Korea the university sets
+it because Korean law requires the university to verify funds. Both pages say
+that rather than quoting a number somebody made up. Finland does publish a
+figure, EUR 9,600, and it is on the page with its source.
+
+None of the three has tuition or living cost data in
+`src/modules/cost/data.ts`, so those pages carry the funds section and the
+process and leave out the cost table. Adding the cost data later turns the
+table on with no further work.
 
 ## The AI tools
 

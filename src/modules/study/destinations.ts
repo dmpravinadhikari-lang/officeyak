@@ -19,7 +19,21 @@ export type Step = { when: string; what: string; detail: string };
 export type Faq = { q: string; a: string };
 
 export type Destination = {
-  code: CountryCode;
+  /**
+   * Set only where src/modules/cost/data.ts has figures for this country.
+   * Where it is absent the page drops its cost table rather than inventing
+   * one, and says in the open that the numbers are not ours to publish yet.
+   */
+  code?: CountryCode;
+  /** Name, flag and visa, for the destinations with no entry in the cost data. */
+  standalone?: { name: string; flag: string; visa: string };
+  /**
+   * A published funds requirement for a country outside the cost data.
+   * `headline` is the figure as the authority states it; `sub` is the same
+   * thing in rupees or a plain restatement, and is optional because not every
+   * country publishes a figure at all.
+   */
+  funds?: { headline: string; sub?: string; formula: string; source: string; holding: string };
   /** The URL segment. Reads better than the country code in a search result. */
   slug: string;
   h1: string;
@@ -347,6 +361,194 @@ export const DESTINATIONS: Destination[] = [
       { href: "/tools/compare", label: "Compare destinations side by side" },
       { href: "/blog/noc-for-abroad-study-nepal", label: "The NOC, start to finish" },
       { href: "/tools/cost", label: "Work out the whole cost" },
+    ],
+  },
+  {
+    slug: "japan",
+    standalone: { name: "Japan", flag: "🇯🇵", visa: "Student residence status" },
+    h1: "Studying in Japan from Nepal",
+    metaTitle: "Study in Japan from Nepal: cost, visa and funds",
+    metaDescription:
+      "What Japan asks a Nepali student to prove financially, why the school sets the figure rather than the government, and how the Certificate of Eligibility works.",
+    opening:
+      "Japan works back to front compared with every other destination here. You do not apply for a visa and then enrol. Your school applies to the immigration bureau for a Certificate of Eligibility on your behalf, and only once that is granted do you take it to the embassy for the visa itself. This means the school is your first gatekeeper and your financial evidence is read by them before anyone official sees it.",
+    funds: {
+      headline: "No published figure",
+      sub: "the school sets the amount through the Certificate of Eligibility",
+      formula:
+        "Japan does not publish a single national minimum for student residence status. The requirement is that you can pay tuition and living costs for the whole programme without relying on illegal work. Schools apply that principle as their own threshold, and for a one year programme they commonly ask to see in the region of two million yen, which varies by school, city and course type.",
+      source:
+        "Immigration Services Agency of Japan and the Ministry of Foreign Affairs set the principle; individual schools set the amount",
+      holding:
+        "The sponsor's relationship to you, their income and the source of the money are examined at least as closely as the balance. A recently assembled figure with nothing behind it fails here as it does everywhere.",
+    },
+    refusals: [
+      {
+        title: "The school rejects the file before immigration ever sees it",
+        body:
+          "Because the school submits the Certificate of Eligibility application, it carries the risk if a student disappears or cannot pay. Schools with a poor track record on that face scrutiny themselves, so they screen hard. A weak financial file usually fails at this stage rather than at the embassy, which is why it is often never described as a refusal at all.",
+      },
+      {
+        title: "A sponsor whose income does not match the amount",
+        body:
+          "Japanese applications ask for the sponsor's occupation, income and relationship in detail, with documents behind each. A balance that a sponsor's declared income could not plausibly have produced is the most common problem on Nepali files here.",
+      },
+      {
+        title: "Japanese language level not matching the programme",
+        body:
+          "Language schools and degree programmes want different things, and applying to a degree taught in Japanese without a level of Japanese to match invites an obvious question. If you are going via a language school first, say so plainly and show how the two steps connect.",
+      },
+      {
+        title: "Starting too late for the Certificate of Eligibility",
+        body:
+          "The Certificate of Eligibility takes months, and it happens before the visa rather than after it. An application started at the timescale that works for Australia will miss a Japanese intake entirely.",
+      },
+    ],
+    timeline: [
+      { when: "12 months before", what: "Choose the school, and the route", detail: "Language school first, or straight into a degree. This decides everything downstream and is hard to change later." },
+      { when: "10 months before", what: "Apply to the school", detail: "The school, not you, applies for the Certificate of Eligibility, so their deadlines are the real deadlines." },
+      { when: "8 to 9 months before", what: "Submit the financial documents to the school", detail: "Sponsor's income, relationship, bank evidence and the source of the funds. The school reviews these before forwarding anything." },
+      { when: "5 to 7 months before", what: "The Certificate of Eligibility is processed", detail: "This is the long wait, and it is out of your hands. Nothing else can proceed until it is issued." },
+      { when: "3 months before", what: "The NOC, and the visa application", detail: "With the Certificate of Eligibility in hand, apply for the visa at the embassy. Apply for Nepal's NOC in parallel." },
+      { when: "1 to 2 months before", what: "Housing and arrival", detail: "Japanese housing usually requires a guarantor and payment up front, and it is the cost most students underestimate." },
+    ],
+    faq: [
+      { q: "How much money do I need for a Japanese student visa?", a: "There is no published national figure. Japan requires that you can cover tuition and living costs for the whole programme, and each school applies that as its own threshold. Schools commonly ask to see around two million yen for a one year programme, but ask your school what it requires rather than relying on a general figure." },
+      { q: "What is a Certificate of Eligibility?", a: "A document your school obtains from Japan's immigration bureau confirming you meet the conditions for student residence status. It is granted before the visa, and the visa application at the embassy is comparatively simple once you hold one." },
+      { q: "Can I apply for the visa myself without a school?", a: "No. The Certificate of Eligibility is applied for by the school on your behalf, which is why the school's admission process and its deadlines govern the whole timeline." },
+      { q: "Do I need to speak Japanese?", a: "It depends entirely on the programme. Degrees taught in English exist and are growing, but most routes from Nepal go through a language school first, and the application should explain that path rather than leave it implied." },
+      { q: "Can I work while studying in Japan?", a: "Students may apply for permission to engage in limited part-time work, within a weekly cap. It is not accepted as part of the funds you must demonstrate, and the application explicitly tests whether you could study without relying on it." },
+      { q: "Do I need an NOC?", a: "Yes. The No Objection Certificate from Nepal's Ministry of Education is what allows your bank to remit tuition legally, and it is separate from anything Japan requires." },
+    ],
+    related: [
+      { href: "/blog/noc-for-abroad-study-nepal", label: "The NOC, start to finish" },
+      { href: "/tools/compare", label: "Compare destinations side by side" },
+      { href: "/blog/sop-mistakes-that-get-nepali-students-refused", label: "The sentences that sink a statement" },
+    ],
+  },
+  {
+    slug: "south-korea",
+    standalone: { name: "South Korea", flag: "🇰🇷", visa: "D-2 student visa" },
+    h1: "Studying in South Korea from Nepal",
+    metaTitle: "Study in South Korea from Nepal: cost, D-2 visa and funds",
+    metaDescription:
+      "What South Korea asks a Nepali student to show financially, the difference between a D-2 and a D-4, and why the university screens the file first.",
+    opening:
+      "Korea splits its student visas in a way that matters more than most students realise. A D-2 is for a degree at a university; a D-4 is for a language course or a non-degree programme, and the two carry different conditions and different work rights. The university verifies your finances before immigration does, because Korean law requires it to, so the institution is the first real check on your application.",
+    funds: {
+      headline: "No single government figure",
+      sub: "universities set the amount, and Seoul institutions set it higher",
+      formula:
+        "Korea does not publish one national threshold. Universities are required to verify that an applicant can cover the full cost of the first year and to confirm funding for subsequent years, and they translate that into their own requirement. Institutions in the Seoul metropolitan area commonly ask for the equivalent of around twenty million won, and others less.",
+      source:
+        "Korean immigration requires the university to verify funds; each university publishes its own amount",
+      holding:
+        "A bank balance certificate is normally required in your own name and dated within about a month of the application, with statements from the preceding three months. Where the source of the money is unclear or it is borrowed, the review becomes markedly stricter.",
+    },
+    refusals: [
+      {
+        title: "Applying for the wrong visa category",
+        body:
+          "A D-2 is a degree at a university. A D-4 is a language or non-degree course. Students routinely apply for one while describing the other, and the conditions, the work rights and the path afterwards all differ. Get the category right before anything else.",
+      },
+      {
+        title: "A balance certificate in someone else's name",
+        body:
+          "Korean universities generally want the certificate in the applicant's own name, dated recently. A parent's account, or a figure assembled and certified the week before, is where Nepali files most often stall, and it stalls at the university rather than at immigration.",
+      },
+      {
+        title: "A study plan that does not explain Korea",
+        body:
+          "The study plan is read, and it is read for whether Korea specifically makes sense for you rather than as a general statement about wanting to study abroad. A plan that would read identically with the country name changed is the pattern that gets doubted.",
+      },
+      {
+        title: "Documents not legalised or translated properly",
+        body:
+          "Academic and financial documents from Nepal usually need apostille or consular legalisation and certified translation. This takes weeks, is commonly left until after the offer, and is the single most avoidable delay on a Korean application.",
+      },
+    ],
+    timeline: [
+      { when: "10 to 12 months before", what: "Decide D-2 or D-4, and shortlist", detail: "Degree or language course. Everything else follows from this, including which documents you will need." },
+      { when: "8 to 10 months before", what: "Start document legalisation", detail: "Apostille or consular legalisation and certified translation of academic and financial documents. Start this before you apply, not after you are accepted." },
+      { when: "7 months before", what: "Apply to universities", detail: "Korean intakes are usually March and September, and the application windows are narrow." },
+      { when: "5 months before", what: "Accept, and prepare the balance certificate", detail: "In your own name, dated close to the application. Work out the university's exact requirement rather than a general figure." },
+      { when: "3 to 4 months before", what: "The NOC, and the visa application", detail: "The university issues a certificate of admission, which the visa application needs. Apply for Nepal's NOC alongside." },
+      { when: "1 to 2 months before", what: "Housing and the alien registration plan", detail: "You register after arrival, within a set period. Know the deadline before you land rather than after." },
+    ],
+    faq: [
+      { q: "How much money do I need for a Korean student visa?", a: "There is no single government threshold. Korean law requires the university to verify that you can cover the first year in full, and each university sets its own figure. Institutions in the Seoul metropolitan area commonly ask for the equivalent of around twenty million won. Ask the specific university rather than relying on a general number." },
+      { q: "What is the difference between D-2 and D-4?", a: "D-2 is for a degree programme at a university. D-4 is for a language course or other non-degree study. The conditions, the work rights and what you can do afterwards all differ, so applying in the wrong category causes real problems." },
+      { q: "Does the bank certificate have to be in my name?", a: "Universities generally want it in the applicant's own name and dated recently, often within about a month of the application, with supporting statements from the preceding months." },
+      { q: "Do my documents need to be legalised?", a: "Usually yes, by apostille or consular legalisation, with certified translation. It takes weeks and should be started before you are accepted rather than after." },
+      { q: "Can I work while studying in Korea?", a: "Part-time work is permitted within limits and usually requires permission and a minimum period of study first, and the conditions differ between D-2 and D-4. It is not counted towards the funds you must show." },
+      { q: "Do I need an NOC?", a: "Yes. Nepal's No Objection Certificate is what allows your bank to remit tuition legally, and it is separate from anything Korea requires." },
+    ],
+    related: [
+      { href: "/blog/noc-for-abroad-study-nepal", label: "The NOC, start to finish" },
+      { href: "/tools/compare", label: "Compare destinations side by side" },
+      { href: "/blog/student-visa-refused-nepal-what-to-do-next", label: "Refused. What now?" },
+    ],
+  },
+  {
+    slug: "finland",
+    standalone: { name: "Finland", flag: "🇫🇮", visa: "Residence permit for studies" },
+    h1: "Studying in Finland from Nepal",
+    metaTitle: "Study in Finland from Nepal: cost, residence permit and funds",
+    metaDescription:
+      "Finland publishes an exact figure a student must hold, and will not accept a sponsor's guarantee or a shared account. What that means for a Nepali application.",
+    opening:
+      "Finland is the strictest of these destinations in one specific way, and it catches Nepali families out because it runs against how every other application here is built. The money has to be in the student's own account. Not a parent's, not a joint account, and a sponsorship guarantee is not accepted in place of it. An application assembled the way a UK or Australian one is assembled will fail on that point alone.",
+    funds: {
+      headline: "EUR 9,600",
+      sub: "in the student's own account when the application is submitted",
+      formula:
+        "At least EUR 800 a month at your disposal, which for studies lasting a year or longer means EUR 9,600 in the bank account when you submit the application. Where the institution provides support towards your living costs, less may be required, and that support has to be documented with the application.",
+      source: "Finnish Immigration Service (Migri) income requirement for students",
+      holding:
+        "The account must be in your own name. Shared accounts and sponsorship guarantees are not accepted, which is the opposite of how most applications from Nepal are put together. A bank statement covering the preceding three months is normally submitted with it.",
+    },
+    refusals: [
+      {
+        title: "The money in a parent's or a joint account",
+        body:
+          "This is the one that fails Nepali applications most often, because a sponsor's account is the normal way a file is built for the UK, Australia or Canada. Finland does not accept it. The funds must sit in the student's own account, so the transfer has to happen early enough to be visible in the statements.",
+      },
+      {
+        title: "Treating a sponsorship letter as evidence",
+        body:
+          "A letter promising support, however well drafted and however genuine, does not substitute for the balance. If a relative is funding you, the money needs to move into your account and be shown there.",
+      },
+      {
+        title: "Insurance that does not meet the requirement",
+        body:
+          "Finland requires health insurance with a specified minimum cover, and the level depends on the length of your studies. A general travel policy bought cheaply usually does not meet it, and this is discovered at the point of application rather than before.",
+      },
+      {
+        title: "Applying too late for the permit processing time",
+        body:
+          "A residence permit is not a visa sticker issued in days. Processing takes time, biometrics must be given, and the permit card is collected. Students used to a visa timeline apply too late and miss the intake even though the application itself was sound.",
+      },
+    ],
+    timeline: [
+      { when: "12 months before", what: "Shortlist, and check the language of instruction", detail: "Finland teaches many degrees in English, particularly at masters level, but not all of them. Confirm per programme." },
+      { when: "10 months before", what: "Apply", detail: "Finnish application periods are narrow and often early in the year for an autumn intake. Missing one means waiting a full year." },
+      { when: "8 months before", what: "Move the money into your own account", detail: "This is the step that decides the application. Start it early enough that the account shows a settled balance in your own name rather than a recent transfer." },
+      { when: "6 months before", what: "Accept the place, pay any tuition deposit", detail: "Tuition fees apply to non-EU students at most institutions, with scholarships commonly available and worth applying for separately." },
+      { when: "4 to 5 months before", what: "Apply for the residence permit, arrange insurance", detail: "Check the required level of health cover before buying a policy. Apply for Nepal's NOC alongside." },
+      { when: "2 to 3 months before", what: "Biometrics and the permit card", detail: "Biometrics are given at the mission, and the card follows. Build in more time than a visa would need." },
+    ],
+    faq: [
+      { q: "How much money do I need for a Finnish student residence permit?", a: "At least EUR 800 a month, which for studies of a year or longer means EUR 9,600 in your bank account when you submit the application. Check the current figure with the Finnish Immigration Service, because it is reviewed." },
+      { q: "Can my parents hold the money for me?", a: "No. The account must be in your own name. Finland does not accept shared accounts or a sponsorship guarantee in place of the balance, which is the single biggest difference from a UK or Australian application." },
+      { q: "Is studying in Finland free?", a: "Not for students from outside the EU and EEA at most institutions, where tuition fees apply. Scholarships are common and are usually applied for alongside admission rather than afterwards." },
+      { q: "Is it a visa or a residence permit?", a: "A residence permit, which is a different process from a visa and takes longer. Biometrics are given and a permit card is issued, so the timeline needs more room than a visa would." },
+      { q: "What insurance do I need?", a: "Health insurance meeting a specified minimum level of cover, which depends on the length of your studies. Check the requirement before buying a policy; a basic travel policy often does not qualify." },
+      { q: "Do I need an NOC?", a: "Yes. Nepal's No Objection Certificate is what allows your bank to remit tuition legally, and it is separate from anything Finland requires." },
+    ],
+    related: [
+      { href: "/blog/noc-for-abroad-study-nepal", label: "The NOC, start to finish" },
+      { href: "/tools/compare", label: "Compare destinations side by side" },
+      { href: "/tools/scholarships", label: "Find a scholarship" },
     ],
   },
 ];
