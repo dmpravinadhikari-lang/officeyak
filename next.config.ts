@@ -51,7 +51,23 @@ const CSP = [
   // client bundle is blocked and nothing interactive works while developing —
   // and 'unsafe-eval' must never reach production, so it is switched by build.
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com https://accounts.google.com`,
-  `connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com${isDev ? " ws: http://localhost:*" : ""}`,
+  /*
+   * Analytics is allowed to measure, and not allowed to advertise.
+   *
+   * The tag tries four endpoints. www.google-analytics.com and
+   * region1.google-analytics.com are measurement and were already here;
+   * analytics.google.com is the same thing on a different host and was being
+   * blocked, which filled the console with errors and lost some events.
+   *
+   * stats.g.doubleclick.net and google.com/ads/ga-audiences are not
+   * measurement. They are remarketing: they build an advertising audience out
+   * of the people who read your site. They stay blocked deliberately, and the
+   * console complaining about them is the policy working rather than
+   * something to fix. A product that promises not to load a tag on a parent's
+   * page about their child's visa should not be handing anybody an ad
+   * audience either.
+   */
+  `connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com${isDev ? " ws: http://localhost:*" : ""}`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob: https://lh3.googleusercontent.com https://www.googletagmanager.com",
