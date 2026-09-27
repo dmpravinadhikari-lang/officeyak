@@ -12,6 +12,9 @@ import { myTasks, dueState } from "@/modules/tasks/data";
 import { listPipeline } from "@/modules/pipeline/data";
 import { stalledSummary } from "@/modules/pipeline/stalled";
 import { leadCounts, listLeads } from "@/modules/leads/data";
+import { feeSummary } from "@/modules/fees/data";
+import { commissionSummary } from "@/modules/partners/commission";
+import { npr } from "@/lib/terms";
 import { normaliseSource, sourceOf } from "@/modules/pipeline/sources";
 import { myScorecard } from "@/modules/account/scorecard";
 import { capabilitiesFor } from "@/lib/auth/access";
@@ -102,6 +105,20 @@ export function StaffHome({ user }: { user: SessionUser }) {
    * student sitting at Enquiry for three weeks is the most expensive silence
    * in a consultancy, so it belongs on the screen everybody opens first.
    */
+  /*
+   * The money, for whoever is responsible for it.
+   *
+   * An accountant opened this page and was told "0 tasks on your desk", and
+   * that was the whole screen. The person whose job is fees, invoices,
+   * commission and payroll had nothing about any of it on the first thing
+   * they see, while the owner got a money card. They went straight past this
+   * page every morning to the fees screen, which means this page was not
+   * doing its one job for them.
+   */
+  const seesMoney = caps.has("money:view");
+  const fees = seesMoney ? feeSummary(scope) : null;
+  const commission = caps.has("partners:money") ? commissionSummary(scope) : null;
+
   const stalledAll = seesStudents ? stalledSummary(scope) : { count: 0, worst: null, list: [] };
   const stalledList = handsWorkOut
     ? stalledAll.list
@@ -275,6 +292,10 @@ export function StaffHome({ user }: { user: SessionUser }) {
       ? { key: "unassigned", label: "No counsellor", n: unassigned, said: unassigned === 1 ? "student is waiting to be handed to someone" : "students are waiting to be handed to someone", cta: "Hand them out", href: "/app/pipeline?unassigned=1", bar: "bg-tint-lilac-ink", ink: "text-tint-lilac-ink" }
     : late > 0
       ? { key: "tasks", label: "Your tasks", n: late, said: late === 1 ? "of your tasks is past its date" : "of your tasks are past their date", cta: "Open tasks", href: "/app/tasks", bar: "bg-tint-amber-ink", ink: "text-tint-amber-ink" }
+    : !seesStudents && seesMoney && fees && fees.outstanding > 0
+      ? { key: "owed", label: "Still to collect", n: fees.owing.length, said: fees.owing.length === 1 ? `student owes ${npr(fees.outstanding)}` : `students owe ${npr(fees.outstanding)} between them`, cta: "Open the ledger", href: "/app/fees", bar: "bg-danger-600", ink: "text-danger-600" }
+    : !seesStudents && commission && commission.overdue.count > 0
+      ? { key: "commission", label: "Commission overdue", n: commission.overdue.count, said: commission.overdue.count === 1 ? `invoice has been unpaid over 60 days` : `invoices have been unpaid over 60 days`, cta: "Chase them", href: "/app/money", bar: "bg-tint-amber-ink", ink: "text-tint-amber-ink" }
     : brandNew && seesStudents
       ? { key: "first", label: "First student", n: 0, said: "students on file yet. Put the one you are helping today in.", cta: "Add a student", href: "/app/pipeline?add=1", bar: "bg-brand-500", ink: "text-brand-600" }
     : seesStudents
@@ -298,8 +319,15 @@ export function StaffHome({ user }: { user: SessionUser }) {
    * the banner worth ignoring. It now says the *next* thing, or nothing.
    */
   const oldest = queue[0];
+  const oldestDebt = fees?.owing[0] ?? null;
   const yak = !seesStudents && !seesLeads
-    ? null
+    ? (oldestDebt && focus.key !== "owed"
+        ? {
+            says: `chase ${oldestDebt.student_name.split(" ")[0]} first.`,
+            because: `${npr(oldestDebt.balance)} outstanding, and it is the balance that has been owed longest. An old small balance is a conversation nobody has had.`,
+            action: { label: "Open the ledger", href: "/app/fees" },
+          }
+        : null)
     : followUps > 0 && seesStudents && focus.key !== "followups"
       ? {
           says: "clear the missed follow-ups before anything else.",

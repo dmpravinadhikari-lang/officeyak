@@ -12,7 +12,24 @@ import { Icon } from "@/components/Icon";
  * two records this office creates all day. Both are in the same place on
  * every screen, so neither has to be looked for twice.
  */
-export function TopBar({ office, seesAll }: { office: string | null; seesAll: boolean }) {
+export function TopBar({
+  office, seesAll, seesStudents = true, addsStudents = true,
+}: {
+  office: string | null;
+  seesAll: boolean;
+  /**
+   * Whether this person may open a student file at all.
+   *
+   * The front desk may not, by design: their position says "writes down every
+   * walk-in and call, no student files". They were still shown a student
+   * search box and a "+ Student" button on every screen, and pressing it put
+   * them back on the dashboard with no explanation. A dead control in the
+   * fixed bar of the one screen somebody uses all day is worse than a missing
+   * one, because they press it more than once before they believe it.
+   */
+  seesStudents?: boolean;
+  addsStudents?: boolean;
+}) {
   const box = useRef<HTMLInputElement>(null);
 
   // "/" jumps to the search, the way it does in every tool people already
@@ -32,6 +49,7 @@ export function TopBar({ office, seesAll }: { office: string | null; seesAll: bo
   return (
     <div className="sticky top-0 z-30 hidden border-b border-line bg-canvas/90 backdrop-blur lg:block">
       <div className="mx-auto flex max-w-[1160px] items-center gap-3 px-6 py-2.5">
+        {seesStudents ? (
         <form action="/app/pipeline" className="relative min-w-0 flex-1 md:max-w-sm">
           <label htmlFor="global-search" className="sr-only">Search students</label>
           <Icon name="search" size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
@@ -45,6 +63,7 @@ export function TopBar({ office, seesAll }: { office: string | null; seesAll: bo
             /
           </kbd>
         </form>
+        ) : <div className="min-w-0 flex-1" />}
 
         {/* "No office · all offices" read as a fault on a new account. With no
             office of their own, somebody who sees everything is simply told
@@ -68,12 +87,14 @@ export function TopBar({ office, seesAll }: { office: string | null; seesAll: bo
           >
             <Icon name="plus" size={15} /> Task
           </Link>
-          <Link
-            href="/app/pipeline?add=1#add-student"
-            className="oy-press inline-flex min-h-[38px] items-center gap-1.5 rounded-[10px] bg-brand-500 px-3.5 text-[13px] font-semibold text-ink hover:bg-brand-400"
-          >
-            <Icon name="plus" size={15} /> Student
-          </Link>
+          {addsStudents && (
+            <Link
+              href="/app/pipeline?add=1#add-student"
+              className="oy-press inline-flex min-h-[38px] items-center gap-1.5 rounded-[10px] bg-brand-500 px-3.5 text-[13px] font-semibold text-ink hover:bg-brand-400"
+            >
+              <Icon name="plus" size={15} /> Student
+            </Link>
+          )}
         </div>
       </div>
     </div>

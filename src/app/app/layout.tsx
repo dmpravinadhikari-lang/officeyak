@@ -201,7 +201,21 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </aside>
 
       <main className="min-w-0 flex-1 bg-canvas">
-        {staff && <TopBar office={user.branchName} seesAll={user.isHeadOffice || user.role === "tenant_admin" || user.role === "super_admin"} />}
+        {/*
+          seesAll used to be read off the role and the head-office flag, which
+          is not the same question. An accountant's position sets their data
+          scope to every office, yet they were told "this office" on every
+          screen while looking at consultancy-wide figures. The scope already
+          knows; it is asked directly.
+        */}
+        {staff && (
+          <TopBar
+            office={user.branchName}
+            seesAll={scope.see === "all"}
+            seesStudents={caps.has("students:view")}
+            addsStudents={caps.has("students:create")}
+          />
+        )}
         {/* the extra bottom padding clears the mobile tab bar */}
         <div className="mx-auto max-w-[1160px] px-4 pb-28 pt-5 sm:px-6 sm:py-6 lg:pb-8">
           <PageTransition>{children}</PageTransition>
