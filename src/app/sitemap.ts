@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { allPosts } from "@/lib/blog";
 import { destinationSlugs } from "@/modules/study/destinations";
+import { softwareSlugs } from "@/modules/software/pages";
 import { BRAND } from "@/lib/brand";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || `https://${BRAND.domain}`;
@@ -39,8 +40,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
+  // The software pages are what an owner searches for, and they are the pages
+  // that actually sell, so they carry the same priority as a destination.
+  const software = softwareSlugs().map((slug) => ({
+    url: `${SITE}/software/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.9,
+  }));
+
   return [
     { url: SITE, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
+    { url: `${SITE}/software`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
+    ...software,
     ...destinations,
     { url: `${SITE}/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     ...tools,

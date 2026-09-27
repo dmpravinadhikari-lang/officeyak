@@ -18,7 +18,9 @@ import { BRAND } from "@/lib/brand";
  */
 
 const NAV = [
-  ["Product", "/#product"],
+  // "Software" rather than "Product" because it points at a real page now, and
+  // because it is the word an owner searching for this actually uses.
+  ["Software", "/software"],
   ["Modules", "/#modules"],
   ["Pricing", "/#pricing"],
   ["Guides", "/blog"],
@@ -79,7 +81,7 @@ export function CtaBand({
 }
 
 const COLUMNS = [
-  { head: "Product", links: [["Student leads", "/#modules"], ["Attendance", "/#product"], ["Mock tests and AI interview", "/#students"], ["SOP Studio", "/tools"], ["HR and payroll", "/#modules"]] },
+  { head: "Product", links: [["Consultancy CRM", "/software/education-consultancy-crm"], ["Enquiry management", "/software/enquiry-management-software"], ["Staff attendance", "/software/attendance-management-system"], ["Class registers", "/software/student-attendance-management-system"], ["Mock tests and AI interview", "/#students"]] },
   { head: "Company", links: [["Pricing", "/#pricing"], ["Security", "/#security"], ["Log in", "/login"], ["Start free", "/signup"]] },
   { head: "Guides", links: [["All guides", "/blog"], ["Study in the UK", "/study/uk"], ["Free student tools", "/tools"], ["True cost calculator", "/tools/cost"], ["University finder", "/tools/universities"]] },
 ];

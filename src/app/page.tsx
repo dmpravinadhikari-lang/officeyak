@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Logo, Ridge } from "@/components/Logo";
 import { Icon, type IconName } from "@/components/Icon";
@@ -10,7 +9,7 @@ import { PLANS } from "@/lib/plans";
 import { STUDENT_JOURNEY, perStudent, studentsCovered } from "@/lib/credits-explained";
 import { PricingCards } from "./pricing-cards";
 import { Reveal } from "@/components/Reveal";
-import { PEAK, type Peak } from "@/components/brand-ui";
+import { PEAK, Shot, type Peak } from "@/components/brand-ui";
 
 /**
  * The homepage, built to the mockup in website/officeyak-homepage.html.
@@ -52,27 +51,6 @@ function Eyebrow({ children, tag = false }: { children: ReactNode; tag?: boolean
     >
       {children}
     </span>
-  );
-}
-
-/**
- * A screenshot in the frame the imagery rule gives it: a 16px radius, one
- * hairline of Mist, cropped from the top left, and no drawn browser or
- * handset around it. "No fake device bezels" is in the rule in as many words.
- */
-function Shot({
-  src, alt, ratio = "16/10", priority = false, className = "",
-}: { src: string; alt: string; ratio?: string; priority?: boolean; className?: string }) {
-  return (
-    <div
-      className={`overflow-hidden rounded-2xl border border-wash bg-panel ${className}`}
-      style={{ aspectRatio: ratio }}
-    >
-      <Image
-        src={src} alt={alt} width={1440} height={900} priority={priority}
-        className="block h-full w-full object-cover object-left-top"
-      />
-    </div>
   );
 }
 
@@ -178,7 +156,10 @@ const PLAN_ROWS = [
   { id: "pro", for: "Multi-branch or franchise", lines: ["Unlimited students and offices", "Everything in Growth", "Office comparison for head office", "Priority support"] },
 ] as const;
 
-const NAV = [["Product", "#product"], ["Modules", "#modules"], ["Pricing", "#pricing"], ["Guides", "/blog"]];
+// Kept in step with the NAV in site-chrome.tsx by hand, because the homepage
+// still draws its own header. The anchors stay bare here and carry a leading
+// slash there, which is the only reason the two lists are not one.
+const NAV = [["Software", "/software"], ["Modules", "#modules"], ["Pricing", "#pricing"], ["Guides", "/blog"]];
 
 const FOLD = [
   { id: "compare", title: "Every plan, side by side" },
@@ -639,7 +620,7 @@ export default async function Home() {
               </p>
             </div>
             {[
-              { head: "Product", links: [["Student leads", "#modules"], ["Attendance", "#product"], ["Mock tests and AI interview", "#students"], ["SOP Studio", "/tools"], ["HR and payroll", "#modules"]] },
+              { head: "Product", links: [["Consultancy CRM", "/software/education-consultancy-crm"], ["Enquiry management", "/software/enquiry-management-software"], ["Staff attendance", "/software/attendance-management-system"], ["Class registers", "/software/student-attendance-management-system"], ["Mock tests and AI interview", "#students"]] },
               { head: "Company", links: [["Pricing", "#pricing"], ["Security", "#security"], ["Log in", "/login"], ["Start free", "/signup"]] },
               { head: "Guides", links: [["All guides", "/blog"], ["Free student tools", "/tools"], ["True cost calculator", "/tools/cost"], ["University finder", "/tools/universities"]] },
             ].map((col) => (

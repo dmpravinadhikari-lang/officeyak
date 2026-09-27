@@ -28,16 +28,39 @@ side, which is in `student-queue.md` and has orders of magnitude more volume.
 Exactly what OfficeYak is, bought by the person searching, and essentially
 uncontested. Each needs its own landing page, not a blog post.
 
+**Built as four pages, not eight.** The rows below originally named eight
+page paths, and several of them were the same question asked twice:
+"education consultancy crm", "crm for education consultancy" and "best crm
+for education consultancy" are one intent, and "attendance and payroll
+management system" is the attendance page with a paragraph about payroll on
+it. Eight near-identical pages about one product would compete with each
+other for a total of maybe two hundred searches a month, and would be
+recognised for what they were. The four that exist are each about a genuinely
+different part of the product, so the rows now point at whichever of the four
+answers them:
+
+- `/software/education-consultancy-crm` — the whole thing, for an owner
+- `/software/enquiry-management-software` — before they are a student
+- `/software/attendance-management-system` — staff, geofence, payroll
+- `/software/student-attendance-management-system` — class registers
+
+Before writing them I checked each claim against the code, because a landing
+page that promises a feature is a refund request with better typography.
+Class registers are real (`class_attendance`), the geofence is real
+(`lat`, `lng`, `radius_m` in `src/modules/attendance/geofence.ts`), and
+payroll genuinely reads the days clocked in the Nepali month. Nothing on the
+pages is on a roadmap.
+
 | Keyword | Page to build | Status |
 | --- | --- | --- |
-| education consultancy crm | /software/education-consultancy-crm | todo |
-| crm for education consultancy | same page, variant | todo |
-| best crm for education consultancy | same page, variant | todo |
-| consultancy management system | /software/consultancy-management-system | todo |
-| best consultancy management system | same page, variant | todo |
-| enquiry management software | /software/enquiry-management-software | todo |
-| student attendance management system | /software/student-attendance-management-system | todo |
-| attendance and payroll management system | /software/attendance-and-payroll | todo |
+| education consultancy crm | /software/education-consultancy-crm | live |
+| crm for education consultancy | same page, variant | live |
+| best crm for education consultancy | same page, variant | live |
+| consultancy management system | /software/education-consultancy-crm | live |
+| best consultancy management system | same page, variant | live |
+| enquiry management software | /software/enquiry-management-software | live |
+| student attendance management system | /software/student-attendance-management-system | live |
+| attendance and payroll management system | /software/attendance-management-system | live |
 
 ## Tier 2, the attendance cluster
 
@@ -47,14 +70,14 @@ more than most of the free tools ranking for these can say.
 
 | Keyword | Page to build | Status |
 | --- | --- | --- |
-| attendance management system | /software/attendance-management-system | todo |
-| online attendance management system | same page, variant | todo |
-| online attendance system | same page, variant | todo |
-| cloud based attendance system | same page, variant | todo |
-| employee attendance management system | /software/employee-attendance | todo |
-| automated attendance system | same page, variant | todo |
-| staff attendance software | same page, variant | todo |
-| student attendance software | /software/student-attendance-management-system | todo |
+| attendance management system | /software/attendance-management-system | live |
+| online attendance management system | same page, variant | live |
+| online attendance system | same page, variant | live |
+| cloud based attendance system | same page, variant | live |
+| employee attendance management system | /software/attendance-management-system | live |
+| automated attendance system | same page, variant | live |
+| staff attendance software | same page, variant | live |
+| student attendance software | /software/student-attendance-management-system | live |
 
 ## Tier 3, the lead cluster, education framing only
 
@@ -64,10 +87,10 @@ frame it is winnable and the visitor is the right person.
 
 | Keyword | Page to build | Status |
 | --- | --- | --- |
-| lead management system | /software/student-lead-management | todo |
-| lead tracking crm | same page, variant | todo |
-| crm lead management system | same page, variant | todo |
-| free attendance management system | /software/attendance-management-system, free tier section | todo |
+| lead management system | /software/enquiry-management-software | live |
+| lead tracking crm | same page, variant | live |
+| crm lead management system | same page, variant | live |
+| free attendance management system | /software/attendance-management-system, free tier section | live |
 
 ---
 

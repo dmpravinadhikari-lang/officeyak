@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Ridge } from "@/components/Logo";
 import { Icon, type IconName } from "@/components/Icon";
+import Image from "next/image";
 
 /**
  * The pieces the guidelines draw but the product had never been given.
@@ -174,5 +175,35 @@ export function Drawer({
       </summary>
       <div className="border-t border-line px-6 py-5">{children}</div>
     </details>
+  );
+}
+
+/**
+ * A screenshot in the frame the imagery rule gives it: a 16px radius, one
+ * hairline of Mist, cropped from the top left, and no drawn browser or
+ * handset around it. "No fake device bezels" is in the rule in as many words.
+ *
+ * This lived privately in the homepage until the software pages needed the
+ * same frame. Two copies of a brand rule is how a brand rule stops being one,
+ * so it moved here rather than being written a second time.
+ *
+ * The product shots are 2880x1800, which is 16/10, so at the default ratio
+ * nothing is actually cropped; the crop only bites when a caller asks for a
+ * different shape.
+ */
+export function Shot({
+  src, alt, ratio = "16/10", priority = false, className = "",
+}: { src: string; alt: string; ratio?: string; priority?: boolean; className?: string }) {
+  return (
+    <div
+      className={`overflow-hidden rounded-2xl border border-wash bg-panel ${className}`}
+      style={{ aspectRatio: ratio }}
+    >
+      <Image
+        src={src} alt={alt} width={2880} height={1800} priority={priority}
+        sizes="(max-width: 768px) 100vw, 1150px"
+        className="block h-full w-full object-cover object-left-top"
+      />
+    </div>
   );
 }
