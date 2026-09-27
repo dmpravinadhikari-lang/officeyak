@@ -65,6 +65,21 @@ export type Position = {
    * else's to chase.
    */
   desk?: "papers" | "applications";
+  /**
+   * Somebody brought in to read, who should leave no trace in the office's
+   * own records.
+   *
+   * The auditor position has always said "reads, changes nothing", and it was
+   * not true: the page still offered them a clock-in, which would have put an
+   * outside accountant into the office's attendance and into its punctuality
+   * report, and an "Add task" form that puts a row on a real desk. Neither is
+   * a permission question, which is why no capability covered it. It is a
+   * statement about what this person is here for.
+   *
+   * Their own account is untouched: changing their own password is not a
+   * change to the consultancy.
+   */
+  readOnly?: boolean;
   tint: string;
   ink: string;
 };
@@ -91,7 +106,7 @@ export const POSITIONS: Position[] = [
       ...COUNSELLING, "leads:assign", "students:share_parent", "reports:branch",
       "tasks:assign", "attendance:view", "attendance:manage", "tests:manage", "market:view",
       "money:view", "money:manage", "partners:manage", "partners:money",
-      "hr:manage", "payroll:run", "branch:settings", "consultancy:admin", "branch:staff",
+      "hr:manage", "payroll:view", "payroll:run", "branch:settings", "consultancy:admin", "branch:staff",
       "people:permissions", "audit:view",
     ],
     oversees: true,
@@ -180,7 +195,7 @@ export const POSITIONS: Position[] = [
     blurb: "Fees, invoices, commission and payroll. No student documents.",
     scope: "all",
     grants: [
-      ...SELF, "money:view", "money:manage", "payroll:run", "hr:view",
+      ...SELF, "money:view", "money:manage", "payroll:view", "payroll:run", "hr:view",
       "partners:view", "partners:money", "reports:branch", "attendance:view",
     ],
     tint: "bg-tint-amber", ink: "text-tint-amber-ink",
@@ -198,7 +213,9 @@ export const POSITIONS: Position[] = [
     label: "Auditor",
     blurb: "Reads, changes nothing. For an outside accountant or a compliance check.",
     scope: "all",
-    grants: [...SELF, "students:view", "reports:branch", "money:view", "payroll:run", "audit:view"],
+    // payroll:view and not payroll:run: the numbers, never the button.
+    grants: [...SELF, "students:view", "reports:branch", "money:view", "payroll:view", "audit:view"],
+    readOnly: true,
     tint: "bg-wash", ink: "text-ink-2",
   },
 ];

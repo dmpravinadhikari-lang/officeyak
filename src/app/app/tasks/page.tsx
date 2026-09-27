@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireRole, scopeOf } from "@/lib/auth/current";
+import { positionOf } from "@/lib/auth/positions";
 import { officesFor } from "@/modules/pipeline/data";
 import { Button, Card, Chip, Field, PageHeader, inputClass, type Tone } from "@/components/ui";
 import { Icon } from "@/components/Icon";
@@ -30,6 +31,8 @@ export default async function TasksPage({
   const { office } = await searchParams;
   const user = await requireRole("super_admin", "tenant_admin", "counsellor");
   const scope = scopeOf(user);
+  /* Somebody here to read leaves no rows on anybody’s desk. */
+  const readsOnly = positionOf(user.position).readOnly === true;
 
   const offices = officesFor(scope);
   const mine = myTasks(scope);
@@ -121,6 +124,7 @@ export default async function TasksPage({
         </Card>
       )}
 
+      {!readsOnly && (
       <div id="add" className="scroll-mt-6">
         <Card className="p-5">
           <h2 className="h-tight text-[17px]">Add a task</h2>
@@ -164,6 +168,7 @@ export default async function TasksPage({
           </form>
         </Card>
       </div>
+      )}
 
       {branch.length > 0 && (
         <Card className="overflow-hidden">

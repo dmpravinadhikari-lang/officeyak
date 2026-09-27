@@ -3,6 +3,7 @@ import { Card, Chip, PageHeader, Th, type Tone } from "@/components/ui";
 import { localDay, monthStartDay, shortDate, whenText } from "@/lib/dates";
 import { Clock } from "@/modules/attendance/Clock";
 import { exceptions, hrSummary, openShift, punctuality, shiftsBetween, workLog, GRACE_MINUTES } from "@/modules/attendance/data";
+import { positionOf } from "@/lib/auth/positions";
 
 export const metadata = { title: "Attendance, OfficeYak" };
 
@@ -21,6 +22,7 @@ const distance = (m: number) => (m >= 1000 ? `${(m / 1000).toFixed(1)} km away` 
 export default async function AttendancePage() {
   const user = await requireRole("super_admin", "tenant_admin", "counsellor");
   const scope = scopeOf(user);
+  const readsOnly = positionOf(user.position).readOnly === true;
 
   const from = monthStartDay();
   const to = localDay();
@@ -40,10 +42,16 @@ export default async function AttendancePage() {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Attendance"
-        sub="Clock in when you arrive and clock out when you leave. Your location is checked only when you press the button."
+        sub={readsOnly
+          ? "Who was in, and when. This account reads the register rather than appearing in it."
+          : "Clock in when you arrive and clock out when you leave. Your location is checked only when you press the button."}
       />
+{/* An auditor is not a member of this office's staff. The action refuses
+          them; this stops it being offered. */}
+      {!readsOnly && (
 
       <Clock open={open} branchName={user.branchName} />
+      )}
 
       {canSeeEveryone && summary.length > 0 && (
         <Card className="overflow-hidden">

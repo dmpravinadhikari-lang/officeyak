@@ -35,7 +35,7 @@ export default async function SecurityPage() {
   );
   const documents = scalar("SELECT COUNT(*) FROM documents WHERE tenant_id = ?", user.tenantId);
   const withPay = staff.filter((p) =>
-    positionOf(p.position ?? defaultPositionFor(p.role)).grants.includes("payroll:run"),
+    positionOf(p.position ?? defaultPositionFor(p.role)).grants.includes("payroll:view"),
   );
   const withDocs = staff.filter((p) =>
     positionOf(p.position ?? defaultPositionFor(p.role)).grants.includes("students:documents"),

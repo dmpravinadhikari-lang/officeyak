@@ -63,6 +63,9 @@ export function StaffHome({ user }: { user: SessionUser }) {
   const finished = floor.filter((p) => p.ended_at);
   const notIn = floor.filter((p) => !p.started_at);
 
+  /* An outside reader is not offered the office's own controls. The actions
+     refuse them anyway; this is so they are never presented. */
+  const readsOnly = positionOf(user.position).readOnly === true;
   const clockedIn = Boolean(openShift(scope));
   const tasks = myTasks(scope);
   const late = tasks.filter((t) => dueState(t.due_on) === "overdue").length;
@@ -591,6 +594,7 @@ export function StaffHome({ user }: { user: SessionUser }) {
 
         {/* the day, and the month so far */}
         <div className="flex flex-col gap-4">
+          {!readsOnly && (
           <article className={`settle rounded-2xl border p-5 ${clockedIn ? "border-teal-500/40 bg-teal-100" : "border-line bg-panel"}`}>
             <div className="flex items-center gap-2.5">
               <span className={`grid h-10 w-10 place-items-center rounded-full ${clockedIn ? "bg-teal-500 text-white" : "bg-wash text-muted"}`}>
@@ -614,6 +618,7 @@ export function StaffHome({ user }: { user: SessionUser }) {
               {clockedIn ? "Clock out" : "Clock in"} <Icon name="arrow" size={15} />
             </Link>
           </article>
+          )}
 
           {seesLeads && (
           <article className="settle rounded-2xl border border-line bg-panel p-5">

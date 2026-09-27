@@ -225,6 +225,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             seesAll={scope.see === "all"}
             seesStudents={caps.has("students:view")}
             addsStudents={caps.has("students:create")}
+            addsTasks={!positionOf(user.position).readOnly}
           />
         )}
         {/* the extra bottom padding clears the mobile tab bar */}

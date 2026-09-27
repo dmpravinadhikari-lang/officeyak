@@ -13,7 +13,7 @@ import { Icon } from "@/components/Icon";
  * every screen, so neither has to be looked for twice.
  */
 export function TopBar({
-  office, seesAll, seesStudents = true, addsStudents = true,
+  office, seesAll, seesStudents = true, addsStudents = true, addsTasks = true,
 }: {
   office: string | null;
   seesAll: boolean;
@@ -29,6 +29,8 @@ export function TopBar({
    */
   seesStudents?: boolean;
   addsStudents?: boolean;
+  /** False for somebody here to read, who should leave no rows behind. */
+  addsTasks?: boolean;
 }) {
   const box = useRef<HTMLInputElement>(null);
 
@@ -81,12 +83,14 @@ export function TopBar({
         </span>
 
         <div className="ml-auto flex items-center gap-2">
-          <Link
-            href="/app/tasks#add"
-            className="oy-press inline-flex min-h-[38px] items-center gap-1.5 rounded-[10px] border border-line-2 bg-panel px-3.5 text-[13px] font-semibold text-ink hover:border-brand-400 hover:text-brand-600"
-          >
-            <Icon name="plus" size={15} /> Task
-          </Link>
+          {addsTasks && (
+            <Link
+              href="/app/tasks#add"
+              className="oy-press inline-flex min-h-[38px] items-center gap-1.5 rounded-[10px] border border-line-2 bg-panel px-3.5 text-[13px] font-semibold text-ink hover:border-brand-400 hover:text-brand-600"
+            >
+              <Icon name="plus" size={15} /> Task
+            </Link>
+          )}
           {addsStudents && (
             <Link
               href="/app/pipeline?add=1#add-student"

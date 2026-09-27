@@ -55,7 +55,19 @@ export const CAPABILITIES = {
   // --- people
   "hr:view": "See the staff list, positions and joining dates",
   "hr:manage": "Add and edit staff records",
-  "payroll:run": "See salaries, prepare a pay run and mark it paid",
+  /*
+   * Seeing the payroll and running it are two jobs, and they were one word.
+   *
+   * The auditor position says, in as many words, "reads, changes nothing. For
+   * an outside accountant or a compliance check." It was granted payroll:run,
+   * because an auditor plainly has to see what the office pays. That same
+   * word also opened "Open the run" and "Add to payroll", so an outside
+   * accountant brought in for a week could start a pay run and put somebody
+   * on the payroll. The same shape as branch:settings, which used to mean
+   * both "set my office's hours" and "download the whole company".
+   */
+  "payroll:view": "See salaries and past pay runs",
+  "payroll:run": "Prepare a pay run, change a line and mark it paid",
 
   // --- consultancy administration
   /*
@@ -111,7 +123,7 @@ const COUNSELLOR: Capability[] = [
 const TENANT_ADMIN: Capability[] = [
   ...COUNSELLOR, "branch:settings", "consultancy:admin", "branch:staff",
   "partners:manage", "partners:money",
-  "hr:manage", "payroll:run",
+  "hr:manage", "payroll:view", "payroll:run",
   "attendance:view", "attendance:manage", "tests:manage", "market:view",
   "money:view", "money:manage", "people:permissions", "audit:view",
 ];
@@ -154,7 +166,7 @@ export const CAPABILITY_GROUPS: Array<{ group: string; caps: Capability[] }> = [
   { group: "Partners and applications", caps: ["partners:view", "applications:manage", "partners:manage", "partners:money"] },
   { group: "The working day", caps: ["tasks:assign", "attendance:view", "attendance:manage", "tests:manage", "market:view"] },
   { group: "Invoices", caps: ["money:view", "money:manage"] },
-  { group: "People and pay", caps: ["hr:view", "hr:manage", "payroll:run"] },
+  { group: "People and pay", caps: ["hr:view", "hr:manage", "payroll:view", "payroll:run"] },
   { group: "Running the consultancy", caps: ["branch:settings", "consultancy:admin", "branch:staff", "people:permissions", "audit:view"] },
   { group: "Question bank", caps: ["bank:review", "bank:publish"] },
   { group: "Across the whole platform", caps: ["platform:admin", "platform:tenants", "platform:reports"] },

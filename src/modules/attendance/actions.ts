@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireScope } from "@/lib/auth/current";
 import { isStaff } from "@/lib/auth/roles";
 import { clockIn, clockOut, type ClockResult } from "@/modules/attendance/data";
+import { positionOf } from "@/lib/auth/positions";
 
 /**
  * The clock.
@@ -36,6 +37,11 @@ async function requestInfo() {
 
 export async function punch(_prev: ClockResult | null, formData: FormData): Promise<ClockResult> {
   const { user, scope } = await requireScope();
+  /* An auditor is not a member of this office's staff and should not appear
+     in its attendance, or in the report that measures who arrives on time. */
+  if (positionOf(user.position).readOnly) {
+    return { ok: false, within: false, distance: -1, message: "This account only reads. It does not clock in." };
+  }
   if (!isStaff(user.role)) {
     return { ok: false, within: false, distance: -1, message: "Only staff clock in." };
   }

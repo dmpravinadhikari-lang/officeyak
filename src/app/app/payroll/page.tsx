@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { all } from "@/lib/db";
 import { requirePermission, scopeOf } from "@/lib/auth/current";
+import { can } from "@/lib/auth/access";
 import { branchFilter } from "@/lib/db/scope";
 import { Button, Card, Chip, Field, PageHeader, Panel, inputClass, type Tone } from "@/components/ui";
 import { peopleFor, runsFor } from "@/modules/payroll/data";
@@ -24,7 +25,9 @@ const npr = (n: number | null) => (n == null ? "not set" : `NPR ${n.toLocaleStri
  * person would be the wrong three weeks.
  */
 export default async function PayrollPage() {
-  const user = await requirePermission("payroll:run");
+  const user = await requirePermission("payroll:view");
+  /* Whether the buttons that write anything are drawn at all. */
+  const canRun = can(user, "payroll:run");
   // Opening payroll is itself the sensitive act: it is the one screen where
   // reading tells you what every colleague earns. Recorded, always.
   logSensitiveRead({ tenantId: user.tenantId, actorId: user.id, area: "payroll" });
@@ -59,9 +62,20 @@ export default async function PayrollPage() {
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Payroll"
-        sub="Paid by the Nepali month. A run stays a draft until you mark it paid, then it locks."
+        sub={canRun
+          ? "Paid by the Nepali month. A run stays a draft until you mark it paid, then it locks."
+          : "Salaries and past runs, to read. Opening a run and marking it paid belong to whoever runs the payroll."}
       />
 
+      {/*
+        The buttons are not drawn for somebody who may only read.
+        
+        The action refuses them anyway, so this is not the guard; it is the
+        honesty. An auditor brought in for a compliance check should not be
+        looking at "Open the run" and deciding whether to find out what it
+        does.
+      */}
+      {canRun && (
       <Card className="p-5">
         <h2 className="h-tight text-[16px]">Start a pay run</h2>
         <form action={startRun} className="mt-3 grid items-start gap-4 sm:grid-cols-3">
@@ -87,6 +101,7 @@ export default async function PayrollPage() {
           Nothing is paid until you say so.
         </p>
       </Card>
+      )}
 
       {runs.length > 0 && (
         <Panel title="Pay runs" note="Open one to edit it, line by line.">
@@ -123,6 +138,7 @@ export default async function PayrollPage() {
             ))}
           </ul>
         )}
+        {canRun && (
         <form action={savePayrollPerson} className="mt-4 grid gap-4 border-t border-line pt-4 sm:grid-cols-3">
           <div className="text-[13px] font-semibold text-ink sm:col-span-3">Add someone to payroll</div>
           <Field label="Name" name="pay_name">
@@ -149,6 +165,7 @@ export default async function PayrollPage() {
           </Field>
           <div className="sm:col-span-3"><SubmitButton variant="secondary" pendingLabel="Adding" doneLabel="Added">Add to payroll</SubmitButton></div>
         </form>
+        )}
       </Card>
     </div>
   );

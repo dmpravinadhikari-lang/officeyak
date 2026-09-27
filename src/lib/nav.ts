@@ -168,7 +168,7 @@ export function buildNav(
           // can take away again.
           { href: "/app/data", icon: "folder" as const, label: "Your data", state: "open" as const, hint: "Import and download" },
         ] : []),
-        ...(has("payroll") && may("payroll:run")
+        ...(has("payroll") && may("payroll:view")
           ? [{ href: "/app/payroll", icon: "wallet" as const, label: "Payroll", state: "open" as const }] : []),
         { href: "/app/profile", icon: "settings" as const, label: "Account & plan", state: "open" as const },
       ];

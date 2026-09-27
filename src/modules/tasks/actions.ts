@@ -9,12 +9,15 @@ import { shortDate } from "@/lib/dates";
 import { notify } from "@/lib/email/notify";
 import { logActivity } from "@/lib/crm/activity";
 import { claimTask, completeTask, createTask } from "@/modules/tasks/data";
+import { positionOf } from "@/lib/auth/positions";
 
 const clean = (v: FormDataEntryValue | null) => String(v ?? "").trim();
 
 export async function addTask(formData: FormData) {
   const { user, scope } = await requireScope();
   if (!isStaff(user.role)) return;
+  // An outside reader leaves no rows on somebody else's desk.
+  if (positionOf(user.position).readOnly) return;
 
   // The form offers one "Give it to" choice holding either "user:<id>" or
   // "team:<id>". The separate fields are still read for older callers.
