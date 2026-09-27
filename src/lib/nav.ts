@@ -65,6 +65,14 @@ export function buildNav(
     return [
       { group: null, items: [
         { href: "/app", icon: "home", label: "Home", state: "open", exact: true },
+        /*
+           "My application" sits second, above the practice tools.
+
+           A parent opening their progress link was shown the stage, the next
+           action, the money and who to ring. The student had none of it, so
+           the one question they actually have had no answer anywhere in the
+           product and they rang the office to ask it. */
+        { href: "/app/file", icon: "folder", label: "My application", hint: "Where your consultancy has got to", state: "open" },
         { href: "/app/profile", icon: "user", label: "My profile", state: "open" },
         { href: "/app/progress", icon: "trophy", label: "My progress", state: "open" },
       ] },

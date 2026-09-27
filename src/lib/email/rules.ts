@@ -1,6 +1,6 @@
 import { STALE_AFTER } from "@/modules/pipeline/stalled";
-import { all, now, one, run, uid } from "@/lib/db";
-import { localDay } from "@/lib/dates";
+import { all, now, one, run, scalar, uid } from "@/lib/db";
+import { localDay, shortDate } from "@/lib/dates";
 import { queueEmail } from "@/lib/email/queue";
 import { wants } from "@/lib/email/notify";
 import { queueMorningDigests } from "@/lib/email/digest";
@@ -316,7 +316,110 @@ const morningList: Rule = {
   },
 };
 
-export const RULES: Rule[] = [morningList, uncalledLeads, unclaimedLeads, stalledStudents, ownerWeek];
+
+/**
+ * The one email a student ever gets.
+ *
+ * Five rules existed and all five went to staff. The product's whole promise
+ * is that it rings when something needs you, and for the person the whole
+ * file is about it never rang once: not when their counsellor set a dated
+ * action, not when six documents were still missing a week before a deadline,
+ * not when a balance sat unpaid. They found out by being telephoned, which is
+ * the call this product exists to save.
+ *
+ * Weekly, and only when there is genuinely something to say. A student who is
+ * up to date gets nothing, because an email that arrives every Sunday saying
+ * "all fine" is an email nobody opens on the Sunday it matters.
+ *
+ * It asks for things and never scolds. A family that is late paying knows
+ * they are late; a reminder that reads as a demand is a reminder that makes
+ * them avoid the office rather than come in.
+ */
+const studentWeek: Rule = {
+  id: "week.student",
+  label: "What the consultancy needs from each student",
+  blurb: "Once a week, each student gets the next thing asked of them, the papers still missing, and anything left to pay. Only when there is something to say.",
+  who: "The student",
+  cadence: "weekly",
+  defaultOn: true,
+  run(tenantId, today) {
+    const rows = all<{
+      student_id: string; full_name: string; stage: string;
+      next_action: string | null; next_action_due: string | null;
+      counsellor_name: string | null;
+    }>(
+      `SELECT p.student_id, u.full_name, p.stage, p.next_action, p.next_action_due,
+              c.full_name AS counsellor_name
+         FROM pipeline_entries p
+         JOIN users u ON u.id = p.student_id
+         LEFT JOIN users c ON c.id = p.counsellor_id
+        WHERE p.tenant_id = ? AND p.stage NOT IN ('departed','lost')
+          AND u.active = 1 AND u.email IS NOT NULL`,
+      tenantId,
+    );
+
+    const slug = slugOf(tenantId);
+    let queued = 0, considered = 0;
+
+    for (const r of rows) {
+      if (!wants(r.student_id, "student.week")) continue;
+
+      const owed = scalar(
+        `SELECT COALESCE((SELECT SUM(amount_npr) FROM student_charges
+                           WHERE tenant_id = ? AND student_id = ? AND waived = 0), 0)
+              - COALESCE((SELECT SUM(amount_npr) FROM student_payments
+                           WHERE tenant_id = ? AND student_id = ?), 0)`,
+        tenantId, r.student_id, tenantId, r.student_id,
+      );
+      const missing = scalar(
+        `SELECT COUNT(*) FROM documents
+          WHERE tenant_id = ? AND student_id = ? AND status = 'rejected'`,
+        tenantId, r.student_id,
+      );
+
+      const lines: string[] = [];
+      if (r.next_action) {
+        // shortDate, so it reads "1 Oct" and not "2026-10-01". The person
+        // reading this is seventeen and on a phone.
+        lines.push(`  - ${r.next_action}${r.next_action_due ? `, by ${shortDate(r.next_action_due.slice(0, 10))}` : ""}`);
+      }
+      if (missing > 0) {
+        lines.push(`  - ${plural(missing, "document was", "documents were")} sent back and need uploading again`);
+      }
+      if (owed > 0) {
+        lines.push(`  - NPR ${owed.toLocaleString("en-IN")} is still to pay`);
+      }
+
+      // Nothing to say means nothing sent. That is the point.
+      if (!lines.length) continue;
+      considered += 1;
+
+      const body = [
+        `${r.full_name.split(" ")[0]},`,
+        "",
+        "Where your application stands this week:",
+        "",
+        ...lines,
+        "",
+        r.counsellor_name
+          ? `${r.counsellor_name} is looking after your file. Ring the office if any of this is wrong.`
+          : "Ring the office if any of this is wrong.",
+        "",
+        `Your file: ${link(slug, "/app/file")}`,
+        sign("What my consultancy needs from me"),
+      ].join("\n");
+
+      if (queueEmail({
+        tenantId, userId: r.student_id, kind: "student.week",
+        subject: "What is left on your application",
+        body, dedupeKey: `week.student:${r.student_id}:${today}`,
+      }) === "queued") queued += 1;
+    }
+    return { considered, queued };
+  },
+};
+
+export const RULES: Rule[] = [morningList, uncalledLeads, unclaimedLeads, stalledStudents, ownerWeek, studentWeek];
 export const ruleById = (id: string) => RULES.find((r) => r.id === id) ?? null;
 
 /* ------------------------------------------------------- switches and runs */

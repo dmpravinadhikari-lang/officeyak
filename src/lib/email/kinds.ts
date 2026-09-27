@@ -59,6 +59,12 @@ export const EMAIL_KINDS = {
     staffOnly: true,
     adminOnly: false,
   },
+  "student.week": {
+    label: "What my consultancy needs from me",
+    blurb: "Once a week: the next thing they asked you for, the papers still missing, and anything left to pay.",
+    staffOnly: false,
+    adminOnly: false,
+  },
   "checklist.deadline": {
     label: "Student deadline reminders",
     blurb: "A student of yours is running out of time on a dated step.",

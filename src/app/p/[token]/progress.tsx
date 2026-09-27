@@ -2,6 +2,7 @@ import { Logo } from "@/components/Logo";
 import { Icon } from "@/components/Icon";
 import { Card, Chip, Meter } from "@/components/ui";
 import { npr } from "@/lib/terms";
+import { shortDate } from "@/lib/dates";
 import { showBand } from "@/modules/mock-tests/bands";
 import type { ParentSummary } from "@/modules/parents/summary";
 
@@ -63,9 +64,70 @@ export function ProgressPage({
           <Card className="border-brand-200 bg-brand-50/60 p-5">
             <div className="text-[11px] font-semibold uppercase tracking-[0.13em] text-brand-600">What happens next</div>
             <p className="mt-1.5 text-[16px] font-semibold text-ink">{s.nextAction.what}</p>
+            {/* shortDate, not toLocaleDateString: the raw call rendered
+                "10/1/2026" on this page while every other date in the product
+                reads "1 Oct", and a parent should not have to work out which
+                number is the month. */}
             {s.nextAction.due && (
-              <p className="mt-1 text-[13px] text-ink-2">By {new Date(s.nextAction.due).toLocaleDateString()}</p>
+              <p className="mt-1 text-[13px] text-ink-2">By {shortDate(s.nextAction.due.slice(0, 10))}</p>
             )}
+          </Card>
+        )}
+
+        {/* ------------------------------------------------------------- bill */}
+        {s.bill && (
+          <Card className="overflow-hidden">
+            <div className="border-b border-line bg-wash/60 px-5 py-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h2 className="h-tight text-[15px]">What you have paid this consultancy</h2>
+                {s.bill.lastPaidOn && (
+                  <span className="text-[12.5px] text-muted">
+                    Last payment {shortDate(s.bill.lastPaidOn.slice(0, 10))}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="grid gap-px bg-line sm:grid-cols-3">
+              {[
+                { label: "Charged", value: s.bill.charged, tone: "text-ink" },
+                { label: "Paid", value: s.bill.paid, tone: "text-teal-700" },
+                { label: "Still to pay", value: s.bill.balance, tone: s.bill.balance > 0 ? "text-danger-600" : "text-teal-700" },
+              ].map((x) => (
+                <div key={x.label} className="bg-panel px-5 py-4">
+                  <div className="text-[12.5px] text-muted">{x.label}</div>
+                  <div className={`num mt-1 text-[22px] font-semibold ${x.tone}`}>{npr(x.value)}</div>
+                </div>
+              ))}
+            </div>
+            <p className="border-t border-line px-5 py-3 text-[12.5px] leading-relaxed text-muted">
+              {npr(s.bill.ours)} is {s.consultancy}&rsquo;s own charge for their work.
+              {s.bill.passedThrough > 0 && ` ${npr(s.bill.passedThrough)} is money they pass on to somebody else, such as a test centre or an embassy.`}
+              {" "}Ask them before paying anything that does not appear here.
+            </p>
+          </Card>
+        )}
+
+        {/* ---------------------------------------------------------- classes */}
+        {s.classes.length > 0 && (
+          <Card className="overflow-hidden">
+            <div className="border-b border-line bg-wash/60 px-5 py-3">
+              <h2 className="h-tight text-[15px]">Classes, and whether {firstName} goes</h2>
+            </div>
+            <ul className="divide-y divide-line">
+              {s.classes.map((c) => (
+                <li key={c.name} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
+                  <div className="min-w-0">
+                    <div className="text-[14.5px] font-semibold text-ink">{c.name}</div>
+                    <div className="text-[13px] text-muted">{c.when || "Times not set yet"}</div>
+                  </div>
+                  {c.attendedPct === null
+                    ? <Chip tone="grey">Register not started</Chip>
+                    : <Chip tone={c.attendedPct >= 80 ? "teal" : c.attendedPct >= 60 ? "gold" : "danger"}>
+                        In {c.attendedPct}% of {c.marked} classes
+                      </Chip>}
+                </li>
+              ))}
+            </ul>
           </Card>
         )}
 
