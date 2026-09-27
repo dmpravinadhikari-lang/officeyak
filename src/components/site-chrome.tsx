@@ -81,7 +81,7 @@ export function CtaBand({
 const COLUMNS = [
   { head: "Product", links: [["Student leads", "/#modules"], ["Attendance", "/#product"], ["Mock tests and AI interview", "/#students"], ["SOP Studio", "/tools"], ["HR and payroll", "/#modules"]] },
   { head: "Company", links: [["Pricing", "/#pricing"], ["Security", "/#security"], ["Log in", "/login"], ["Start free", "/signup"]] },
-  { head: "Guides", links: [["All guides", "/blog"], ["Free student tools", "/tools"], ["True cost calculator", "/tools/cost"], ["University finder", "/tools/universities"]] },
+  { head: "Guides", links: [["All guides", "/blog"], ["Study in the UK", "/study/uk"], ["Free student tools", "/tools"], ["True cost calculator", "/tools/cost"], ["University finder", "/tools/universities"]] },
 ];
 
 export function SiteFooter() {

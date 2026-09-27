@@ -19,8 +19,8 @@ a calculator attached.
 
 | Keyword | Page to build | Status |
 | --- | --- | --- |
-| cost of student visa to uk | /study/uk/cost | todo |
-| study in uk | /study/uk | todo |
+| study in uk | /study/uk | **live** |
+| cost of student visa to uk | /study/uk, the funds section | **live**, covered by the same page |
 | cost of student visa to canada | /study/canada/cost | todo |
 | study in canada | /study/canada | todo |
 | cost of student visa to usa | /study/usa/cost | todo |
@@ -31,6 +31,15 @@ a calculator attached.
 | study in new zealand | /study/new-zealand | todo |
 | cost of student visa to ireland | /study/ireland/cost | todo |
 | study in ireland | /study/ireland | todo |
+
+
+## A note on the first one
+
+`study in uk` and `cost of student visa to uk` were queued as two pages and
+are one. The funds requirement is the reason somebody searches either of
+them, and splitting it across two pages would have meant two thin pages
+competing with each other rather than one that answers the question. The
+remaining destinations should follow the same shape.
 
 ## Needs research before writing
 

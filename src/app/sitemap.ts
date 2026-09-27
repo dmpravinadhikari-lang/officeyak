@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { allPosts } from "@/lib/blog";
+import { destinationSlugs } from "@/modules/study/destinations";
 import { BRAND } from "@/lib/brand";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || `https://${BRAND.domain}`;
@@ -29,8 +30,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: path === "/tools" ? 0.9 : 0.8,
   }));
 
+  // A destination page answers "study in the UK" and "cost of a UK student
+  // visa", which are the two highest intent searches a student makes.
+  const destinations = destinationSlugs().map((slug) => ({
+    url: `${SITE}/study/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.9,
+  }));
+
   return [
     { url: SITE, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
+    ...destinations,
     { url: `${SITE}/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     ...tools,
     ...posts,
