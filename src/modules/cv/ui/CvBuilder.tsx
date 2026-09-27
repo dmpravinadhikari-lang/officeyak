@@ -639,9 +639,15 @@ export function CvBuilder() {
         <span className="mx-auto block w-[132px]">
           <Panda width={132} sway />
         </span>
-        <h1 className="mt-6 text-[2rem] font-black leading-tight tracking-tight text-navy sm:text-[2.4rem]">
+        {/*
+          An h2, not an h1. The page around this builder has its own h1 in the
+          hero, and two h1s means a screen reader announces two subjects and a
+          search engine has to choose between them. The classes are unchanged,
+          so it looks exactly as it did.
+        */}
+        <h2 className="mt-6 text-[2rem] font-black leading-tight tracking-tight text-navy sm:text-[2.4rem]">
           Create your CV in a few clicks, for FREE.
-        </h1>
+        </h2>
         <p className="mx-auto mt-4 max-w-md text-[1.02rem] leading-relaxed text-ink-2">
           Eight short questions in plain words. We write it up properly, you tick what is true, and
           you download it.
