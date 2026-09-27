@@ -19,7 +19,7 @@ export default function Offline() {
           connection once the page has loaded once.
         </p>
         <Link href="/"
-          className="mt-8 inline-flex min-h-[44px] items-center rounded-[10px] bg-brand-500 px-6 text-sm font-semibold text-ink">
+          className="oy-press mt-8 inline-flex min-h-[44px] items-center rounded-[10px] bg-brand-500 px-6 text-sm font-semibold text-ink">
           Try again
         </Link>
       </div>

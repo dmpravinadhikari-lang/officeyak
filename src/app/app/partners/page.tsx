@@ -7,6 +7,7 @@ import {
   partnersForOwner, partnersForStaff, PRIORITY_TIERS, tierOf,
 } from "@/modules/partners/data";
 import { savePartner } from "@/modules/partners/actions";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Partners, OfficeYak" };
 
@@ -154,7 +155,7 @@ export default async function PartnersPage() {
             )}
 
             <div className="sm:col-span-2">
-              <Button type="submit">Add partner</Button>
+              <SubmitButton pendingLabel="Adding" doneLabel="Added">Add partner</SubmitButton>
               {seesMoney && (
                 <p className="mt-2 text-[12px] text-muted">
                   Commission is visible to you and to other consultancy admins. It never appears on

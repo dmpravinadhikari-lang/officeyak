@@ -7,6 +7,7 @@ import { COUNTRIES, COUNTRY_CODES, INTERVIEW_KINDS, country } from "@/lib/countr
 import { getProfile } from "@/lib/profile";
 import { Alert, Button, Card, Chip, Empty, Field, inputClass } from "@/components/ui";
 import { requireModule } from "@/lib/auth/module-guard";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "AI Mock Interview, OfficeYak" };
 
@@ -60,7 +61,7 @@ export default async function InterviewListPage() {
             </select>
           </Field>
           <div className="flex items-end">
-            <Button type="submit" size="md">Begin interview</Button>
+            <SubmitButton size="md" pendingLabel="Starting" doneLabel={null}>Begin interview</SubmitButton>
           </div>
         </form>
         <p className="mt-4 text-[12.5px] leading-relaxed text-muted">

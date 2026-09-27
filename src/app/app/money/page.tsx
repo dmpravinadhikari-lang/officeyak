@@ -7,6 +7,7 @@ import {
   commissionSummary, uninvoicedPlacements, COMMISSION_STATUSES,
 } from "@/modules/partners/commission";
 import { addCommission, moveCommission, removeCommission } from "./actions";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Money coming in, OfficeYak" };
 
@@ -128,12 +129,9 @@ export default async function MoneyPage() {
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  className="inline-flex min-h-[40px] items-center gap-1.5 rounded-[10px] bg-ink px-4 text-[13.5px] font-semibold text-white hover:bg-ink-2"
-                >
+                <SubmitButton pendingLabel="Recording" doneLabel="Recorded">
                   <Icon name="plus" size={15} /> Record
-                </button>
+                </SubmitButton>
               </form>
             ))}
             {candidates.length > 12 && (
@@ -197,9 +195,9 @@ export default async function MoneyPage() {
                             <form action={moveCommission}>
                               <input type="hidden" name="id" value={c.id} />
                               <input type="hidden" name="status" value="invoiced" />
-                              <button type="submit" className="rounded-[10px] border border-line-2 px-2.5 py-1 text-[12px] font-semibold text-ink-2 hover:border-brand-400 hover:text-brand-600">
+                              <SubmitButton variant="secondary" size="sm" pendingLabel="Saving" doneLabel="Invoiced">
                                 Invoiced
-                              </button>
+                              </SubmitButton>
                             </form>
                           )}
                           {(c.status === "expected" || c.status === "invoiced") && (
@@ -213,25 +211,25 @@ export default async function MoneyPage() {
                                   placeholder={String(c.expected_npr)}
                                   className="min-h-[32px] w-[104px] rounded-lg border border-line-2 px-2 text-[12.5px]"
                                 />
-                                <button type="submit" className="rounded-[10px] bg-brand-500 px-2.5 py-1 text-[12px] font-semibold text-ink hover:bg-brand-400">
+                                <SubmitButton size="sm" pendingLabel="Saving" doneLabel="Received">
                                   Received
-                                </button>
+                                </SubmitButton>
                               </form>
                               <form action={moveCommission}>
                                 <input type="hidden" name="id" value={c.id} />
                                 <input type="hidden" name="status" value="written_off" />
-                                <button type="submit" className="px-2 py-1 text-[12px] font-medium text-muted hover:text-danger-600">
+                                <SubmitButton variant="ghost" size="sm" pendingLabel="Saving" doneLabel="Written off">
                                   Write off
-                                </button>
+                                </SubmitButton>
                               </form>
                             </>
                           )}
                           {c.status === "received" && (
                             <form action={removeCommission}>
                               <input type="hidden" name="id" value={c.id} />
-                              <button type="submit" className="px-2 py-1 text-[12px] font-medium text-muted hover:text-danger-600">
+                              <SubmitButton variant="ghost" size="sm" pendingLabel="Removing" doneLabel={null}>
                                 Remove
-                              </button>
+                              </SubmitButton>
                             </form>
                           )}
                         </div>

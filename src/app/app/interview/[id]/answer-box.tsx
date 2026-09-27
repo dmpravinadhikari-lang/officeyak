@@ -3,8 +3,21 @@
 import { useActionState, useRef } from "react";
 import { endEarly, retryQuestion, submitAnswer, type ActionState } from "@/modules/ai-interview/actions";
 import { Alert, Button, Card, Chip } from "@/components/ui";
+import { BellMotion } from "@/components/motion/BellMotion";
 
 const initial: ActionState = { ok: true };
+
+/** A label on a button that is waiting for the model. The bell swings for as
+ *  long as the answer is coming, so a several-second wait does not read as a
+ *  page that has stopped. */
+function Busy({ children }: { children: string }) {
+  return (
+    <>
+      <BellMotion size={15} state="swing" tone="mono" className="shrink-0" />
+      {children}
+    </>
+  );
+}
 
 export function AnswerBox({
   sessionId, question, intent, isFollowup, answered,
@@ -31,13 +44,13 @@ export function AnswerBox({
         {error?.message && <div className="mt-4"><Alert tone="danger">{error.message}</Alert></div>}
         <form action={retryAction} className="mt-4 flex gap-2">
           <input type="hidden" name="id" value={sessionId} />
-          <Button type="submit" disabled={busy}>{retrying ? "Asking…" : "Ask the next question"}</Button>
+          <Button type="submit" disabled={busy}>{retrying ? <Busy>Asking…</Busy> : "Ask the next question"}</Button>
         </form>
         {answered > 0 && (
           <form action={endAction} className="mt-2">
             <input type="hidden" name="id" value={sessionId} />
             <Button type="submit" variant="ghost" size="sm" disabled={busy}>
-              {ending ? "Writing your report…" : "End here and get my report"}
+              {ending ? <Busy>Writing your report…</Busy> : "End here and get my report"}
             </Button>
           </form>
         )}
@@ -66,7 +79,7 @@ export function AnswerBox({
         />
         <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line bg-wash/40 px-5 py-3">
           <Button type="submit" disabled={busy}>
-            {answering ? "Assessing your answer…" : "Submit answer"}
+            {answering ? <Busy>Assessing your answer…</Busy> : "Submit answer"}
           </Button>
           <button
             type="submit" formAction={endAction} disabled={busy || answered === 0}

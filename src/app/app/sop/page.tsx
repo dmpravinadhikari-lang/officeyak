@@ -6,6 +6,7 @@ import { createSopDoc } from "@/modules/sop-studio/actions";
 import { COUNTRIES, COUNTRY_CODES, country } from "@/lib/countries";
 import { Button, Card, Chip, Empty, Field, inputClass } from "@/components/ui";
 import { requireModule } from "@/lib/auth/module-guard";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "SOP Studio, OfficeYak" };
 
@@ -53,7 +54,7 @@ export default async function SopListPage() {
             <input id="title" name="title" className={inputClass} placeholder="Wollongong, MIT" />
           </Field>
           <div className="flex items-end">
-            <Button type="submit" size="md">Create statement</Button>
+            <SubmitButton size="md" pendingLabel="Creating" doneLabel={null}>Create statement</SubmitButton>
           </div>
         </form>
       </Card>

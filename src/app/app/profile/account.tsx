@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { changePassword, saveMyDetails, signOutEverywhereElse, type AccountState } from "@/modules/account/actions";
 import { Alert, Button, Card, Field, inputClass } from "@/components/ui";
 import { Icon } from "@/components/Icon";
+import { SubmitButton } from "@/components/ui-motion";
 
 const initial: AccountState = { ok: true };
 
@@ -81,7 +82,7 @@ export function PasswordCard({ google, otherSessions }: { google: boolean; other
         </span>
         {otherSessions > 0 && (
           <form action={signOutEverywhereElse} className="ml-auto">
-            <Button type="submit" variant="secondary" size="sm">Sign out everywhere else</Button>
+            <SubmitButton variant="secondary" size="sm" pendingLabel="Signing out" doneLabel="Signed out">Sign out everywhere else</SubmitButton>
           </form>
         )}
       </div>

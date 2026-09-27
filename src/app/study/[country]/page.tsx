@@ -119,13 +119,13 @@ export default async function DestinationPage({
           <div className="mt-9 flex flex-wrap gap-2.5">
             <Link
               href="/tools/cost"
-              className="inline-flex min-h-[50px] items-center justify-center rounded-[10px] bg-brand-500 px-[22px] text-[16px] font-semibold text-ink transition-colors hover:bg-brand-400"
+              className="oy-press inline-flex min-h-[50px] items-center justify-center rounded-[10px] bg-brand-500 px-[22px] text-[16px] font-semibold text-ink transition-colors hover:bg-brand-400"
             >
               Work out your own figure
             </Link>
             <Link
               href="/tools/eligibility"
-              className="inline-flex min-h-[50px] items-center justify-center rounded-[10px] border border-line-2 bg-panel px-[22px] text-[16px] font-semibold text-ink transition-colors hover:border-brand-400 hover:text-brand-600"
+              className="oy-press inline-flex min-h-[50px] items-center justify-center rounded-[10px] border border-line-2 bg-panel px-[22px] text-[16px] font-semibold text-ink transition-colors hover:border-brand-400 hover:text-brand-600"
             >
               Check if you are eligible
             </Link>

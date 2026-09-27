@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { setUpDevice, signOutDevice, type DeviceState } from "@/modules/kiosk/actions";
 import { Alert, Button, Field, inputClass } from "@/components/ui";
+import { SubmitButton } from "@/components/ui-motion";
 
 const initial: DeviceState = { ok: true };
 
@@ -26,7 +27,7 @@ export function DeviceSetup({
           <span className="font-medium">/kiosk</span> on it and leave it on that page.
         </Alert>
         <form action={signOutDevice}>
-          <Button type="submit" variant="danger" size="sm">Stop using this device as a clock</Button>
+          <SubmitButton variant="danger" size="sm" pendingLabel="Stopping" doneLabel={null}>Stop using this device as a clock</SubmitButton>
         </form>
       </div>
     );

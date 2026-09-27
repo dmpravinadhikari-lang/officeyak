@@ -3,8 +3,27 @@
 import { useActionState, useState } from "react";
 import { generateDraft, reviewDoc, reviseDoc, saveEdit, type ActionState } from "@/modules/sop-studio/actions";
 import { Alert, Button, Card, Chip, inputClass } from "@/components/ui";
+import { Skeleton } from "@/components/ui-motion";
+import { BellMotion } from "@/components/motion/BellMotion";
 
 const initial: ActionState = { ok: true };
+
+/**
+ * The label on a button that is waiting for the model.
+ *
+ * This is the longest wait anywhere in OfficeYak - the model takes several
+ * seconds to write a statement - and it was the stillest thing on the screen:
+ * the word changed and nothing else did, which reads as a page that has
+ * frozen. The bell swings for as long as the answer is coming.
+ */
+function Busy({ children }: { children: string }) {
+  return (
+    <>
+      <BellMotion size={15} state="swing" tone="mono" className="shrink-0" />
+      {children}
+    </>
+  );
+}
 
 type Version = { id: string; no: number; source: string; words: number; note: string | null; at: string };
 
@@ -46,7 +65,7 @@ export function SopWorkbench({
             />
             <div>
               <Button type="submit" disabled={busy}>
-                {drafting ? "Writing your draft…" : "Write a first draft (3 credits)"}
+                {drafting ? <Busy>Writing your draft…</Busy> : "Write a first draft (3 credits)"}
               </Button>
             </div>
           </form>
@@ -62,6 +81,19 @@ export function SopWorkbench({
           </div>
         </div>
 
+        {/*
+          While the model writes, the editor shows where the words will land
+          rather than an unchanged empty box. The sheet allows one shimmer
+          group per view and this is it.
+        */}
+        {(drafting || revising) ? (
+          <div className="px-5 py-6">
+            <Skeleton rows={8} />
+            <p className="mt-5 text-[13px] text-muted">
+              {drafting ? "Writing your first draft. This takes a few seconds." : "Rewriting around the problems it found."}
+            </p>
+          </div>
+        ) : (
         <form action={saveAction}>
           <input type="hidden" name="id" value={docId} />
           <textarea
@@ -72,31 +104,32 @@ export function SopWorkbench({
           />
           <div className="flex flex-wrap items-center gap-2 border-t border-line bg-wash/40 px-5 py-3">
             <Button type="submit" variant="secondary" size="sm" disabled={busy || text.trim().length < 40}>
-              {saving ? "Saving…" : "Save as new version"}
+              {saving ? <Busy>Saving…</Busy> : "Save as new version"}
             </Button>
             <span className="text-[12px] text-muted">Every save is kept, so you can always go back.</span>
           </div>
         </form>
+        )}
       </Card>
 
       <div className="flex flex-wrap gap-2">
         <form action={reviewAction}>
           <input type="hidden" name="id" value={docId} />
           <Button type="submit" disabled={busy || !hasDraft}>
-            {reviewing ? "Assessing…" : "Score this statement (2 credits)"}
+            {reviewing ? <Busy>Assessing…</Busy> : "Score this statement (2 credits)"}
           </Button>
         </form>
         <form action={reviseAction}>
           <input type="hidden" name="id" value={docId} />
           <Button type="submit" variant="secondary" disabled={busy || !hasDraft}>
-            {revising ? "Revising…" : "Rewrite addressing the problems (2 credits)"}
+            {revising ? <Busy>Revising…</Busy> : "Rewrite addressing the problems (2 credits)"}
           </Button>
         </form>
         {hasDraft && (
           <form action={draftAction}>
             <input type="hidden" name="id" value={docId} />
             <Button type="submit" variant="ghost" disabled={busy}>
-              {drafting ? "Writing…" : "Start a fresh draft"}
+              {drafting ? <Busy>Writing…</Busy> : "Start a fresh draft"}
             </Button>
           </form>
         )}

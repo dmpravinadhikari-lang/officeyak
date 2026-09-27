@@ -9,6 +9,7 @@ import { shortDate } from "@/lib/dates";
 import { addTeam } from "@/modules/staff/actions";
 import { AddStaff } from "./add-staff";
 import { addExperience, saveEmployee } from "@/modules/payroll/actions";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Staff, OfficeYak" };
 
@@ -78,7 +79,7 @@ export default async function PeoplePage() {
         actions={
           <a
             href="/app/access"
-            className="inline-flex min-h-[40px] items-center gap-2 rounded-[10px] border border-line-2 bg-panel px-4 text-[13.5px] font-semibold text-ink hover:border-brand-400 hover:text-brand-600"
+            className="oy-press inline-flex min-h-[40px] items-center gap-2 rounded-[10px] border border-line-2 bg-panel px-4 text-[13.5px] font-semibold text-ink hover:border-brand-400 hover:text-brand-600"
           >
             <Icon name="lock" size={15} /> What each person can open
           </a>
@@ -164,7 +165,7 @@ export default async function PeoplePage() {
                   <Field label="Pay band" name={`band-${p.id}`} hint="A band like B2, not a salary.">
                     <input id={`band-${p.id}`} name="salary_band" defaultValue={p.salary_band ?? ""} className={inputClass} placeholder="B2" />
                   </Field>
-                  <div className="sm:col-span-3"><Button type="submit" variant="secondary">Save details</Button></div>
+                  <div className="sm:col-span-3"><SubmitButton variant="secondary" pendingLabel="Saving" doneLabel="Saved">Save details</SubmitButton></div>
                 </form>
 
                 <form action={addExperience} className="mt-4 grid gap-3 border-t border-line pt-4 sm:grid-cols-4">
@@ -182,7 +183,7 @@ export default async function PeoplePage() {
                   <Field label="To" name={`to-${p.id}`} hint="Leave empty if still there.">
                     <input id={`to-${p.id}`} type="month" name="ended_on" className={inputClass} />
                   </Field>
-                  <div className="sm:col-span-4"><Button type="submit" variant="secondary" size="sm">Add work</Button></div>
+                  <div className="sm:col-span-4"><SubmitButton variant="secondary" size="sm" pendingLabel="Adding" doneLabel="Added">Add work</SubmitButton></div>
                 </form>
               </details>
             )}
@@ -229,7 +230,7 @@ export default async function PeoplePage() {
                   ))}
                 </div>
               </fieldset>
-              <div className="sm:col-span-2"><Button type="submit"><Icon name="plus" size={16} /> Create team</Button></div>
+              <div className="sm:col-span-2"><SubmitButton pendingLabel="Creating" doneLabel="Created"><Icon name="plus" size={16} /> Create team</SubmitButton></div>
             </form>
           </Card>
         )}

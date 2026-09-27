@@ -13,6 +13,7 @@ import { Button, Card, Chip, Empty, LinkButton, NotSet, PageHeader, ScrollHint, 
 import { Icon } from "@/components/Icon";
 import { dueText, localDay } from "@/lib/dates";
 import { AddStudent, AddStudentButton } from "./add-student";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Students, OfficeYak" };
 
@@ -218,7 +219,7 @@ export default async function PipelinePage({
                 <option value="" disabled>Choose a counsellor</option>
                 {counsellors.map((c) => <option key={c.id} value={c.id}>{c.full_name}</option>)}
               </select>
-              <Button type="submit"><Icon name="check" size={15} /> Assign all</Button>
+              <SubmitButton pendingLabel="Assigning" doneLabel="Assigned"><Icon name="check" size={15} /> Assign all</SubmitButton>
             </div>
           </form>
         </Card>

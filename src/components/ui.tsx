@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Ridge } from "@/components/Logo";
 
 /* Shared building blocks. Everything visual in OfficeYak comes from here so the
    product stays consistent as modules are added. */
@@ -55,7 +56,13 @@ export type Tone = keyof typeof TONES;
 
 export function Chip({ tone = "grey", children }: { tone?: Tone; children: ReactNode }) {
   return (
-    <span className={`inline-flex items-center gap-1 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[11.5px] font-semibold ${TONES[tone]}`}>
+    /*
+     * max-w-full with the ellipsis, because whitespace-nowrap on a string of
+     * unknown length is a trap: one long label and the page scrolls sideways
+     * on a phone with nothing visibly wrong on it. Short labels, which is what
+     * a chip is for, are unaffected.
+     */
+    <span className={`inline-flex max-w-full items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap rounded-full border px-2.5 py-0.5 text-[11.5px] font-semibold ${TONES[tone]}`}>
       {children}
     </span>
   );
@@ -105,7 +112,7 @@ export function Button({
   return (
     <button
       type={type}
-      className={`inline-flex items-center justify-center gap-1.5 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${BUTTON[variant]} ${sizes[size]} ${className}`}
+      className={`oy-press inline-flex items-center justify-center gap-1.5 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${BUTTON[variant]} ${sizes[size]} ${className}`}
       {...rest}
     >
       {children}
@@ -121,7 +128,7 @@ export function LinkButton({
 }) {
   const sizes = { sm: "min-h-[36px] px-4 text-[13px]", md: "min-h-[40px] px-5 text-[13.5px]", lg: "min-h-[48px] px-7 text-[15px]" };
   return (
-    <Link href={href} className={`inline-flex items-center justify-center gap-1.5 rounded-[10px] font-semibold transition-colors ${BUTTON[variant]} ${sizes[size]} ${className}`}>
+    <Link href={href} className={`oy-press inline-flex items-center justify-center gap-1.5 rounded-[10px] font-semibold transition-colors ${BUTTON[variant]} ${sizes[size]} ${className}`}>
       {children}
     </Link>
   );
@@ -207,15 +214,39 @@ export function ScrollHint({ children = "Swipe the table sideways to see every c
   );
 }
 
+/**
+ * A list with nothing in it yet.
+ *
+ * The motion sheet draws this one specifically: the ridge draws itself in
+ * under a resting bell, because nothing to carry is the whole point. It was a
+ * dashed grey box, which is what every piece of software puts here and which
+ * reads as a fault rather than as a starting point.
+ *
+ * The icon the caller passes still sits on the bell, so each page keeps saying
+ * which list is empty.
+ */
 export function Empty({
   icon, title, children, action,
 }: { icon: ReactNode; title: string; children?: ReactNode; action?: ReactNode }) {
   return (
-    <div className="rounded-2xl border border-dashed border-line-2 bg-panel px-6 py-10 text-center">
-      <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-brand-50 text-brand-600" aria-hidden>{icon}</div>
-      <div className="h-tight mt-3 text-lg">{title}</div>
-      {children && <div className="mx-auto mt-2 max-w-md text-sm text-muted">{children}</div>}
-      {action && <div className="mt-5 flex justify-center">{action}</div>}
+    <div className="relative overflow-hidden rounded-2xl border border-line bg-panel px-6 pb-[84px] pt-12 text-center">
+      {/*
+        The ridge, drawn once, sitting on the floor of the panel.
+
+        It is short and the panel keeps 84px of floor clear beneath the copy,
+        because at full height the peaks climbed through the last line of text
+        and the sentence became hard to read. A background that competes with
+        the words is worse than no background.
+      */}
+      <div aria-hidden className="oy-draw pointer-events-none absolute inset-x-0 bottom-0">
+        <Ridge height={68} opacity={0.09} />
+      </div>
+      <div className="relative">
+        <div className="oy-rise mx-auto grid h-12 w-12 place-items-center rounded-full bg-brand-50 text-brand-600" aria-hidden>{icon}</div>
+        <div className="h-tight oy-rise oy-step-1 mt-3 text-lg">{title}</div>
+        {children && <div className="oy-rise oy-step-2 mx-auto mt-2 max-w-md text-sm text-muted">{children}</div>}
+        {action && <div className="oy-rise oy-step-3 mt-5 flex justify-center">{action}</div>}
+      </div>
     </div>
   );
 }

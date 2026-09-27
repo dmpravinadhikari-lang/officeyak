@@ -43,7 +43,7 @@ export default async function ResetPage({ params }: { params: Promise<{ token: s
           </Alert>
           <Link
             href="/forgot"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-[10px] bg-brand-500 px-5 text-[14.5px] font-semibold text-ink hover:bg-brand-400"
+            className="oy-press inline-flex min-h-[44px] items-center justify-center rounded-[10px] bg-brand-500 px-5 text-[14.5px] font-semibold text-ink hover:bg-brand-400"
           >
             Send me a new link
           </Link>

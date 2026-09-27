@@ -83,7 +83,7 @@ export function WalkInForm({
         </p>
         <button
           type="button" onClick={() => window.location.reload()}
-          className="mt-10 min-h-[52px] rounded-[10px] border border-line-2 px-7 text-[15px] font-semibold text-ink-2"
+          className="oy-press mt-10 min-h-[52px] rounded-[10px] border border-line-2 px-7 text-[15px] font-semibold text-ink-2"
         >
           Next person
         </button>

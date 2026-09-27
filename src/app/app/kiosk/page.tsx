@@ -7,6 +7,7 @@ import { whenText } from "@/lib/dates";
 import { currentDevice, devicesFor } from "@/modules/kiosk/device";
 import { retire } from "@/modules/kiosk/actions";
 import { DeviceSetup } from "./setup";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Front desk clock, OfficeYak" };
 export const dynamic = "force-dynamic";
@@ -65,7 +66,7 @@ export default async function KioskAdminPage() {
                 </span>
                 <form action={retire}>
                   <input type="hidden" name="id" value={d.id} />
-                  <Button type="submit" variant="danger" size="sm">Retire</Button>
+                  <SubmitButton variant="danger" size="sm" pendingLabel="Retiring" doneLabel="Retired">Retire</SubmitButton>
                 </form>
               </li>
             ))}

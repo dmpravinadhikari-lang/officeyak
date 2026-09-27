@@ -109,7 +109,7 @@ export function PricingCards({ rows }: { rows: Row[] }) {
                 filled button in the row is the one being recommended. */}
             <Link
               href="/signup"
-              className={`relative mt-7 inline-flex min-h-[46px] items-center justify-center rounded-[10px] px-6 text-[15px] font-semibold transition-colors ${
+              className={`oy-press relative mt-7 inline-flex min-h-[46px] items-center justify-center rounded-[10px] px-6 text-[15px] font-semibold transition-colors ${
                 row.featured
                   ? "bg-brand-500 text-ink hover:bg-brand-400"
                   : "border border-line-2 text-ink hover:border-brand-400 hover:text-brand-600"

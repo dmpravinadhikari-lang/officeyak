@@ -200,7 +200,7 @@ export function Wizard<A>({
           type="button"
           onClick={() => (last ? onFinish() : setStep(step + 1))}
           disabled={!current.done(answers)}
-          className="flex-1 rounded-[10px] bg-brand-500 py-3.5 text-[15px] font-semibold text-ink transition-colors hover:bg-brand-400 disabled:opacity-40"
+          className="oy-press flex-1 rounded-[10px] bg-brand-500 py-3.5 text-[15px] font-semibold text-ink transition-colors hover:bg-brand-400 disabled:opacity-40"
         >
           {last ? finishLabel : "Continue"}
         </button>

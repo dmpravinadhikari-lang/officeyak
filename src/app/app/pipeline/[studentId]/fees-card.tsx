@@ -3,6 +3,7 @@ import { Icon } from "@/components/Icon";
 import { shortDate } from "@/lib/dates";
 import { CHARGE_KINDS, PAYMENT_METHODS, type Ledger } from "@/modules/fees/data";
 import { chargeStudent, payStudent, toggleWaive, undoPayment } from "@/modules/fees/actions";
+import { SubmitButton } from "@/components/ui-motion";
 
 /**
  * The fee ledger on a student's own file.
@@ -132,9 +133,9 @@ export function FeesCard({
                     {CHARGE_KINDS.map((k) => <option key={k.id} value={k.id}>{k.label}</option>)}
                   </select>
                 </div>
-                <button type="submit" className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-[10px] border border-line-2 px-4 text-[13.5px] font-semibold text-ink hover:border-brand-400 hover:text-brand-600">
+                <SubmitButton variant="secondary" pendingLabel="Adding" doneLabel="Added">
                   <Icon name="plus" size={15} /> Add charge
-                </button>
+                </SubmitButton>
               </form>
 
               <form action={payStudent} className="flex flex-col gap-2">
@@ -150,9 +151,9 @@ export function FeesCard({
                   <input name="paid_on" type="date" className={inputClass} aria-label="Date paid" />
                   <input name="reference" className={inputClass} placeholder="Receipt or transaction no." />
                 </div>
-                <button type="submit" className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-[10px] bg-brand-500 px-4 text-[13.5px] font-semibold text-ink hover:bg-brand-400">
+                <SubmitButton pendingLabel="Recording" doneLabel="Recorded">
                   <Icon name="check" size={15} /> Record payment
-                </button>
+                </SubmitButton>
               </form>
             </div>
           )}

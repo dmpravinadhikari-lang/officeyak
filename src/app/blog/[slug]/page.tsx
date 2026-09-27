@@ -140,7 +140,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             </div>
             <Link
               href="/signup"
-              className="inline-flex min-h-[50px] shrink-0 items-center rounded-[10px] bg-brand-500 px-[22px] text-[16px] font-semibold text-ink transition-colors hover:bg-brand-400"
+              className="oy-press inline-flex min-h-[50px] shrink-0 items-center rounded-[10px] bg-brand-500 px-[22px] text-[16px] font-semibold text-ink transition-colors hover:bg-brand-400"
             >
               Start free
             </Link>

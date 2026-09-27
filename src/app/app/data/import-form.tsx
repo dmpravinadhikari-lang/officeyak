@@ -27,7 +27,7 @@ export function ImportForm() {
           They are on the student leads board, marked as imported so you can always tell them from
           the walk-ins. Open one and it behaves like any other enquiry.
         </p>
-        <a href="/app/leads" className="mt-3 inline-flex min-h-[40px] items-center gap-2 rounded-[10px] bg-ink px-4 text-[13.5px] font-semibold text-white hover:bg-ink-2">
+        <a href="/app/leads" className="oy-press mt-3 inline-flex min-h-[40px] items-center gap-2 rounded-[10px] bg-ink px-4 text-[13.5px] font-semibold text-white hover:bg-ink-2">
           Open the board <Icon name="arrow" size={15} />
         </a>
       </Card>
@@ -58,7 +58,7 @@ export function ImportForm() {
             <input type="hidden" name="kind" value="leads" />
             <button
               type="submit" disabled={previewing}
-              className="inline-flex min-h-[44px] items-center gap-2 rounded-[10px] border border-line-2 px-5 text-[14px] font-semibold text-ink hover:border-brand-400 hover:text-brand-600 disabled:opacity-60"
+              className="oy-press inline-flex min-h-[44px] items-center gap-2 rounded-[10px] border border-line-2 px-5 text-[14px] font-semibold text-ink hover:border-brand-400 hover:text-brand-600 disabled:opacity-60"
             >
               {previewing ? "Reading…" : "Check the file"}
             </button>
@@ -139,7 +139,7 @@ export function ImportForm() {
             <input type="hidden" name="plan" value={JSON.stringify(plan)} />
             <button
               type="submit" disabled={committing || plan.counts.new === 0}
-              className="inline-flex min-h-[44px] items-center gap-2 rounded-[10px] bg-brand-500 px-5 text-[14px] font-semibold text-ink hover:bg-brand-400 disabled:opacity-50"
+              className="oy-press inline-flex min-h-[44px] items-center gap-2 rounded-[10px] bg-brand-500 px-5 text-[14px] font-semibold text-ink hover:bg-brand-400 disabled:opacity-50"
             >
               <Icon name="check" size={16} />
               {committing ? "Bringing them in…" : `Add the ${plan.counts.new}`}

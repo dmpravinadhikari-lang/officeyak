@@ -4,6 +4,7 @@ import { Button, Card, Chip, ScrollHint, type Tone } from "@/components/ui";
 import { deductions, gross, linesFor, net, runById } from "@/modules/payroll/data";
 import { monthLabel, monthRange } from "@/modules/payroll/nepali-month";
 import { editLine, payRun } from "@/modules/payroll/actions";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Pay run, OfficeYak" };
 
@@ -121,7 +122,7 @@ export default async function RunPage({ params }: { params: Promise<{ runId: str
           </p>
           <form action={payRun} className="mt-3">
             <input type="hidden" name="run_id" value={runId} />
-            <Button type="submit">Mark paid, NPR {n(totals.net)}</Button>
+            <SubmitButton pendingLabel="Paying" doneLabel="Paid">Mark paid, NPR {n(totals.net)}</SubmitButton>
           </form>
         </Card>
       )}

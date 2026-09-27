@@ -4,6 +4,7 @@ import { allTestimonials, exampleCount, TINTS } from "@/modules/testimonials/dat
 import { createTestimonial, deleteTestimonial, toggleTestimonial, clearExamples } from "@/modules/testimonials/actions";
 import { Avatar } from "@/components/Avatar";
 import { Alert, Button, Card, Chip, Field, inputClass } from "@/components/ui";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Testimonials, OfficeYak" };
 
@@ -29,7 +30,7 @@ export default async function TestimonialsAdmin() {
           These carry a visible “Example, not a real student” label on the homepage. Add your real
           quotes below, then clear the placeholders in one go.
           <form action={clearExamples} className="mt-3">
-            <Button type="submit" variant="secondary" size="sm">Delete all placeholders</Button>
+            <SubmitButton variant="secondary" size="sm" pendingLabel="Deleting" doneLabel="Deleted">Delete all placeholders</SubmitButton>
           </form>
         </Alert>
       )}
@@ -60,7 +61,7 @@ export default async function TestimonialsAdmin() {
               <textarea id="quote" name="quote" required rows={3} className={inputClass} />
             </Field>
           </div>
-          <div><Button type="submit">Publish testimonial</Button></div>
+          <div><SubmitButton pendingLabel="Publishing" doneLabel="Published">Publish testimonial</SubmitButton></div>
         </form>
       </Card>
 

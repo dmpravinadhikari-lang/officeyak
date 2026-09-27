@@ -10,6 +10,7 @@ import { bandTone, showBand } from "@/modules/mock-tests/bands";
 import { isStaff } from "@/lib/auth/roles";
 import { Button, Card, Chip, Empty, StatTile } from "@/components/ui";
 import { requireModule } from "@/lib/auth/module-guard";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "IELTS & PTE Mocks, OfficeYak" };
 
@@ -80,7 +81,7 @@ export default async function MockTestsPage() {
             <div className="px-5 py-5">
               <form action={startMock} className="flex flex-wrap items-center gap-2">
                 <input type="hidden" name="paper_id" value={paper.id} />
-                <Button type="submit" size="md">Sit the full mock (10 credits)</Button>
+                <SubmitButton size="md" pendingLabel="Starting" doneLabel={null}>Sit the full mock (10 credits)</SubmitButton>
                 <span className="text-[13px] text-muted">or practise one section:</span>
               </form>
 

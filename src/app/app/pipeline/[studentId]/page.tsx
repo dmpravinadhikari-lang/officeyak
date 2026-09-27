@@ -27,6 +27,7 @@ import { setStudentModule } from "@/modules/pipeline/module-actions";
 import { normaliseSource, sourceOf } from "@/modules/pipeline/sources";
 import { ResendInvite } from "./resend";
 import { scalar } from "@/lib/db";
+import { SubmitButton } from "@/components/ui-motion";
 
 export default async function StudentPage({ params }: { params: Promise<{ studentId: string }> }) {
   const { studentId } = await params;
@@ -113,7 +114,7 @@ export default async function StudentPage({ params }: { params: Promise<{ studen
                 <option value="">Unassigned</option>
                 {counsellors.map((c) => <option key={c.id} value={c.id}>{c.full_name}</option>)}
               </select>
-              <Button type="submit" variant="secondary" size="sm">Save</Button>
+              <SubmitButton variant="secondary" size="sm">Save</SubmitButton>
             </div>
           </form>
 
@@ -123,7 +124,7 @@ export default async function StudentPage({ params }: { params: Promise<{ studen
             <input id="next_action" name="next_action" defaultValue={row.next_action ?? ""} className={inputClass} placeholder="Chase bank balance certificate" />
             <div className="flex gap-2">
               <input type="date" name="next_action_due" defaultValue={row.next_action_due?.slice(0, 10) ?? ""} className={inputClass} />
-              <Button type="submit" variant="secondary" size="sm">Save</Button>
+              <SubmitButton variant="secondary" size="sm">Save</SubmitButton>
             </div>
           </form>
         </div>
@@ -263,7 +264,7 @@ export default async function StudentPage({ params }: { params: Promise<{ studen
         <form action={postNote} className="mt-3 flex gap-2">
           <input type="hidden" name="student_id" value={studentId} />
           <input name="body" className={inputClass} placeholder="Called about the sponsor's tax clearance, father bringing it Sunday." />
-          <Button type="submit" variant="secondary" size="sm">Add</Button>
+          <SubmitButton variant="secondary" size="sm" pendingLabel="Adding" doneLabel="Added">Add</SubmitButton>
         </form>
 
         {notes.length > 0 && (
@@ -320,7 +321,7 @@ export default async function StudentPage({ params }: { params: Promise<{ studen
                         <option key={o.id} value={o.id}>{o.label}</option>
                       ))}
                     </select>
-                    <Button type="submit" variant="secondary" size="sm">Save</Button>
+                    <SubmitButton variant="secondary" size="sm">Save</SubmitButton>
                   </form>
                   <Chip tone={st.tone as Tone}>{st.label}</Chip>
                 </li>
@@ -357,7 +358,7 @@ export default async function StudentPage({ params }: { params: Promise<{ studen
             placeholder="First year tuition, NPR"
           />
 
-          <Button type="submit" variant="secondary">Add application</Button>
+          <SubmitButton variant="secondary" pendingLabel="Adding" doneLabel="Added">Add application</SubmitButton>
         </form>
       </Card>
 

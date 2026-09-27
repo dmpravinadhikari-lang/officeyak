@@ -8,6 +8,7 @@ import {
   classesFor, timetableFor, daysLabel, SUBJECTS, CLASS_STATUSES, WEEKDAYS,
 } from "@/modules/classes/data";
 import { saveClass } from "@/modules/classes/actions";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Classes, OfficeYak" };
 
@@ -147,9 +148,9 @@ export default async function ClassesPage() {
           </fieldset>
 
           <div className="sm:col-span-2 lg:col-span-3">
-            <button type="submit" className="inline-flex min-h-[44px] items-center gap-2 rounded-[10px] bg-ink px-5 text-[14px] font-semibold text-white hover:bg-ink-2">
+            <SubmitButton size="lg" pendingLabel="Starting" doneLabel={null}>
               <Icon name="plus" size={16} /> Start the batch
-            </button>
+            </SubmitButton>
           </div>
         </form>
       </Card>

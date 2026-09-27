@@ -11,6 +11,7 @@ import { NextUp, PhaseTrack, ProgressRing } from "@/modules/checklist/progress";
 import { activeEmailProvider } from "@/lib/email/provider";
 import { Alert, Button, Card, inputClass, Meter, StatTile } from "@/components/ui";
 import { requireModule } from "@/lib/auth/module-guard";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Application Checklist, OfficeYak" };
 
@@ -47,7 +48,7 @@ export default async function ChecklistPage() {
           </p>
           <form action={setIntake} className="mt-4 flex flex-wrap gap-2">
             <input name="target_intake" required aria-label="Course start month and year" className={`${inputClass} max-w-[220px]`} placeholder="July 2027" />
-            <Button type="submit">Build my plan</Button>
+            <SubmitButton pendingLabel="Building" doneLabel={null}>Build my plan</SubmitButton>
           </form>
         </Card>
       )}
@@ -86,7 +87,7 @@ export default async function ChecklistPage() {
             <form action={setIntake} className="mt-5 flex flex-wrap items-center gap-2 border-t border-line pt-4">
               <label htmlFor="intake-update" className="text-[13px] text-muted">Course starts</label>
               <input id="intake-update" name="target_intake" defaultValue={profile?.target_intake ?? ""} className={`${inputClass} max-w-[180px]`} />
-              <Button type="submit" variant="secondary" size="sm">Update dates</Button>
+              <SubmitButton variant="secondary" size="sm" pendingLabel="Saving" doneLabel="Saved">Update dates</SubmitButton>
             </form>
           </Card>
 

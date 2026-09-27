@@ -64,13 +64,13 @@ export function TopBar({ office, seesAll }: { office: string | null; seesAll: bo
         <div className="ml-auto flex items-center gap-2">
           <Link
             href="/app/tasks#add"
-            className="inline-flex min-h-[38px] items-center gap-1.5 rounded-[10px] border border-line-2 bg-panel px-3.5 text-[13px] font-semibold text-ink hover:border-brand-400 hover:text-brand-600"
+            className="oy-press inline-flex min-h-[38px] items-center gap-1.5 rounded-[10px] border border-line-2 bg-panel px-3.5 text-[13px] font-semibold text-ink hover:border-brand-400 hover:text-brand-600"
           >
             <Icon name="plus" size={15} /> Task
           </Link>
           <Link
             href="/app/pipeline?add=1#add-student"
-            className="inline-flex min-h-[38px] items-center gap-1.5 rounded-[10px] bg-brand-500 px-3.5 text-[13px] font-semibold text-ink hover:bg-brand-400"
+            className="oy-press inline-flex min-h-[38px] items-center gap-1.5 rounded-[10px] bg-brand-500 px-3.5 text-[13px] font-semibold text-ink hover:bg-brand-400"
           >
             <Icon name="plus" size={15} /> Student
           </Link>

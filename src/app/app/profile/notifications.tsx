@@ -5,6 +5,7 @@ import { prefsFor } from "@/lib/email/notify";
 import { saveEmailPrefs } from "@/lib/email/actions";
 import { Button, Card } from "@/components/ui";
 import { activeEmailProvider } from "@/lib/email/provider";
+import { SubmitButton } from "@/components/ui-motion";
 
 /**
  * What we are allowed to email this person about.
@@ -56,7 +57,7 @@ export async function NotificationSettings() {
         })}
 
         <div className="mt-2 flex flex-wrap items-center gap-3">
-          <Button type="submit">Save</Button>
+          <SubmitButton>Save</SubmitButton>
           <span className="text-[12.5px] text-muted">
             {provider.id === "outbox"
               ? "Mail is going to the local outbox on this machine, not to real inboxes."

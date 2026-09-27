@@ -9,6 +9,7 @@ import { PlanGate } from "@/components/PlanGate";
 import { currentMonth, monthLabel, previousMonth } from "@/modules/payroll/nepali-month";
 import { savePayrollPerson, startRun } from "@/modules/payroll/actions";
 import { logSensitiveRead } from "@/lib/security/audit";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Payroll, OfficeYak" };
 
@@ -78,7 +79,7 @@ export default async function PayrollPage() {
           </Field>
           <input type="hidden" name="calendar" value="bs" />
           <div className="sm:col-span-3">
-            <Button type="submit">Open the run</Button>
+            <SubmitButton pendingLabel="Opening" doneLabel={null}>Open the run</SubmitButton>
           </div>
         </form>
         <p className="mt-3 text-[12.5px] text-muted">
@@ -146,7 +147,7 @@ export default async function PayrollPage() {
               <option value="none">Neither</option>
             </select>
           </Field>
-          <div className="sm:col-span-3"><Button type="submit" variant="secondary">Add to payroll</Button></div>
+          <div className="sm:col-span-3"><SubmitButton variant="secondary" pendingLabel="Adding" doneLabel="Added">Add to payroll</SubmitButton></div>
         </form>
       </Card>
     </div>

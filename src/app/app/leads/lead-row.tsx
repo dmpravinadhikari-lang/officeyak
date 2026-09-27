@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { convertLead, setLeadState, takeLead, type ConvertState } from "@/modules/leads/actions";
 import { Alert, Button, Chip, inputClass, type Tone } from "@/components/ui";
 import { Icon } from "@/components/Icon";
+import { SubmitButton } from "@/components/ui-motion";
 
 const initial: ConvertState = { ok: true };
 
@@ -68,7 +69,7 @@ export function LeadRow({ lead, meId, canConvert }: { lead: Row; meId: string; c
               {/* Secondary, because this button repeats on every unclaimed
                   row. A colour that appears four times in a list is not
                   telling you which thing to press. */}
-              <Button type="submit" size="sm" variant="secondary">I will take it</Button>
+              <SubmitButton size="sm" variant="secondary" pendingLabel="Taking" doneLabel="Yours">I will take it</SubmitButton>
             </form>
           )
         )}
@@ -103,7 +104,7 @@ export function LeadRow({ lead, meId, canConvert }: { lead: Row; meId: string; c
                   <span className="text-[12px] font-medium text-ink">Ring back on</span>
                   <input type="date" name="follow_up_on" defaultValue={lead.follow_up_on ?? ""} className={`${inputClass} w-auto`} />
                 </label>
-                <Button type="submit" variant="secondary" size="sm">Save</Button>
+                <SubmitButton variant="secondary" size="sm">Save</SubmitButton>
                 <button
                   type="submit" name="status" value="lost"
                   className="min-h-[36px] rounded-full px-3 text-[13px] font-medium text-muted hover:text-danger-600"

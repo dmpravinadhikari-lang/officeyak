@@ -5,6 +5,7 @@ import { allTopics } from "@/modules/blog/topics";
 import { queueTopic, removeTopic } from "@/modules/blog/actions";
 import { DraftNow } from "./draft-now";
 import { Button, Card, Chip, Field, inputClass, StatTile, type Tone } from "@/components/ui";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Blog, OfficeYak" };
 export const dynamic = "force-dynamic";
@@ -93,7 +94,7 @@ export default async function BlogAdmin() {
                 {["Australia", "UK", "Canada", "USA", "Money", "Tests", "Visa", "Applying", "Choosing"].map((c) => <option key={c}>{c}</option>)}
               </select>
             </Field>
-            <div className="flex items-end"><Button type="submit">Add to queue</Button></div>
+            <div className="flex items-end"><SubmitButton pendingLabel="Adding" doneLabel="Added">Add to queue</SubmitButton></div>
             <div className="sm:col-span-4">
               <Field label="Angle" name="angle" hint="What this piece should argue, so two topics do not become the same article.">
                 <input id="angle" name="angle" className={inputClass} placeholder="Real monthly figures in NPR, and why the visa figure is lower than the truth" />

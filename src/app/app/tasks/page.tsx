@@ -8,6 +8,7 @@ import {
   branchTasks, dueState, myTasks, staffFor, teamsFor,
 } from "@/modules/tasks/data";
 import { addTask, finishTask, takeTask } from "@/modules/tasks/actions";
+import { SubmitButton } from "@/components/ui-motion";
 
 export const metadata = { title: "Tasks, OfficeYak" };
 
@@ -52,7 +53,7 @@ export default async function TasksPage({
             ? `You have ${mine.length} to do. ${overdue} ${overdue === 1 ? "is" : "are"} late.`
             : `You have ${mine.length} to do. Nothing is late.`}
         /* Ink: the top bar's "+ Task" already offers this on every screen. */
-        actions={<a href="#add" className="inline-flex min-h-[44px] items-center gap-2 rounded-[10px] bg-ink px-5 text-sm font-semibold text-white hover:bg-ink-2"><Icon name="plus" size={16} /> Add task</a>}
+        actions={<a href="#add" className="oy-press inline-flex min-h-[44px] items-center gap-2 rounded-[10px] bg-ink px-5 text-sm font-semibold text-white hover:bg-ink-2"><Icon name="plus" size={16} /> Add task</a>}
       />
 
       <Card className="overflow-hidden">
@@ -81,7 +82,7 @@ export default async function TasksPage({
                     <Chip tone={DUE_TONE[d]}>{dueText(t.due_on)}</Chip>
                     <form action={finishTask}>
                       <input type="hidden" name="id" value={t.id} />
-                      <Button type="submit" variant="secondary" size="sm">Mark done</Button>
+                      <SubmitButton variant="secondary" size="sm" pendingLabel="Saving" doneLabel="Done">Mark done</SubmitButton>
                     </form>
                   </div>
                 </li>
@@ -111,7 +112,7 @@ export default async function TasksPage({
                   <form action={takeTask}>
                     <input type="hidden" name="id" value={t.id} />
                     {/* Secondary: one per row, so not the view's primary. */}
-                    <Button type="submit" size="sm" variant="secondary">Take it</Button>
+                    <SubmitButton size="sm" variant="secondary" pendingLabel="Taking" doneLabel="Yours">Take it</SubmitButton>
                   </form>
                 </div>
               </li>
@@ -158,7 +159,7 @@ export default async function TasksPage({
               </div>
             </fieldset>
             <div className="sm:col-span-2">
-              <Button type="submit"><Icon name="plus" size={16} /> Add task</Button>
+              <SubmitButton pendingLabel="Adding" doneLabel="Added"><Icon name="plus" size={16} /> Add task</SubmitButton>
             </div>
           </form>
         </Card>

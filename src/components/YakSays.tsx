@@ -49,7 +49,7 @@ export function YakSays({
       {action && (
         <Link
           href={action.href}
-          className="inline-flex min-h-[36px] shrink-0 items-center gap-1.5 rounded-[10px] bg-ink px-3.5 text-[13px] font-semibold text-white transition-colors hover:bg-ink-2"
+          className="oy-press inline-flex min-h-[36px] shrink-0 items-center gap-1.5 rounded-[10px] bg-ink px-3.5 text-[13px] font-semibold text-white transition-colors hover:bg-ink-2"
         >
           {action.label} <Icon name="arrow" size={14} />
         </Link>

@@ -11,6 +11,7 @@ import {
   SUBJECTS, CLASS_STATUSES,
 } from "@/modules/classes/data";
 import { markRegister, enrolStudent, changeEnrolment } from "@/modules/classes/actions";
+import { SubmitButton } from "@/components/ui-motion";
 
 /**
  * One batch: who is in it, how often they come, and the register for a day.
@@ -85,7 +86,7 @@ export default async function ClassPage({
             <label htmlFor="on" className="text-[12.5px] text-muted">Day</label>
             <input id="on" type="date" name="on" defaultValue={day}
               className="min-h-[36px] rounded-lg border border-line-2 px-2 text-[13px]" />
-            <button type="submit" className="rounded-[10px] border border-line-2 px-3 py-1.5 text-[12.5px] font-semibold text-ink-2 hover:border-brand-400 hover:text-brand-600">
+            <button type="submit" className="oy-press rounded-[10px] border border-line-2 px-3 py-1.5 text-[12.5px] font-semibold text-ink-2 hover:border-brand-400 hover:text-brand-600">
               Show
             </button>
           </form>
@@ -128,9 +129,9 @@ export default async function ClassPage({
                 );
               })}
               <div className="flex flex-wrap items-center gap-3 px-5 py-4">
-                <button type="submit" className="inline-flex min-h-[44px] items-center gap-2 rounded-[10px] bg-brand-500 px-5 text-[14px] font-semibold text-ink hover:bg-brand-400">
+                <SubmitButton size="lg" pendingLabel="Saving" doneLabel="Register saved">
                   <Icon name="check" size={16} /> Save the register
-                </button>
+                </SubmitButton>
                 <span className="text-[12.5px] text-muted">
                   Ticked is present. Everyone is ticked by default, so you only untick who is missing.
                 </span>
@@ -176,9 +177,9 @@ export default async function ClassPage({
                 <option value="">Choose a student</option>
                 {addable.map((s) => <option key={s.id} value={s.id}>{s.full_name}</option>)}
               </select>
-              <button type="submit" className="inline-flex min-h-[40px] items-center gap-1.5 rounded-[10px] border border-line-2 px-4 text-[13.5px] font-semibold text-ink hover:border-brand-400 hover:text-brand-600">
+              <SubmitButton variant="secondary" pendingLabel="Enrolling" doneLabel="Enrolled">
                 <Icon name="plus" size={15} /> Enrol
-              </button>
+              </SubmitButton>
             </form>
           )}
         </Card>

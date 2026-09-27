@@ -28,7 +28,7 @@ const NAV = [
 
 /** Yak Orange with Ink on it: 6.79:1, where white on the same orange is 2.61. */
 const ORANGE =
-  "inline-flex items-center justify-center rounded-[10px] bg-brand-500 px-[18px] text-[15px] font-semibold text-ink transition-colors hover:bg-brand-400";
+  "oy-press inline-flex items-center justify-center rounded-[10px] bg-brand-500 px-[18px] text-[15px] font-semibold text-ink transition-colors hover:bg-brand-400";
 
 export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
   return (
@@ -71,7 +71,7 @@ export function CtaBand({
         </h2>
         <Link
           href="/signup"
-          className="inline-flex min-h-[50px] shrink-0 items-center justify-center rounded-[10px] bg-ink px-[22px] text-[16px] font-semibold text-white transition-colors hover:bg-ink-2"
+          className="oy-press inline-flex min-h-[50px] shrink-0 items-center justify-center rounded-[10px] bg-ink px-[22px] text-[16px] font-semibold text-white transition-colors hover:bg-ink-2"
         >
           {action}
         </Link>

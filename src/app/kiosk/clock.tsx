@@ -51,7 +51,7 @@ export function KioskClock({ people, office }: { people: Person[]; office: strin
         <p className="display mt-6 text-[32px]">{state.message}</p>
         <button
           type="button" onClick={() => { setPicked(null); setPin(""); setNote(""); }}
-          className="mt-10 min-h-[56px] rounded-[10px] border border-line-2 px-8 text-[16px] font-semibold text-ink-2"
+          className="oy-press mt-10 min-h-[56px] rounded-[10px] border border-line-2 px-8 text-[16px] font-semibold text-ink-2"
         >
           Next person
         </button>
@@ -180,7 +180,7 @@ export function KioskClock({ people, office }: { people: Person[]; office: strin
         type="submit"
         disabled={pending || pin.length < 4 || (out && note.trim().length < 3)}
         // The ink travels with the fill, as on every other clock-in button.
-        className={`mt-7 min-h-[64px] w-full rounded-[10px] text-[18px] font-semibold disabled:opacity-50 ${
+        className={`oy-press mt-7 min-h-[64px] w-full rounded-[10px] text-[18px] font-semibold disabled:opacity-50 ${
           out ? "bg-danger-600 text-white" : "bg-brand-500 text-ink"
         }`}
       >

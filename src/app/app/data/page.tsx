@@ -54,7 +54,7 @@ export default async function DataPage() {
 
         <a
           href="/api/account/export" download
-          className="mt-4 inline-flex min-h-[44px] items-center gap-2 rounded-[10px] bg-ink px-5 text-[14px] font-semibold text-white hover:bg-ink-2"
+          className="oy-press mt-4 inline-flex min-h-[44px] items-center gap-2 rounded-[10px] bg-ink px-5 text-[14px] font-semibold text-white hover:bg-ink-2"
         >
           <Icon name="folder" size={16} /> Download my data
         </a>

@@ -89,7 +89,16 @@ export function ScholarshipFinder({
                       {s.countries.length < 6 && ` · ${s.countries.map((k) => COUNTRIES[k].flag).join(" ")}`}
                     </p>
                   </div>
-                  <Chip tone="grey">{s.window}</Chip>
+                  {/*
+                    The deadline window is a sentence, not a label, so it is
+                    set as text. It was in a Chip, and a Chip does not wrap:
+                    on a 390px phone "Through participating universities,
+                    usually December to February" pushed the whole page
+                    sideways.
+                  */}
+                  <p className="min-w-0 shrink-0 text-right text-[12px] leading-snug text-muted sm:max-w-[190px]">
+                    {s.window}
+                  </p>
                 </div>
 
                 <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
@@ -119,7 +128,7 @@ export function ScholarshipFinder({
                 )}
 
                 <Link href={`/tools/scholarships/${s.id}`}
-                  className="mt-4 inline-flex min-h-11 items-center rounded-[10px] bg-brand-500 px-5 text-[13px] font-semibold text-ink hover:bg-brand-400 sm:min-h-0 sm:px-4 sm:py-2">
+                  className="oy-press mt-4 inline-flex min-h-11 items-center rounded-[10px] bg-brand-500 px-5 text-[13px] font-semibold text-ink hover:bg-brand-400 sm:min-h-0 sm:px-4 sm:py-2">
                   How to win it →
                 </Link>
               </Card>

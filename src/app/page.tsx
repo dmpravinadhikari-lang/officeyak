@@ -72,7 +72,7 @@ function Btn({
   return (
     <Link
       href={href}
-      className={`inline-flex min-h-[50px] items-center justify-center rounded-[10px] px-[22px] text-[16px] font-semibold transition-colors ${skin} ${className}`}
+      className={`oy-press inline-flex min-h-[50px] items-center justify-center rounded-[10px] px-[22px] text-[16px] font-semibold transition-colors ${skin} ${className}`}
     >
       {children}
     </Link>
