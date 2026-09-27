@@ -39,7 +39,11 @@ export type ActivityKind =
   | "practice.sop"
   | "parent.link_created"
   | "parent.link_revoked"
-  | "email.sent";
+  | "email.sent"
+  // Everything the consultancy holds, leaving the building in one file. Worth
+  // being able to look up afterwards.
+  | "data.exported"
+  | "data.imported";
 
 export type Activity = {
   id: string;
@@ -120,6 +124,8 @@ export function recentActivity(scope: Scope, limit = 60): Array<Activity & { stu
 export const ACTIVITY_STYLE: Record<string, { icon: string; tint: string }> = {
   "account.created":     { icon: "👤", tint: "sky" },
   "account.invited":     { icon: "✉️", tint: "sky" },
+  "data.exported":       { icon: "⬇️", tint: "lilac" },
+  "data.imported":       { icon: "⬆️", tint: "lilac" },
   "account.first_login": { icon: "🔓", tint: "mint" },
   "profile.updated":     { icon: "✏️", tint: "lilac" },
   "stage.changed":       { icon: "→",  tint: "brand" },

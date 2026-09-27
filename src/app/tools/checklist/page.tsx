@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   // One address per page, so the same content on www or on a
   // consultancy subdomain does not compete with it in search.
   alternates: { canonical: "/tools/checklist" },
-  title: "Study abroad application checklist and timeline from Nepal | OfficeYak",
+  title: "Study abroad checklist and timeline | OfficeYak",
   description:
-    "A dated, step-by-step application plan for Nepali students, IELTS, applications, education loan, bank balance, NOC, visa and departure, worked backwards from your intake month. Free, no account needed.",
+    "Every step from choosing a course to boarding, dated backwards from your intake month so nothing is left too late.",
 };
 
 export default function PublicChecklist() {

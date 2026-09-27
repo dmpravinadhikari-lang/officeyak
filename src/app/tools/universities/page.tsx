@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tools/universities" },
   title: "University finder for Nepali students | OfficeYak",
   description:
-    "Find universities in Australia, New Zealand, the UK, Ireland, the USA and Canada matched to your grades, budget and IELTS score. Shows what you can reach and what you cannot, with the reason. Free, no account.",
+    "Find universities that match your grades, your budget and your intake, across six destinations. Free, no account needed.",
 };
 
 export default function PublicUnis() {

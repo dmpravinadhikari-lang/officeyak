@@ -32,7 +32,7 @@ export async function GET() {
   logActivity(scope, {
     actorId: user.id,
     actorLabel: user.fullName,
-    kind: "account.invited",
+    kind: "data.exported",
     summary: `${user.fullName} downloaded a full data export`,
     detail: { files: files.length },
   });

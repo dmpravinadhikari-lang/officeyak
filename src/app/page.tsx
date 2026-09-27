@@ -37,7 +37,7 @@ export const metadata = {
   alternates: { canonical: "/" },
   title: `${BRAND.name}, software for education consultancies`,
   description:
-    "One system for every branch: student pipeline, attendance, documents, payroll and market research. Priced in NPR, USD, GBP, AUD, CAD and EUR. Free to start on your own subdomain.",
+    "Run every branch from one screen: leads, students, attendance, documents, payroll and market research, priced in Nepali rupees.",
 };
 
 /* -------------------------------------------------------------- the parts */

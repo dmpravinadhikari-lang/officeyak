@@ -6,7 +6,7 @@ import { BRAND } from "@/lib/brand";
 export const metadata: Metadata = {
   title: `Free CV maker for Nepali students | ${BRAND.name}`,
   description:
-    "Build a CV for a university, a scholarship or a job abroad. Set out the way admissions offices in Australia, the UK, Canada and New Zealand expect to read it. Free, no sign-up.",
+    "Build a CV for a university, scholarship or job abroad, laid out the way admissions offices expect to read it. Free, no sign-up.",
   alternates: { canonical: "/tools/cv-maker" },
 };
 

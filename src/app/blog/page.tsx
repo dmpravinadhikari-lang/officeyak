@@ -8,7 +8,7 @@ import { SiteHeader, SiteFooter, CtaBand } from "@/components/site-chrome";
 export const metadata: Metadata = {
   title: `Guides, ${BRAND.name}`,
   description:
-    "The NOC, student visas for Australia, the UK, the USA and Canada, statements of purpose, and what to do after a refusal. Written for Nepal, with the figures and the official source.",
+    "The NOC, student visas, statements of purpose and what to do after a refusal. Written for Nepal, with the figures and the official source.",
   alternates: { canonical: "/blog" },
 };
 

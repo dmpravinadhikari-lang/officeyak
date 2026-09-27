@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tools/scholarships" },
   title: "Scholarships for Nepali students studying abroad | OfficeYak",
   description:
-    "Scholarships open to Nepali students, Chevening, Australia Awards, Fulbright, Manaaki, Commonwealth, GREAT and institutional awards. What each one covers, what it demands, and when it closes. Free, no account.",
+    "Scholarships Nepali students can actually apply for, with the value, the deadline and who is eligible. Free to search.",
 };
 
 export default function PublicScholarships() {

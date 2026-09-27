@@ -1119,7 +1119,15 @@ export function CvBuilder() {
 
         <div className="mt-8 overflow-x-auto rounded-2xl border border-line bg-white p-4 sm:p-8">
           <div ref={printRef}>
-            <CvDocument cv={cv} template={template} />
+            {/*
+              The name renders as a paragraph rather than an h1 here, which
+              looks identical because .cv-name carries the styling. This copy
+              lives on /tools/cv-maker, which already has its own h1, and two
+              h1s on a page means a screen reader announces two subjects and
+              a search engine has to pick between them. The printed sheet
+              loses nothing a reader can see.
+            */}
+            <CvDocument cv={cv} template={template} sample />
           </div>
         </div>
       </div>

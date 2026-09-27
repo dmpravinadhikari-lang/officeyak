@@ -139,6 +139,9 @@ export function buildNav(
           { href: "/app/branches", icon: "building" as const, label: "Offices", state: "open" as const },
           { href: "/app/kiosk", icon: "clock" as const, label: "Front desk clock", state: "open" as const },
           { href: "/app/automations", icon: "inbox" as const, label: "Automatic emails", state: "open" as const },
+          // Both directions in one place: what you brought in, and what you
+          // can take away again.
+          { href: "/app/data", icon: "folder" as const, label: "Your data", state: "open" as const, hint: "Import and download" },
         ] : []),
         ...(has("payroll") && may("payroll:run")
           ? [{ href: "/app/payroll", icon: "wallet" as const, label: "Payroll", state: "open" as const }] : []),
