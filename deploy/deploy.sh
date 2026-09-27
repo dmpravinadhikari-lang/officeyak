@@ -48,6 +48,19 @@ tail -2 "$LOG"
 
 echo "==> building into a scratch directory, the site stays up"
 rm -rf .next-build
+mkdir -p .next-build
+
+# Carry the previous build's cache across.
+#
+# Without this every deploy starts from an empty cache, which means next/font
+# re-downloads the Google Fonts on every single build. That made builds three
+# times slower and, worse, made every deploy depend on a network fetch
+# succeeding: one hiccup and the build died with
+# "An error occurred in next/font: Cannot read properties of null".
+# The cache is Next's own and is safe to reuse across builds of the same app.
+if [ -d .next/cache ]; then
+  cp -r .next/cache .next-build/cache
+fi
 if ! OFFICEYAK_DIST_DIR=.next-build npm run build >>"$LOG" 2>&1; then
   echo "!!  build failed. The site is still on the old version. Last of $LOG:"
   tail -30 "$LOG"
