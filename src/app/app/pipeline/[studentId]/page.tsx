@@ -18,6 +18,9 @@ import { entitlementsFor } from "@/lib/modules/entitlements";
 import { readinessFor, weeklyStreak } from "@/lib/gamify/readiness";
 import { applicationsFor, statusOf, APPLICATION_STATUSES } from "@/modules/partners/applications";
 import { partnersForStaff } from "@/modules/partners/data";
+import { can } from "@/lib/auth/access";
+import { ledgerFor } from "@/modules/fees/data";
+import { FeesCard } from "./fees-card";
 import { addApplication, moveApplication } from "@/modules/partners/actions";
 import { setStudentModule } from "@/modules/pipeline/module-actions";
 import { normaliseSource, sourceOf } from "@/modules/pipeline/sources";
@@ -45,6 +48,15 @@ export default async function StudentPage({ params }: { params: Promise<{ studen
   const apps = applicationsFor(scope, studentId);
   // Names only: a counsellor must not see what any of them pays.
   const partners = partnersForStaff(scope);
+
+  /*
+   * A counsellor sees the balance because they need to know where the family
+   * stands before starting the next piece of work. The ledger itself, and
+   * taking a payment, belong to whoever handles money.
+   */
+  const ledger = ledgerFor(scope, studentId);
+  const seesFeeDetail = can(user, "money:view");
+  const managesFees = can(user, "money:manage");
   const readiness = readinessFor(studentId, scope.tenantId);
   const streak = weeklyStreak(studentId);
   const entitlements = entitlementsFor(studentId, scope.tenantId, user.tenantPlan).filter((e) => e.mod.perStudent);
@@ -345,6 +357,12 @@ export default async function StudentPage({ params }: { params: Promise<{ studen
           <Button type="submit" variant="secondary">Add application</Button>
         </form>
       </Card>
+
+      {/* ------------------------------------------------------------- fees */}
+      <FeesCard
+        studentId={studentId} ledger={ledger}
+        canSeeDetail={seesFeeDetail} canManage={managesFees}
+      />
 
       {/* --------------------------------------------------- how ready they are */}
       <Card className="p-5">

@@ -122,6 +122,8 @@ export function buildNav(
       // Beside the partners, because it is what the partners owe. Gated on
       // money:view, so a counsellor never sees it in the menu or at the URL.
       ...(may("money:view") ? [{ href: "/app/money", icon: "coins" as const, label: "Money coming in", state: "open" as const, hint: "Commission owed and received" }] : []),
+      // The other income line: what students owe this office directly.
+      ...(may("money:view") ? [{ href: "/app/fees", icon: "wallet" as const, label: "Student fees", state: "open" as const, hint: "Charged, paid and outstanding" }] : []),
       ...(may("students:share_parent") ? fromModule("parents", "Parents") : []),
       ...(!admin && may("hr:view") ? [{ href: "/app/people", icon: "people" as const, label: "Staff", state: "open" as const }] : []),
     ] },

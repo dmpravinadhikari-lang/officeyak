@@ -1188,3 +1188,61 @@ CREATE TABLE IF NOT EXISTS password_resets (
   created_at TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_resets_token ON password_resets(token_hash);
+
+
+-- ===========================================================================
+-- What a student owes, and what they have paid
+--
+-- A consultancy has two income lines. Commission from the institution, which
+-- is the commissions table above, and fees charged to the student directly,
+-- which is this. Both were missing; this is the second half.
+--
+-- Two tables rather than one, because a payment is rarely for one charge. A
+-- family pays fifteen thousand against a balance of forty, then the rest in
+-- Mangsir. Tying each payment to a specific charge would mean inventing an
+-- allocation nobody performed. The balance is the sum of one minus the sum of
+-- the other, which is also how the family thinks about it.
+--
+-- The `kind` column exists for one reason and it matters more than it looks.
+-- The complaints that damage a consultancy are almost never about the size of
+-- a fee; they are about a family discovering that a line they believed was a
+-- government charge was a service fee, or the reverse. An invoice that puts
+-- the NPR 2,000 NOC fee and a counselling fee on one line will later be
+-- described as overcharging, and the arithmetic being correct will not help.
+-- So each charge says whose money it is.
+CREATE TABLE IF NOT EXISTS student_charges (
+  id          TEXT PRIMARY KEY,
+  tenant_id   TEXT NOT NULL REFERENCES tenants(id),
+  student_id  TEXT NOT NULL REFERENCES users(id),
+  branch_id   TEXT REFERENCES branches(id),
+  label       TEXT NOT NULL,
+  amount_npr  INTEGER NOT NULL DEFAULT 0,
+  -- ours       a fee this consultancy charges for its own work
+  -- government a published government charge, passed straight through
+  -- third_party a test centre, an embassy, a translator, paid on their behalf
+  kind        TEXT NOT NULL DEFAULT 'ours',
+  note        TEXT,
+  waived      INTEGER NOT NULL DEFAULT 0,   -- kept, not deleted, so a discount is visible
+  created_by  TEXT REFERENCES users(id),
+  created_at  TEXT NOT NULL,
+  updated_at  TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_charges_student ON student_charges(student_id);
+CREATE INDEX IF NOT EXISTS idx_charges_tenant  ON student_charges(tenant_id);
+
+CREATE TABLE IF NOT EXISTS student_payments (
+  id          TEXT PRIMARY KEY,
+  tenant_id   TEXT NOT NULL REFERENCES tenants(id),
+  student_id  TEXT NOT NULL REFERENCES users(id),
+  branch_id   TEXT REFERENCES branches(id),
+  amount_npr  INTEGER NOT NULL DEFAULT 0,
+  -- How it arrived. Cash needs a receipt number more than the others do.
+  method      TEXT NOT NULL DEFAULT 'cash',  -- cash | bank | esewa | khalti | cheque | other
+  reference   TEXT,
+  paid_on     TEXT NOT NULL,
+  note        TEXT,
+  recorded_by TEXT REFERENCES users(id),
+  created_at  TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_payments_student ON student_payments(student_id);
+CREATE INDEX IF NOT EXISTS idx_payments_tenant  ON student_payments(tenant_id);
