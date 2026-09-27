@@ -1,6 +1,6 @@
 import { all, one, scalar } from "@/lib/db";
 import { getProfile, profileCompleteness } from "@/lib/profile";
-import { country } from "@/lib/countries";
+import { country, countryCode } from "@/lib/countries";
 import { stageOf } from "@/modules/pipeline/stages";
 import { requiredFor, kindById } from "@/modules/documents/kinds";
 import { calculate } from "@/modules/cost/calculate";
@@ -20,6 +20,11 @@ export type ParentSummary = {
   consultancy: string;
   counsellor: string | null;
   counsellorPhone: string | null;
+  /* The consultancy's own switchboard and inbox, so the contact card still
+     has something to tap when no counsellor is assigned or the one who is
+     has no number on file. */
+  officePhone: string | null;
+  officeEmail: string | null;
   destination: { name: string; flag: string; visa: string } | null;
   course: string | null;
   intake: string | null;
@@ -43,7 +48,9 @@ export function buildSummary(tenantId: string, studentId: string): ParentSummary
   );
   if (!student) return null;
 
-  const tenant = one<{ name: string }>("SELECT name FROM tenants WHERE id = ?", tenantId);
+  const tenant = one<{ name: string; contact_phone: string | null; contact_email: string | null }>(
+    "SELECT name, contact_phone, contact_email FROM tenants WHERE id = ?", tenantId,
+  );
   const entry = one<{ stage: string; next_action: string | null; next_action_due: string | null; counsellor_id: string | null }>(
     "SELECT stage, next_action, next_action_due, counsellor_id FROM pipeline_entries WHERE student_id = ? AND tenant_id = ?",
     studentId, tenantId,
@@ -81,14 +88,17 @@ export function buildSummary(tenantId: string, studentId: string): ParentSummary
   }
 
   let money: ParentSummary["money"] = null;
-  if (profile?.target_country) {
-    const level = (["diploma", "bachelors", "masters"].includes(profile.study_level ?? "")
-      ? profile.study_level : "masters") as Level;
-    const cc = profile.target_country as CountryCode;
+  // countryCode rather than the raw column: a profile saying "GB" used to
+  // index the cost table with a key that is not in it, and the resulting
+  // TypeError took down the whole page rather than hiding one card.
+  const cc = countryCode(profile?.target_country);
+  if (cc) {
+    const level = (["diploma", "bachelors", "masters"].includes(profile?.study_level ?? "")
+      ? profile?.study_level : "masters") as Level;
     const r = calculate({
       country: cc, level, years: COST[cc].years[level], tuition: 0,
       livingBand: "typical", londonOrEquivalent: false,
-      savingsNpr: profile.budget_npr ?? 0, sponsorIncomeNpr: profile.sponsor_income_npr ?? 0, partTime: 0,
+      savingsNpr: profile?.budget_npr ?? 0, sponsorIncomeNpr: profile?.sponsor_income_npr ?? 0, partTime: 0,
     });
     money = {
       wholeCourseNpr: r.wholeCourseTotal,
@@ -103,6 +113,8 @@ export function buildSummary(tenantId: string, studentId: string): ParentSummary
     consultancy: tenant?.name ?? "",
     counsellor: counsellor?.full_name ?? null,
     counsellorPhone: counsellor?.phone ?? null,
+    officePhone: tenant?.contact_phone ?? null,
+    officeEmail: tenant?.contact_email ?? null,
     destination: c ? { name: c.name, flag: c.flag, visa: c.visa } : null,
     course: profile?.intended_course ?? null,
     intake: profile?.target_intake ?? null,

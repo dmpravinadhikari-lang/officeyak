@@ -50,7 +50,46 @@ export const COUNTRIES = {
 
 export type CountryCode = keyof typeof COUNTRIES;
 export const COUNTRY_CODES = Object.keys(COUNTRIES) as CountryCode[];
-export const country = (code: string) => COUNTRIES[code as CountryCode] ?? COUNTRIES.AU;
+
+/**
+ * The other spellings of the same six destinations.
+ *
+ * The database holds codes written by seeds, by imports of a consultancy's
+ * old spreadsheets, and by earlier versions of this product, and they do not
+ * all agree: eighteen student profiles said "GB" where the registry says
+ * "UK", and two said "Australia" rather than "AU".
+ *
+ * That mattered more than a cosmetic label. `country()` quietly fell back to
+ * Australia for anything it did not know, so a family heading to London was
+ * shown an Australian visa and an Australian statement requirement, and the
+ * cost table had no fallback at all, so the same value crashed the page.
+ * Translating the spelling is the honest fix; guessing a different country
+ * is not.
+ */
+const ALIASES: Record<string, CountryCode> = {
+  GB: "UK", "GB-ENG": "UK", ENG: "UK",
+  UNITEDKINGDOM: "UK", BRITAIN: "UK", ENGLAND: "UK",
+  AUS: "AU", AUSTRALIA: "AU",
+  NEWZEALAND: "NZ", NZL: "NZ",
+  IRELAND: "IE", EIRE: "IE", IRL: "IE",
+  USA: "US", UNITEDSTATES: "US", AMERICA: "US",
+  CAN: "CA", CANADA: "CA",
+};
+
+/**
+ * The registry code for whatever a record happens to hold, or null when it is
+ * genuinely not one of the six. Callers decide what to do with a null, which
+ * is the point: a missing country is a thing to say out loud rather than to
+ * paper over with a default.
+ */
+export function countryCode(code: string | null | undefined): CountryCode | null {
+  if (!code) return null;
+  const key = code.trim().toUpperCase().replace(/[\s._-]/g, "");
+  if (key in COUNTRIES) return key as CountryCode;
+  return ALIASES[key] ?? null;
+}
+
+export const country = (code: string) => COUNTRIES[countryCode(code) ?? "AU"];
 
 export const INTERVIEW_KINDS = {
   us_f1: { label: "US F-1 consular interview", blurb: "Short, direct, and decided in minutes. Non-immigrant intent is everything." },

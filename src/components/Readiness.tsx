@@ -128,8 +128,14 @@ export function ReadinessPanel({
                   }}
                 />
               </div>
+              {/*
+                "pts", because the number is points and the sentence beside it
+                is a count of something else. "Steps done 0/35" sat next to
+                "30 of 30 still to do" and a reader had no way to tell that 35
+                is a score and 30 is a number of steps.
+              */}
               <div className="num mt-1.5 text-[11px] text-muted">
-                {f.points}/{f.max}
+                {f.points}/{f.max} pts
               </div>
             </div>
           );

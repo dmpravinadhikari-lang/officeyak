@@ -1,4 +1,5 @@
 import { Logo } from "@/components/Logo";
+import { Icon } from "@/components/Icon";
 import { Card, Chip, Meter } from "@/components/ui";
 import { npr } from "@/lib/terms";
 import { showBand } from "@/modules/mock-tests/bands";
@@ -15,13 +16,18 @@ export function ProgressPage({
   summary: s, greetingName, relation,
 }: { summary: ParentSummary; greetingName: string; relation: string }) {
   const firstName = s.studentName.split(" ")[0];
+  // Their own counsellor first, the office switchboard if that is not set.
+  const phone = s.counsellorPhone ?? s.officePhone;
 
   return (
     <main className="min-h-screen bg-canvas">
       <header className="wash border-b border-line">
         <div className="mx-auto max-w-2xl px-5 py-8">
           <div className="flex items-center justify-between gap-4">
-            <Logo href="#" />
+            {/* Not a link. This page is opened by a parent who has no
+                account and nowhere to navigate to, and href="#" was a
+                control that looked tappable and did nothing. */}
+            <Logo />
             <Chip tone="grey">{relation}</Chip>
           </div>
           <h1 className="display mt-6 text-[30px]">
@@ -167,9 +173,40 @@ export function ProgressPage({
         <Card className="p-5">
           <h2 className="h-tight text-[15px]">Questions?</h2>
           <p className="mt-1.5 text-[14px] leading-relaxed text-ink-2">
-            Speak to {s.counsellor ?? `${s.consultancy}`}
-            {s.counsellorPhone ? ` on ${s.counsellorPhone}` : ""}. They know this file.
+            Speak to {s.counsellor ?? s.consultancy}. They know this file.
           </p>
+          {/*
+            Something to tap.
+
+            This card used to name a person and stop there, and the number, on
+            the rare file that had one, was plain text. The entire point of
+            this page is to save the parent a worried phone call, but when
+            they do have a question they are holding a phone and there was
+            nothing to press. So: the counsellor's number if there is one, the
+            consultancy's switchboard if not, and the office inbox as the last
+            resort. A parent should never reach the bottom of this page with
+            no way to ask.
+          */}
+          {(phone || s.officeEmail) && (
+            <div className="mt-3.5 flex flex-wrap gap-2">
+              {phone && (
+                <a
+                  href={`tel:${phone.replace(/[^+\d]/g, "")}`}
+                  className="oy-press inline-flex min-h-[44px] items-center gap-2 rounded-[10px] bg-ink px-4 text-[14px] font-semibold text-white transition-colors hover:bg-ink-2"
+                >
+                  <Icon name="phone" size={16} /> Call {phone}
+                </a>
+              )}
+              {s.officeEmail && (
+                <a
+                  href={`mailto:${s.officeEmail}`}
+                  className="oy-press inline-flex min-h-[44px] items-center gap-2 rounded-[10px] border border-line-2 bg-panel px-4 text-[14px] font-semibold text-ink transition-colors hover:border-brand-400 hover:text-brand-600"
+                >
+                  <Icon name="inbox" size={16} /> Email the office
+                </a>
+              )}
+            </div>
+          )}
         </Card>
 
         <p className="pb-6 text-center text-[12px] leading-relaxed text-muted">

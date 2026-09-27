@@ -2,7 +2,7 @@ import { requireScope } from "@/lib/auth/current";
 import { getProfile } from "@/lib/profile";
 import { CostCalculator } from "./calculator";
 import { RATES_AS_OF } from "@/modules/cost/data";
-import type { CountryCode } from "@/lib/countries";
+import { countryCode } from "@/lib/countries";
 import type { Level } from "@/modules/cost/data";
 
 export const metadata = { title: "True Cost Calculator, OfficeYak" };
@@ -27,7 +27,10 @@ export default async function CostPage() {
 
       <CostCalculator
         initial={{
-          country: (profile?.target_country ?? "AU") as CountryCode,
+          // Resolved rather than cast. The column holds whatever earlier
+          // versions and imported spreadsheets put there, and a cast let a
+          // value like "GB" reach COST[...] and crash this page outright.
+          country: countryCode(profile?.target_country) ?? "AU",
           level,
           savingsNpr: profile?.budget_npr ?? 0,
           sponsorIncomeNpr: profile?.sponsor_income_npr ?? 0,

@@ -114,7 +114,23 @@ export default async function Dashboard() {
       )}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <StatTile label="AI credits left" value={budget.remaining} sub={`of ${budget.allowance} this month · ${budget.scopeLabel}`} />
+        {/*
+          A student is told what they can still run, and nothing about the
+          office's budget.
+
+          Credits are one pool per branch, and this tile was showing every
+          student "1500 of 1500 this month · this branch". That is the
+          consultancy's commercial allowance and its branch, on the first
+          screen a seventeen year old sees. They cannot act on the total and
+          they should not be counting the office's money. What they do need is
+          the answer to "can I run another mock", so the remaining number
+          stays and the rest goes.
+        */}
+        <StatTile
+          label={isStudent ? "Practice credits" : "AI credits left"}
+          value={budget.remaining}
+          sub={isStudent ? "Paid for by your consultancy" : `of ${budget.allowance} this month · ${budget.scopeLabel}`}
+        />
         {isStudent ? (
           <>
             <StatTile label="Best interview" value={bestInterview ? `${bestInterview}` : <NotSet />} sub={bestInterview ? "out of 100" : "No completed interview yet"} tone="teal" />
@@ -128,12 +144,15 @@ export default async function Dashboard() {
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           {live.map((m) => (
             <Link key={m.id} href={m.route} className="group rounded-2xl border border-line bg-panel p-5 transition-colors hover:border-brand-400">
-              <div className="flex items-start justify-between gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-600">
-                  <Icon name={iconFor(m.icon)} size={20} />
-                </span>
-                <Chip tone="teal">Live</Chip>
-              </div>
+              {/*
+                No "Live" chip. Every card in this list is live by definition,
+                so the chip was on all fourteen of them and told a reader
+                nothing, while adding fourteen green marks to the first screen
+                a student meets. A label that never varies is decoration.
+              */}
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-brand-50 text-brand-600">
+                <Icon name={iconFor(m.icon)} size={20} />
+              </span>
               <h3 className="h-tight mt-3 text-[16px] group-hover:text-brand-600">{m.name}</h3>
               <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted">{m.summary}</p>
             </Link>

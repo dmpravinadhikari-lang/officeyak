@@ -3,7 +3,21 @@ import { Logo } from "@/components/Logo";
 import { Icon } from "@/components/Icon";
 import { BRAND } from "@/lib/brand";
 
-export const metadata = { title: "Not found, OfficeYak" };
+/*
+ * noindex, and not only as a belt-and-braces measure.
+ *
+ * notFound() does not set a 404 status in this build: a request for
+ * /blog/anything-at-all renders this page and answers 200. Google treats a
+ * 200 as a real page, so without this every mistyped or invented address
+ * under /blog, /study, /software and /tools would be an indexable page of
+ * near-identical thin content, and there is no limit to how many of those
+ * somebody can link to. The status is the framework's to fix; whether these
+ * pages are indexed is ours, and this settles it.
+ */
+export const metadata = {
+  title: "Not found, OfficeYak",
+  robots: { index: false, follow: false },
+};
 
 /**
  * The page somebody lands on when an address is wrong.

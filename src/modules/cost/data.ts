@@ -1,4 +1,4 @@
-import type { CountryCode } from "@/lib/countries";
+import { countryCode, type CountryCode } from "@/lib/countries";
 
 /**
  * Cost and visa-funds data.
@@ -148,3 +148,18 @@ export const COST: Record<CountryCode, CountryCost> = {
 export const LEVEL_LABEL: Record<Level, string> = {
   diploma: "Diploma / Certificate", bachelors: "Bachelors", masters: "Masters",
 };
+
+/**
+ * The cost table for whatever a record holds, or null if it is not one of the
+ * six destinations.
+ *
+ * Every caller used to write COST[code] against a value read straight out of
+ * the database. One profile holding "GB" was therefore enough to throw
+ * "Cannot read properties of undefined" and take down that student's parent
+ * progress page completely: the parent saw a crash, not a page. Reading a
+ * table with a key from a database is exactly where a guard belongs.
+ */
+export function costFor(code: string | null | undefined): CountryCost | null {
+  const c = countryCode(code);
+  return c ? COST[c] : null;
+}
