@@ -184,23 +184,31 @@ export default async function ReportsPage() {
           </Link>
         }
       >
+        {/* min-w-0 on the grid children as well as on the rows inside them.
+            A grid item is min-width:auto by default, so the column refuses to
+            shrink below its widest line and every truncate below it is
+            ignored. Fixing only the row was not enough. */}
         <div className="grid gap-4 px-4 py-4 sm:grid-cols-2">
-          <div>
+          <div className="min-w-0">
             <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted">Rising searches</div>
             <ul className="mt-2 flex flex-col gap-1.5">
               {market.rising.map((k) => (
-                <li key={k.term} className="flex items-baseline gap-2 text-[13.5px]">
+                /* min-w-0 on the row, not only on the text inside it. A flex
+                   item defaults to min-width:auto, so the row itself refuses to
+                   shrink, truncate never fires, and the card's overflow-hidden
+                   silently eats the figure on the right. */
+                <li key={k.term} className="flex min-w-0 items-baseline gap-2 text-[13.5px]">
                   <span className="min-w-0 flex-1 truncate text-ink">{k.term}</span>
                   <span className="num shrink-0 font-medium text-teal-700">+{k.change}%</span>
                 </li>
               ))}
             </ul>
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-muted">Changing soon</div>
             <ul className="mt-2 flex flex-col gap-1.5">
               {market.coming.slice(0, 4).map((m2) => (
-                <li key={m2.id} className="flex items-baseline gap-2 text-[13.5px]">
+                <li key={m2.id} className="flex min-w-0 items-baseline gap-2 text-[13.5px]">
                   <span className="min-w-0 flex-1 truncate text-ink">{m2.headline}</span>
                   <span className="shrink-0 text-[12.5px] text-muted">{shortDate(m2.effectiveOn)}</span>
                 </li>

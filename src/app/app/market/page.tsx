@@ -121,7 +121,7 @@ export default async function MarketPage() {
           <Panel title="Rising fastest" note="Where the questions are moving.">
             <ul className="divide-y divide-line">
               {d.rising.map((k) => (
-                <li key={k.term} className="flex items-baseline gap-2 px-4 py-2.5">
+                <li key={k.term} className="flex min-w-0 items-baseline gap-2 px-4 py-2.5">
                   <Icon name="arrow" size={14} className="-rotate-45 text-teal-700" />
                   <span className="min-w-0 flex-1 truncate text-[13.5px] text-ink">{k.term}</span>
                   <span className="num shrink-0 text-[13px] font-medium text-teal-700">+{k.change}%</span>
@@ -133,7 +133,7 @@ export default async function MarketPage() {
           <Panel title="Falling" note="Cooling off. Worth knowing before you staff a desk for it.">
             <ul className="divide-y divide-line">
               {d.falling.map((k) => (
-                <li key={k.term} className="flex items-baseline gap-2 px-4 py-2.5">
+                <li key={k.term} className="flex min-w-0 items-baseline gap-2 px-4 py-2.5">
                   <Icon name="arrow" size={14} className="rotate-45 text-danger-600" />
                   <span className="min-w-0 flex-1 truncate text-[13.5px] text-ink">{k.term}</span>
                   <span className="num shrink-0 text-[13px] font-medium text-danger-600">{k.change}%</span>
