@@ -2,7 +2,7 @@ import { requireRole, scopeOf } from "@/lib/auth/current";
 import { Card, Chip, PageHeader, Th, type Tone } from "@/components/ui";
 import { localDay, monthStartDay, shortDate, whenText } from "@/lib/dates";
 import { Clock } from "@/modules/attendance/Clock";
-import { exceptions, hrSummary, openShift, shiftsBetween, workLog } from "@/modules/attendance/data";
+import { exceptions, hrSummary, openShift, punctuality, shiftsBetween, workLog, GRACE_MINUTES } from "@/modules/attendance/data";
 
 export const metadata = { title: "Attendance, OfficeYak" };
 
@@ -33,6 +33,7 @@ export default async function AttendancePage() {
     (r) => canSeeEveryone || r.user_id === user.id,
   );
   const flagged = canSeeEveryone ? exceptions(scope, from, to) : [];
+  const punctual = canSeeEveryone ? punctuality(scope, from, to) : [];
   const log = workLog(scope, from, to).filter((r) => canSeeEveryone || r.full_name === user.fullName);
 
   return (
@@ -85,6 +86,70 @@ export default async function AttendancePage() {
           </div>
           <p className="border-t border-line px-5 py-3 text-[12.5px] leading-relaxed text-muted">
             "Clocked in away" means outside the office area, with a reason given. Fine for a fair or a visit.
+          </p>
+        </Card>
+      )}
+
+      {/*
+        Arriving on time.
+
+        The rule this product has always followed is that the office decides
+        what late means, and that is exactly why this can be shown: every
+        office already sets the hour its day starts, on its own settings page.
+        Nothing here invents a standard, and an office that has not set one is
+        simply absent from this table rather than being judged by a default.
+
+        Counts, not verdicts. "Late on 9 of 14 days" is a fact a manager can
+        raise. "Always late" is a conclusion, and whoever reads this knows
+        which of their people drops a child at school first.
+      */}
+      {canSeeEveryone && punctual.length > 0 && (
+        <Card className="overflow-hidden">
+          <div className="border-b border-line bg-wash/60 px-5 py-3">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="h-tight text-[15px]">Who arrives on time</h2>
+              <span className="text-[13px] text-muted">Against each office's own opening time</span>
+            </div>
+          </div>
+          <div className="scroll-soft overflow-x-auto">
+            <table className="w-full min-w-[680px] text-[13.5px]">
+              <thead>
+                <tr className="border-b border-line text-left">
+                  {["Person", "Office", "On time", "Late", "Average late by", "Longest run late"].map((h) => (
+                    <Th key={h}>{h}</Th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {punctual.map((p) => {
+                  const share = p.measured ? p.late / p.measured : 0;
+                  return (
+                    <tr key={p.user_id}>
+                      <td className="px-4 py-2.5 font-semibold text-ink">{p.full_name}</td>
+                      <td className="px-4 py-2.5 text-muted">{p.branch_name ?? "No office"}</td>
+                      <td className="num px-4 py-2.5">{p.on_time} of {p.measured}</td>
+                      <td className="num px-4 py-2.5">
+                        {p.late === 0
+                          ? <Chip tone={"teal" as Tone}>None</Chip>
+                          : <Chip tone={(share > 0.5 ? "danger" : "gold") as Tone}>{p.late}</Chip>}
+                      </td>
+                      <td className="num px-4 py-2.5 text-muted">
+                        {p.late === 0 ? "—" : `${p.avg_late_minutes} min`}
+                      </td>
+                      <td className="num px-4 py-2.5 text-muted">
+                        {p.streak > 1 ? `${p.streak} days` : p.streak === 1 ? "1 day" : "—"}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p className="border-t border-line px-5 py-3 text-[12.5px] leading-relaxed text-muted">
+            Counted from the time each office says it opens, with {GRACE_MINUTES} minutes' grace, so
+            arriving a couple of minutes past does not count against anybody. Set or change an
+            office's opening time on the Offices page. Anyone whose office has no opening time set
+            is not listed.
           </p>
         </Card>
       )}

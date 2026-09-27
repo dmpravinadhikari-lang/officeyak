@@ -143,9 +143,20 @@ export async function signup(_prev: AuthState, formData: FormData): Promise<Auth
    */
   const branchId = uid();
   run(
-    `INSERT INTO branches (id, tenant_id, name, code, city, is_head_office, active, created_at)
-     VALUES (?,?,?,?,?,1,1,?)`,
-    branchId, tenantId, "Head office", null, null, now(),
+    /*
+     * The opening hours are set here, not left null.
+     *
+     * Attendance measures punctuality against the hour an office says it
+     * opens, and an office with no hour set is left out of that report
+     * entirely. The first office every consultancy gets is this one, so
+     * without a default the founder's own head office was the one place in
+     * the product where nobody could be measured. Ten to six is the Kathmandu
+     * norm and the same default the offices form offers; changing it is two
+     * presses on that page.
+     */
+    `INSERT INTO branches (id, tenant_id, name, code, city, day_starts, day_ends, is_head_office, active, created_at)
+     VALUES (?,?,?,?,?,?,?,1,1,?)`,
+    branchId, tenantId, "Head office", null, null, "10:00", "18:00", now(),
   );
 
   const userId = uid();

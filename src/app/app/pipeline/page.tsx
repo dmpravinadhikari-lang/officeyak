@@ -3,6 +3,7 @@ import { requirePermission, scopeOf } from "@/lib/auth/current";
 import {
   activeStudentCount, counsellorsOf, listPipeline, officesFor, stageCounts,
 } from "@/modules/pipeline/data";
+import { stalledFiles } from "@/modules/pipeline/stalled";
 import { assignMany } from "@/modules/pipeline/actions";
 import { can } from "@/lib/auth/access";
 import { ACTIVE_STAGES, STAGE_IDS, stageOf } from "@/modules/pipeline/stages";
@@ -21,29 +22,42 @@ export default async function PipelinePage({
   searchParams,
 }: { searchParams: Promise<{
   stage?: string; mine?: string; add?: string; q?: string;
-  office?: string; late?: string; unassigned?: string; sort?: string;
+  office?: string; late?: string; unassigned?: string; stalled?: string; sort?: string;
 }> }) {
-  const { stage, mine, add, q, office, late: lateParam, unassigned: unassignedParam, sort } = await searchParams;
+  const { stage, mine, add, q, office, late: lateParam, unassigned: unassignedParam, stalled: stalledParam, sort } = await searchParams;
   const user = await requirePermission("students:view");
   const scope = scopeOf(user);
 
   const showLate = lateParam === "1";
   const showUnassigned = unassignedParam === "1";
+  /*
+   * Files that have stopped moving.
+   *
+   * Filtered after the query rather than inside it, because "stalled" is not
+   * a column: it is the gap between the last stage change and what that
+   * particular stage should take, and the thresholds live in one place so the
+   * board, the dashboard and the weekly email can never drift apart.
+   */
+  const showStalled = stalledParam === "1";
+  const stuck = stalledFiles(scope);
+  const stalledIds = showStalled ? new Set(stuck.map((f) => f.student_id)) : null;
   const rows = listPipeline(scope, {
     stage, mine: mine === "1", q, branchId: office,
     late: showLate, unassigned: showUnassigned,
     sort: sort === "newest" || sort === "late" ? sort : "name",
   });
+  const visible = stalledIds ? rows.filter((r) => stalledIds.has(r.student_id)) : rows;
   const offices = officesFor(scope);
   const officeName = offices.find((o) => o.id === office)?.name ?? null;
   const counsellors = counsellorsOf(scope.tenantId);
-  const filtered = Boolean(q || stage || mine === "1" || office || showLate || showUnassigned);
+  const filtered = Boolean(q || stage || mine === "1" || office || showLate || showUnassigned || showStalled);
   // Keep the other filters when one chip is pressed, so narrowing is additive.
   const url = (patch: Record<string, string | undefined>) => {
     const p = new URLSearchParams();
     const base: Record<string, string | undefined> = {
       q, stage, mine: mine === "1" ? "1" : undefined, office,
       late: showLate ? "1" : undefined, unassigned: showUnassigned ? "1" : undefined,
+      stalled: showStalled ? "1" : undefined,
       sort: sort && sort !== "name" ? sort : undefined,
       ...patch,
     };
@@ -68,6 +82,9 @@ export default async function PipelinePage({
   // office. Showing the consultancy total to somebody holding 22 files is a
   // number they cannot reconcile with the list underneath it.
   const visibleActive = inScope.filter((r) => r.stage !== "departed" && r.stage !== "lost").length;
+  /* Counted for the office being looked at, like every other tile here. */
+  const inOffice = new Set(inScope.map((r) => r.student_id));
+  const stalledCount = stuck.filter((f) => inOffice.has(f.student_id)).length;
   const cap = plan.maxStudents === Number.POSITIVE_INFINITY ? "unlimited" : plan.maxStudents;
 
   return (
@@ -121,10 +138,20 @@ export default async function PipelinePage({
         <Link href={url({ late: "1", unassigned: undefined, stage: undefined })} className="rounded-2xl focus-visible:outline-none">
           <StatTile label="Follow-ups late" value={overdue} tone={overdue > 0 ? "danger" : "teal"} sub="next step past its date" />
         </Link>
-        <StatTile
-          label="Flown out" value={inScope.filter((r) => r.stage === "departed").length}
-          tone="teal" sub="students who departed"
-        />
+        {/*
+          Not moving, in place of "Flown out".
+
+          A count of students who already left is a nice number and nothing to
+          do about it. A count of files that have sat in one stage longer than
+          that stage should take is the one tile on this page somebody can act
+          on today, and it was only ever visible in a weekly email.
+        */}
+        <Link href={url({ stalled: "1", late: undefined, unassigned: undefined, stage: undefined })} className="rounded-2xl focus-visible:outline-none">
+          <StatTile
+            label="Not moving" value={stalledCount}
+            tone={stalledCount > 0 ? "gold" : "teal"} sub="stuck longer than the stage allows"
+          />
+        </Link>
       </div>
 
       <AddStudent defaultOpen={add === "1"} />
@@ -166,7 +193,7 @@ export default async function PipelinePage({
           className={`inline-flex min-h-[36px] items-center gap-1 rounded-full border px-3.5 text-[13px] font-medium ${
             !stage && mine !== "1" && !showLate && !showUnassigned ? "border-brand-400 bg-brand-50 text-brand-700" : "border-line text-ink-2 hover:border-line-2"}`}
         >
-          Everyone {rows.length > 0 && !stage && mine !== "1" ? <span className="num text-muted">{rows.length}</span> : null}
+          Everyone {visible.length > 0 && !stage && mine !== "1" ? <span className="num text-muted">{visible.length}</span> : null}
         </Link>
         <Link
           href={url({ mine: mine === "1" ? undefined : "1" })}
@@ -201,13 +228,13 @@ export default async function PipelinePage({
         ))}
       </nav>
 
-      {canAssign && rows.length > 0 && showUnassigned && (
+      {canAssign && visible.length > 0 && showUnassigned && (
         <Card className="p-4">
           <form action={assignMany} className="flex flex-wrap items-end gap-3">
-            {rows.map((r) => <input key={r.student_id} type="hidden" name="student_id" value={r.student_id} />)}
+            {visible.map((r) => <input key={r.student_id} type="hidden" name="student_id" value={r.student_id} />)}
             <div className="min-w-0">
               <div className="text-[14px] font-medium text-ink">
-                Hand all {rows.length} of these {officeName ? `${officeName} ` : ""}students to one counsellor
+                Hand all {visible.length} of these {officeName ? `${officeName} ` : ""}students to one counsellor
               </div>
               <p className="mt-0.5 text-[12.5px] text-muted">
                 Each one is logged on the student's file, and you can change any of them afterwards.
@@ -225,7 +252,7 @@ export default async function PipelinePage({
         </Card>
       )}
 
-      {rows.length === 0 ? (
+      {visible.length === 0 ? (
         <Empty
           icon={<Icon name="students" size={24} />}
           title={
@@ -257,7 +284,7 @@ export default async function PipelinePage({
                 </tr>
               </thead>
               <tbody>
-                {rows.map((r) => {
+                {visible.map((r) => {
                   const due = r.next_action_due;
                   const late = due !== null && due.slice(0, 10) < today;
                   const s = stageOf(r.stage);

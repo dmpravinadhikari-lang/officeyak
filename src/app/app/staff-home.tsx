@@ -10,6 +10,7 @@ import { activeProvider } from "@/lib/ai/provider";
 import { openShift, whoIsIn } from "@/modules/attendance/data";
 import { myTasks, dueState } from "@/modules/tasks/data";
 import { listPipeline } from "@/modules/pipeline/data";
+import { stalledSummary } from "@/modules/pipeline/stalled";
 import { leadCounts, listLeads } from "@/modules/leads/data";
 import { normaliseSource, sourceOf } from "@/modules/pipeline/sources";
 import { myScorecard } from "@/modules/account/scorecard";
@@ -68,6 +69,17 @@ export function StaffHome({ user }: { user: SessionUser }) {
     (r) => r.next_action_due && r.next_action_due.slice(0, 10) < today,
   ).length;
   const unassigned = live.filter((r) => !r.counsellor_id).length;
+
+  /*
+   * Files that have stopped moving.
+   *
+   * This existed only as a weekly email to the counsellor on the file, which
+   * meant the owner paying for the office could not see it anywhere, and a
+   * counsellor who had switched that email off saw it nowhere either. A
+   * student sitting at Enquiry for three weeks is the most expensive silence
+   * in a consultancy, so it belongs on the screen everybody opens first.
+   */
+  const stalled = seesStudents ? stalledSummary(scope) : { count: 0, worst: null, list: [] };
 
   const leads = seesLeads
     ? leadCounts(scope)
@@ -210,6 +222,8 @@ export function StaffHome({ user }: { user: SessionUser }) {
   const focus =
     followUps > 0 && seesStudents
       ? { key: "followups", label: "Follow-ups missed", n: followUps, said: followUps === 1 ? "student was promised a call that has not happened" : "students were promised a call that has not happened", cta: "See who", href: "/app/pipeline?late=1", bar: "bg-danger-600", ink: "text-danger-600" }
+    : stalled.count > 0 && seesStudents
+      ? { key: "stalled", label: "Not moving", n: stalled.count, said: stalled.count === 1 ? "file has sat in one stage past the time it should" : "files have sat in one stage past the time they should", cta: "See which", href: "/app/pipeline?stalled=1", bar: "bg-tint-amber-ink", ink: "text-tint-amber-ink" }
     : leads.open > 0 && seesLeads
       ? { key: "leads", label: "Student leads", n: leads.open, said: leads.open === 1 ? "enquiry is still open" : "enquiries are still open", cta: "Open the board", href: "/app/leads", bar: "bg-brand-500", ink: "text-brand-600" }
     : unassigned > 0 && seesStudents
@@ -247,6 +261,12 @@ export function StaffHome({ user }: { user: SessionUser }) {
           because: `${followUps} ${followUps === 1 ? "student was" : "students were"} promised a call that has not happened, and those are the files that go quiet.`,
           action: { label: "See who", href: "/app/pipeline?late=1" },
         }
+      : stalled.worst && seesStudents && focus.key !== "stalled"
+        ? {
+            says: `${stalled.worst.student_name.split(" ")[0]}'s file has stopped.`,
+            because: `${stalled.worst.days} days at ${stalled.worst.stage.replace("_", " ")}, which is ${stalled.worst.over} past what that stage should take${stalled.count > 1 ? `, and ${stalled.count - 1} other ${stalled.count === 2 ? "file is" : "files are"} the same` : ""}.`,
+            action: { label: "See which", href: "/app/pipeline?stalled=1" },
+          }
       : oldest && seesLeads && focus.key !== "leads"
         ? {
             says: `ring ${oldest.full_name.split(" ")[0]} first.`,

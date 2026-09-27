@@ -3,6 +3,8 @@
 import { randomBytes } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { requireRole, scopeOf } from "@/lib/auth/current";
+import { requireCapability } from "@/lib/auth/guard";
+import { can } from "@/lib/auth/access";
 import { hashPassword } from "@/lib/auth/password";
 import { all, now, one, run, uid } from "@/lib/db";
 import { isPosition, positionOf } from "@/lib/auth/positions";
@@ -24,8 +26,23 @@ function tempPassword(): string {
  * same way a student's is, so it can be handed over in person.
  */
 export async function addStaffMember(_prev: StaffState, formData: FormData): Promise<StaffState> {
-  const user = await requireRole("super_admin", "tenant_admin");
-  const scope = scopeOf(user);
+  /*
+   * A branch manager may do this, for their own office.
+   *
+   * The permission table has always said so: "branch:staff, add and remove
+   * counsellor accounts" is one of the grants on the branch manager position,
+   * and the access screen shows it to them ticked. This action asked for the
+   * tenant_admin role instead, so the product promised something it then
+   * refused, and every new counsellor in every office had to go through the
+   * owner. In a consultancy with four branches that is the owner doing HR
+   * admin for people they have never met.
+   *
+   * The capability decides who may add somebody. The scope decides where:
+   * an owner sees all offices and picks one, a branch manager does not get
+   * that choice, because a manager who can create an account in another
+   * manager's office can read that office's students through it.
+   */
+  const { user, scope } = await requireCapability("branch:staff");
 
   const fullName = clean(formData.get("full_name"));
   const email = clean(formData.get("email")).toLowerCase();
@@ -37,9 +54,29 @@ export async function addStaffMember(_prev: StaffState, formData: FormData): Pro
    * staff, and what they may actually touch comes from their position. So the
    * form asks one human question, and the two system words are derived.
    */
-  const position = isPosition(clean(formData.get("position"))) ? clean(formData.get("position")) : "counsellor";
+  const requested = isPosition(clean(formData.get("position"))) ? clean(formData.get("position")) : "counsellor";
+  /*
+   * Nobody creates somebody senior to themselves.
+   *
+   * Only a person who can already change what colleagues may do is allowed to
+   * mint an owner or another branch manager. Without this, a branch manager
+   * could create an "owner" account and sign in as the consultancy.
+   */
+  const mayPromote = can(user, "people:permissions");
+  const position = !mayPromote && (requested === "owner" || requested === "branch_manager")
+    ? "counsellor"
+    : requested;
   const role = position === "owner" ? "tenant_admin" : "counsellor";
-  const branchId = clean(formData.get("branch_id")) || null;
+  /*
+   * Where the new person lands.
+   *
+   * Whoever may see every office chooses. Anybody else gets their own office,
+   * whatever the form said, so a tampered form cannot place somebody in a
+   * branch the person creating them cannot see.
+   */
+  const branchId = scope.see === "all"
+    ? clean(formData.get("branch_id")) || null
+    : scope.branchId ?? null;
 
   if (fullName.length < 2) return { ok: false, message: "Enter their full name." };
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return { ok: false, message: "That email address does not look right." };

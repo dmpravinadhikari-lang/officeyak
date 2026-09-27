@@ -92,7 +92,10 @@ export default async function LeadsPage({
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] text-ink-2">
           <Icon name="alert" size={15} className="text-brand-600" />
           <span className="font-medium text-ink">Put this on the tablet at reception:</span>
-          <code className="rounded-lg border border-line-2 bg-panel px-2.5 py-1 text-[12.5px]">
+          {/* break-all and max-w-full: this is a full URL with the
+              consultancy's own subdomain in it, and on a 390px phone it was
+              420px wide and scrolled the whole page sideways. */}
+          <code className="max-w-full break-all rounded-lg border border-line-2 bg-panel px-2.5 py-1 text-[12.5px]">
             {user.tenantSlug}.{BRAND.domain}/enquiry/{user.tenantSlug}
           </code>
           <span className="text-muted">

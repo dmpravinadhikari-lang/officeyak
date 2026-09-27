@@ -1,3 +1,4 @@
+import { STALE_AFTER } from "@/modules/pipeline/stalled";
 import { all, now, one, run, uid } from "@/lib/db";
 import { localDay } from "@/lib/dates";
 import { queueEmail } from "@/lib/email/queue";
@@ -160,9 +161,6 @@ const unclaimedLeads: Rule = {
 };
 
 /** How long a file may sit in a stage before somebody should look at it. */
-const STALE_AFTER: Record<string, number> = {
-  enquiry: 2, counselling: 21, test_prep: 90, applying: 30, offer: 30, visa: 60,
-};
 
 /**
  * Files that have stopped moving.

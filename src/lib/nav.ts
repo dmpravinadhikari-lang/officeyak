@@ -128,11 +128,14 @@ export function buildNav(
       // The other income line: what students owe this office directly.
       ...(may("money:view") ? [{ href: "/app/fees", icon: "wallet" as const, label: "Student fees", state: "open" as const, hint: "Charged, paid and outstanding" }] : []),
       ...(may("students:share_parent") ? fromModule("parents", "Parents") : []),
-      ...(!admin && may("hr:view") ? [{ href: "/app/people", icon: "people" as const, label: "Staff", state: "open" as const }] : []),
+      ...(!admin && (may("hr:view") || may("branch:staff")) ? [{ href: "/app/people", icon: "people" as const, label: "Staff", state: "open" as const }] : []),
     ] },
     ...(() => {
       const setup: NavItem[] = [
-        ...(may("hr:view") ? [{ href: "/app/people", icon: "people" as const, label: "Staff & teams", state: "open" as const }] : []),
+        ...((may("hr:view") || may("branch:staff")) ? [{ href: "/app/people", icon: "people" as const, label: "Staff & teams", state: "open" as const }] : []),
+        // Sits beside the staff list, because "who works here" and "how are
+        // they doing" are the same thought a minute apart.
+        ...((may("hr:view") || may("branch:staff")) ? [{ href: "/app/team", icon: "chart" as const, label: "Employee Analysis", hint: "How each person is doing", state: "open" as const }] : []),
         ...(may("people:permissions") ? [{ href: "/app/access", icon: "lock" as const, label: "Who can do what", state: "open" as const }] : []),
         ...(may("audit:view") ? [{ href: "/app/security", icon: "lock" as const, label: "Security", state: "open" as const }] : []),
         ...(may("branch:settings") ? [

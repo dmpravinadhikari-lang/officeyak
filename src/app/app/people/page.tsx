@@ -1,5 +1,6 @@
 import { all } from "@/lib/db";
-import { requirePermission, scopeOf } from "@/lib/auth/current";
+import { requireUser, scopeOf } from "@/lib/auth/current";
+import { redirect } from "next/navigation";
 import { can } from "@/lib/auth/access";
 import { branchFilter } from "@/lib/db/scope";
 import { Button, Card, Chip, Field, PageHeader, inputClass } from "@/components/ui";
@@ -35,9 +36,23 @@ const TYPE_LABEL: Record<string, string> = {
  * capability.
  */
 export default async function PeoplePage() {
-  const user = await requirePermission("hr:view");
+  /*
+   * Two different jobs share this page.
+   *
+   * hr:view is the HR record: salary band, emergency contact, work history.
+   * branch:staff is narrower and more common, giving a colleague a login.
+   * A branch manager has the second and not the first, and used to be bounced
+   * off this page entirely, which made the "add and remove counsellor
+   * accounts" permission on their position mean nothing in practice. So
+   * either capability opens the page, and each half is gated on its own.
+   */
+  const user = await requireUser();
+  if (!can(user, "hr:view") && !can(user, "branch:staff")) redirect("/app");
   const scope = scopeOf(user);
   const canEdit = can(user, "hr:manage");
+  const canAddPeople = can(user, "branch:staff");
+  /* An owner picks the office. A manager has only their own, so no choice. */
+  const picksOffice = scope.see === "all";
   const b = branchFilter(scope, "u");
 
   const people = all<Person>(
@@ -86,7 +101,7 @@ export default async function PeoplePage() {
         }
       />
 
-      {canEdit && <AddStaff branches={branches} />}
+      {canAddPeople && <AddStaff branches={picksOffice ? branches : []} canPromote={can(user, "people:permissions")} />}
 
       <section className="flex flex-col gap-3">
         <h2 className="h-tight text-[17px]">{people.length} {people.length === 1 ? "person" : "people"}</h2>

@@ -8,7 +8,14 @@ import { POSITIONS } from "@/lib/auth/positions";
 
 const initial: StaffState = { ok: true };
 
-export function AddStaff({ branches }: { branches: Array<{ id: string; name: string }> }) {
+export function AddStaff({
+  branches, canPromote = true,
+}: {
+  /** Empty for anybody who runs a single office: there is nothing to choose. */
+  branches: Array<{ id: string; name: string }>;
+  /** Whether this person may create an owner or another branch manager. */
+  canPromote?: boolean;
+}) {
   const [state, action, pending] = useActionState(addStaffMember, initial);
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState("counsellor");
@@ -55,11 +62,16 @@ export function AddStaff({ branches }: { branches: Array<{ id: string; name: str
             <Field label="Mobile" name="staff_phone">
               <input id="staff_phone" name="phone" className={inputClass} placeholder="98xxxxxxxx" />
             </Field>
-            <Field label="Office" name="staff_branch">
-              <select id="staff_branch" name="branch_id" className={inputClass} defaultValue={branches[0]?.id ?? ""}>
-                {branches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
-              </select>
-            </Field>
+            {/* A branch manager gets no office picker, because they have one
+                office. The server puts the new person in theirs regardless of
+                what the form says. */}
+            {branches.length > 0 && (
+              <Field label="Office" name="staff_branch">
+                <select id="staff_branch" name="branch_id" className={inputClass} defaultValue={branches[0]?.id ?? ""}>
+                  {branches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+                </select>
+              </Field>
+            )}
             {/*
               The job, not a permission level.
               
@@ -76,7 +88,12 @@ export function AddStaff({ branches }: { branches: Array<{ id: string; name: str
                 id="staff_position" name="position" className={inputClass}
                 value={position} onChange={(e) => setPosition(e.target.value)}
               >
-                {POSITIONS.map((x) => <option key={x.id} value={x.id}>{x.label}</option>)}
+                {/* Nobody hires somebody senior to themselves. The server
+                    enforces this too; hiding them is so the form does not
+                    offer a choice it will then quietly overrule. */}
+                {POSITIONS
+                  .filter((x) => canPromote || (x.id !== "owner" && x.id !== "branch_manager"))
+                  .map((x) => <option key={x.id} value={x.id}>{x.label}</option>)}
               </select>
             </Field>
           </div>

@@ -285,3 +285,108 @@ export function whoIsIn(scope: Scope, day = localDay()): OnFloor[] {
     day, scope.tenantId, ...b.params,
   );
 }
+
+/* ------------------------------------------------------------------ lateness
+ *
+ * Who arrives on time.
+ *
+ * The note above whoIsIn says this product does not tell somebody they are
+ * late, because the office decides what late means. That still holds, and it
+ * is the reason this can now be measured: every office already sets the time
+ * its day starts, on its own settings page. So nothing here invents a
+ * standard. It compares the clock-in against the hour that office chose, and
+ * an office that has not chosen one is left out rather than judged by a
+ * default.
+ *
+ * A grace period, because a person who arrives at 10:02 has not done anything
+ * wrong and a report that says otherwise is a report managers stop believing.
+ */
+export const GRACE_MINUTES = 10;
+
+export type Punctuality = {
+  user_id: string;
+  full_name: string;
+  branch_name: string | null;
+  /** Days with a clock-in and an office start time to compare it against. */
+  measured: number;
+  on_time: number;
+  late: number;
+  /** Average minutes past the start, counting only the late days. */
+  avg_late_minutes: number;
+  worst_minutes: number;
+  /** The most consecutive late days in the window, which is the real signal. */
+  streak: number;
+  last_late: string | null;
+};
+
+const minutesOfDay = (hhmm: string) => {
+  const [h, m] = hhmm.split(":").map(Number);
+  return (h || 0) * 60 + (m || 0);
+};
+
+/**
+ * Punctuality per person over a date range.
+ *
+ * Deliberately returns counts rather than a verdict. "Always late" is a
+ * judgement a manager makes with context this table does not have, such as
+ * who drops a child at school first, so the numbers are laid out and the
+ * wording around them stays factual.
+ */
+export function punctuality(scope: Scope, from: string, to: string): Punctuality[] {
+  const b = branchFilter(scope, "s");
+  const rows = all<{
+    user_id: string; full_name: string; branch_name: string | null;
+    day: string; started_at: string; day_starts: string | null;
+  }>(
+    `SELECT s.user_id, u.full_name, br.name AS branch_name,
+            s.day, s.started_at, br.day_starts
+       FROM shifts s
+       JOIN users u ON u.id = s.user_id
+       LEFT JOIN branches br ON br.id = s.branch_id
+      WHERE s.tenant_id = ? AND s.day >= ? AND s.day <= ?
+        AND br.day_starts IS NOT NULL AND s.started_at IS NOT NULL${b.sql}
+      ORDER BY s.user_id, s.day`,
+    scope.tenantId, from, to, ...b.params,
+  );
+
+  const byPerson = new Map<string, Punctuality & { _run: number; _prevDay: string | null }>();
+  for (const r of rows) {
+    // started_at is stored as an ISO instant; the office's own day is what we
+    // compare against, so read the wall clock in Kathmandu rather than UTC.
+    const at = new Date(r.started_at);
+    if (Number.isNaN(at.getTime())) continue;
+    const local = at.toLocaleTimeString("en-GB", {
+      hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Kathmandu",
+    });
+    const over = minutesOfDay(local) - minutesOfDay(r.day_starts!) - GRACE_MINUTES;
+
+    let p = byPerson.get(r.user_id);
+    if (!p) {
+      p = {
+        user_id: r.user_id, full_name: r.full_name, branch_name: r.branch_name,
+        measured: 0, on_time: 0, late: 0, avg_late_minutes: 0, worst_minutes: 0,
+        streak: 0, last_late: null, _run: 0, _prevDay: null,
+      };
+      byPerson.set(r.user_id, p);
+    }
+    p.measured += 1;
+    if (over > 0) {
+      p.late += 1;
+      p.avg_late_minutes += over;          // summed here, divided below
+      p.worst_minutes = Math.max(p.worst_minutes, over);
+      p.last_late = r.day;
+      p._run += 1;
+      p.streak = Math.max(p.streak, p._run);
+    } else {
+      p.on_time += 1;
+      p._run = 0;
+    }
+  }
+
+  return [...byPerson.values()]
+    .map(({ _run, _prevDay, ...p }) => ({
+      ...p,
+      avg_late_minutes: p.late ? Math.round(p.avg_late_minutes / p.late) : 0,
+    }))
+    .sort((a, b2) => (b2.late / (b2.measured || 1)) - (a.late / (a.measured || 1)));
+}
