@@ -1,4 +1,5 @@
-# One encrypted archive of the database and the uploaded documents.
+# One encrypted archive of the database and the uploaded documents, then a
+# copy of it somewhere that is not this disk.
 [Unit]
 Description=OfficeYak backup
 After=officeyak.service
@@ -10,10 +11,11 @@ Group=officeyak
 WorkingDirectory=/srv/officeyak
 EnvironmentFile=/etc/officeyak/officeyak.env
 ExecStart=/usr/bin/npm run backup
-# Copying it off this machine is the half that makes it a backup. Put your own
-# command here: rclone to a bucket, rsync to another box, anything that is not
-# this disk.
-# ExecStartPost=/usr/bin/rclone copy /srv/officeyak/data/backups remote:officeyak-backups
+# The half that makes it a backup rather than a second copy of the same disk.
+# This used to be a commented-out suggestion, which is why it never ran. It
+# reads the archive back from the remote and fails the unit if it is not there,
+# so a wrong bucket name or an expired key is loud instead of silent.
+ExecStartPost=/srv/officeyak/scripts/offsite.sh
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=officeyak-backup

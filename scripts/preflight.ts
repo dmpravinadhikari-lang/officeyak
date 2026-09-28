@@ -13,7 +13,7 @@
  * throws; a missing SMTP host is survivable, so it is a warning and the mail
  * simply waits in the queue.
  */
-import { existsSync, mkdirSync, writeFileSync, unlinkSync } from "node:fs";
+import { existsSync, mkdirSync, statSync, writeFileSync, unlinkSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 type Check = { name: string; state: "ok" | "warn" | "fail"; detail: string };
@@ -109,6 +109,34 @@ writable("Backup directory", env("OFFICEYAK_BACKUP_DIR") || "./data/backups", "d
 
 if (production && !existsSync(dbPath)) {
   warn("Database", `${dbPath} does not exist yet. It is created on first boot, with an empty consultancy list.`);
+}
+
+/*
+ * A backup that never leaves this disk.
+ *
+ * The nightly archive ran correctly for months and every copy of it sat beside
+ * the database it was protecting, because the line that copied it away was a
+ * comment in the service file. The failure had no symptom: the timer was
+ * green, the archives were there, and the whole lot would have died with the
+ * machine. So it is checked here, and the receipt is checked too, because
+ * "configured" and "happened last night" are different claims.
+ */
+const backupDir = env("OFFICEYAK_BACKUP_DIR") || "./data/backups";
+const remote = env("OFFICEYAK_BACKUP_REMOTE");
+if (!remote) {
+  (production ? fail : warn)(
+    "OFFICEYAK_BACKUP_REMOTE",
+    "Not set, so every backup stays on this disk and losing the machine loses every consultancy on it.",
+  );
+} else {
+  const receipt = join(backupDir, ".last-offsite");
+  if (!existsSync(receipt)) {
+    warn("Off-site backup", `Set to ${remote}, but no backup has reached it yet. Run: scripts/offsite.sh`);
+  } else {
+    const age = Math.floor((Date.now() - statSync(receipt).mtimeMs) / 864e5);
+    if (age > 2) fail("Off-site backup", `The last one to reach ${remote} was ${age} days ago. Something has been failing quietly.`);
+    else ok("Off-site backup", `${remote}, last reached ${age === 0 ? "today" : age === 1 ? "yesterday" : `${age} days ago`}`);
+  }
 }
 
 /* ----------------------------------------------------------------- email */
