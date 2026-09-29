@@ -88,8 +88,8 @@ export async function BillingCard({ tenantId, plan }: { tenantId: string; plan: 
         <Icon name="alert" size={15} className="mt-0.5 shrink-0 text-brand-600" />
         <span>
           Invoices come from {LEGAL.entity}, {LEGAL.place}, PAN {LEGAL.pan}, and are payable within{" "}
-          {TERMS_DAYS} days by bank transfer. Bank details are on the invoice itself. Nothing is
-          charged automatically and no card is held.
+          {TERMS_DAYS} days. How to pay is arranged with you directly. Nothing is charged
+          automatically and no card is held.
         </span>
       </p>
     </Card>
