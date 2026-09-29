@@ -102,6 +102,31 @@ What makes it finished:
 - Internal links to pages that genuinely relate, and that exist. Check them.
 - Sources only where a real source was used, with the date it was checked.
 
+### Link into it before you move on
+
+A page nothing links to is a page search engines reach last and readers never
+reach at all. The sitemap is not a substitute for a link.
+
+So, having written it: find two or three existing pages that genuinely relate,
+and add a link to the new page from inside their prose, using words that
+describe where the link goes. Not a "related posts" list at the foot, which
+readers skip and which carries less weight. If no existing page relates closely
+enough that a link would read naturally, say so in the report rather than
+forcing one in.
+
+Then check the reverse: any page in the sitemap that nothing else links to at
+all. Fixing every orphan is a weekly job, but a new one appearing is worth a
+line in today's report.
+
+### Check the page you just wrote
+
+Before committing, fetch it as a reader would:
+
+- every internal link resolves, no 404s
+- every outbound link resolves, and none has quietly become a parked domain
+- the structured data parses and declares a type
+- it has a title, a description in range, a canonical, and one `h1`
+
 Then:
 
 ```
@@ -135,7 +160,40 @@ decides what to do about it.
 
 If none published anything, say nothing about it in the report.
 
-## 7. Report
+## 7. Write the machine readable report
+
+The owner has a Marketing tab in the admin console that reads this. It is the
+only way anything you did today reaches a screen, so it is not optional and it
+is not a summary of the report below: it is the same run, in a form something
+else can read.
+
+Write `content/seo/latest.json`, and a copy at
+`content/seo/history/<YYYY-MM-DD>-<kind>.json`. The shape is defined in
+`src/modules/seo/report.ts`; read that file rather than guessing at field
+names, because a field the page does not know about is a field nobody sees.
+
+Two rules about it, and they matter more than completeness:
+
+**Never write a number you did not measure.** Every block is optional. If you
+could not reach Search Console, omit `search` entirely. The page renders a
+sentence saying the credential is missing. A zero would render as an answer,
+and somebody would believe it.
+
+**`site.unreachable` and `site.up: false` are different things.** Use
+`unreachable` when a network or proxy policy refused the host, and leave `up`
+alone. Use `up: false` only when you reached the site and it answered badly.
+The page draws a red banner for one and an amber one for the other, and telling
+the owner the site is down when it is not is the single worst thing this
+routine can do.
+
+Put anything you were not allowed to fix into `suggestions`, and set `needsYou`
+on the ones only a person can clear: a credential, a decision, a fact you do
+not have. Those are pulled to the top of the tab under "Waiting on you".
+
+Commit this with the fixes, not with the page. It describes the run, not the
+content.
+
+## 8. Report
 
 Four lines on a normal day, in this order:
 

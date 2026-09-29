@@ -120,7 +120,7 @@ export default async function AdminPage() {
         sub="Every consultancy on OfficeYak, and what running them costs."
         actions={
           <div className="flex flex-wrap gap-2">
-            {[["Blog and drafts", "/app/admin/blog"], ["Testimonials", "/app/admin/testimonials"]].map(([label, href]) => (
+            {[["Marketing", "/app/admin/marketing"], ["Blog and drafts", "/app/admin/blog"], ["Testimonials", "/app/admin/testimonials"]].map(([label, href]) => (
               <a
                 key={href} href={href}
                 className="inline-flex min-h-[40px] items-center rounded-[10px] border border-line-2 bg-panel px-4 text-[13.5px] font-medium text-ink hover:border-brand-400 hover:text-brand-600"

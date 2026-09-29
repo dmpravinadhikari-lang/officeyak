@@ -96,3 +96,14 @@ Longer than the others, and structured:
 5. What is still blocked on the owner, with the same items as last month marked
    as such, so that a thing that has been blocked for three months looks like
    what it is.
+
+Also write the machine readable report, exactly as the daily playbook's section
+on it describes: `content/seo/latest.json` plus a dated copy under
+`content/seo/history/`, with `kind` set to `monthly`. The owner's Marketing tab
+reads whichever run wrote last, so a run that skips this is a run that did not
+happen as far as that screen is concerned.
+
+The same two rules apply and apply hardest here: never write a figure you did
+not measure, and put everything you were not allowed to change into
+`suggestions`, with `needsYou` set on anything only a person can clear. On this
+run that list is the point of the exercise.

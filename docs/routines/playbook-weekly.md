@@ -120,3 +120,14 @@ Report: the biggest movement, the biggest leak, what the week's five pages are,
 and what is blocked. If Search Console or Analytics were skipped, that goes
 first, not last, because it is the thing that makes the rest of the report
 weaker and the owner should know that before they read it.
+
+Also write the machine readable report, exactly as the daily playbook's section
+on it describes: `content/seo/latest.json` plus a dated copy under
+`content/seo/history/`, with `kind` set to `weekly`. The owner's Marketing tab
+reads whichever run wrote last, so a run that skips this is a run that did not
+happen as far as that screen is concerned.
+
+The same two rules apply and apply hardest here: never write a figure you did
+not measure, and put everything you were not allowed to change into
+`suggestions`, with `needsYou` set on anything only a person can clear. On this
+run that list is the point of the exercise.
