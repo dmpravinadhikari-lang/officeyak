@@ -260,7 +260,7 @@ export default async function SoftwarePage({
       </section>
 
       <CtaBand action="Start free">
-        Try it with your own students this week. Nothing is charged until you ask to be invoiced.
+        Try it with your own students this week. Thirty days free, and no card on file.
       </CtaBand>
 
       <SiteFooter />
