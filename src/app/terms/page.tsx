@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BRAND } from "@/lib/brand";
 import { LEGAL } from "@/lib/legal";
-import { PLANS } from "@/lib/plans";
+import { PLANS, TRIAL_DAYS } from "@/lib/plans";
 import { LegalPage, Row, type Section } from "../legal-page";
 
 export const metadata = {
@@ -73,9 +73,10 @@ export default function TermsPage() {
       body: (
         <>
           <p>
-            You can set up and use {BRAND.name} before paying anything. There is no card on file
-            and nothing is charged until you ask to be invoiced, which is also why there is nothing
-            to cancel if you decide it is not for you.
+            You can set up and use {BRAND.name} free for the first {TRIAL_DAYS} days. There is
+            no card on file and nothing is ever charged automatically: when the trial ends we raise
+            an invoice for the plan you are on, and you either pay it or tell us you are stopping.
+            Telling us you are stopping is the whole of it, there is no notice and no fee.
           </p>
           <div className="mt-1">
             <Row label={`${PLANS.starter.label}, ${npr(PLANS.starter.priceNpr)} a month`}>
@@ -109,7 +110,8 @@ export default function TermsPage() {
       body: (
         <>
           <p>
-            Invoices are raised in Nepali rupees, monthly, from the day you ask to be invoiced.
+            Invoices are raised in Nepali rupees, monthly, from the end of your {TRIAL_DAYS} day
+            trial.
             There is no card on file and no automatic charge: an invoice arrives, and you pay it.
             The other currencies shown on our pricing page are there so a partner or an investor can
             read it without doing arithmetic; they are not what you are billed in.
@@ -315,7 +317,7 @@ export default function TermsPage() {
       title="Terms"
       intro="What we agree to do, what we ask of you, and what happens if either of us stops. No clause here exists only to make us look protected."
       summary={[
-        "Set up and use it before paying anything. No card on file, and nothing is charged until you ask to be invoiced.",
+        `${TRIAL_DAYS} days free to set up and use it. No card on file, and nothing is ever charged automatically.`,
         "Your data is yours. Ask and we export all of it within seven days, and you can leave with no fee and no notice.",
         "Plans are counted in staff accounts and offices. Students are unlimited on every plan.",
         "The practice tools are practice. Nothing here is immigration advice, and no score predicts a visa decision.",

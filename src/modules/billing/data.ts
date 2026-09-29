@@ -1,7 +1,7 @@
 import "server-only";
 import { all, one, run, uid, now } from "@/lib/db";
 import { addDays, localDay, daysFromToday } from "@/lib/dates";
-import { PLANS, planOf } from "@/lib/plans";
+import { PLANS, planOf, TRIAL_DAYS } from "@/lib/plans";
 
 /**
  * What a consultancy owes Straw Holdings for OfficeYak.
@@ -24,16 +24,8 @@ import { PLANS, planOf } from "@/lib/plans";
  * changes.
  */
 
-/**
- * How long a consultancy gets before the first bill.
- *
- * Thirty days rather than the fourteen that software companies elsewhere use.
- * A consultancy owner does not evaluate this in an afternoon: they try it on
- * one branch, wait for a counsellor to complain, and decide at the end of the
- * month when they can see whether anything got easier. Fourteen days ends
- * before that conversation happens.
- */
-export const TRIAL_DAYS = 30;
+/** Re-exported so callers here do not need two imports. Defined beside the prices. */
+export { TRIAL_DAYS } from "@/lib/plans";
 
 /** How long they have to pay once an invoice is issued. */
 export const TERMS_DAYS = 14;

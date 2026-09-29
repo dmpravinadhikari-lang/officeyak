@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TRIAL_DAYS } from "@/lib/plans";
 import { AuthShell } from "@/components/AuthShell";
 import { SignupForm } from "./form";
 
@@ -18,7 +19,7 @@ export default function SignupPage() {
   return (
     <AuthShell
       title="Set up your consultancy"
-      sub="Your own address, your students, your records. Free to set up: no card, and nothing is charged until you ask to be invoiced."
+      sub={`Your own address, your students, your records. ${TRIAL_DAYS} days free, no card, and nothing is ever charged automatically.`}
       footer={
         <>
           Already set up?{" "}

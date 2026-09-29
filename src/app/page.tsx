@@ -5,7 +5,7 @@ import { Icon, type IconName } from "@/components/Icon";
 import { currentUser } from "@/lib/auth/current";
 import { BRAND } from "@/lib/brand";
 import { GoogleAnalytics } from "@/lib/analytics/ga";
-import { PLANS } from "@/lib/plans";
+import { PLANS, TRIAL_DAYS } from "@/lib/plans";
 import { STUDENT_JOURNEY, perStudent, studentsCovered } from "@/lib/credits-explained";
 import { PricingCards } from "./pricing-cards";
 import { Reveal } from "@/components/Reveal";
@@ -22,8 +22,8 @@ import { SiteHeader, SiteFooter } from "@/components/site-chrome";
  * footer with the ridge flipped along its top.
  *
  * Two things here are not in the mockup and are here on purpose. The primary
- * button says "Start free" rather than "Book a demo", because there is a free
- * tier and a signup form at the end of it and no demo to book; the shape,
+ * button says "Start free" rather than "Book a demo", because there is a thirty
+ * day trial and a signup form at the end of it and no demo to book; the shape,
  * colour, radius and weight are the mockup's. And the sections after the
  * product band - the student tools, security, the plan comparison - are
  * business the mockup does not cover but a consultancy asks about before it
@@ -481,8 +481,8 @@ export default async function Home() {
               Priced for a Nepali consultancy.
             </h2>
             <p className="text-[16px] leading-[1.55] text-ink-2">
-              Start free while you set up. Nothing is charged until you ask to be invoiced, there
-              is no card on file, and you move between plans as the office grows.
+              {TRIAL_DAYS} days free while you set up. No card on file, nothing is ever charged
+              automatically, and you move between plans as the office grows.
             </p>
           </div>
 

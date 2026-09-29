@@ -20,6 +20,21 @@
  * this category charges on, and a consultancy can put every student it has on
  * the system without being punished for it.
  */
+/**
+ * How long a consultancy gets before the first bill.
+ *
+ * Thirty days rather than the fourteen software companies elsewhere use: a
+ * consultancy owner does not evaluate this in an afternoon, they try it on one
+ * branch and decide at the end of the month.
+ *
+ * It lives here, beside the prices, because it is a commercial term and the
+ * Terms of Service and the pricing pages all have to state it. The last time a
+ * number like this was written out by hand in prose, the prose said billing
+ * started when the customer asked for it while the product started a clock at
+ * signup, and that contradiction sat in a contract for a day.
+ */
+export const TRIAL_DAYS = 30;
+
 export const PLANS = {
   starter: {
     label: "Starter",
