@@ -19,6 +19,8 @@ a calculator attached.
 
 | Keyword | Page to build | Status |
 | --- | --- | --- |
+| study in ireland | /study/ireland | **todo, write this first** |
+| cost of student visa to ireland | /study/ireland, the funds section | **todo**, covered by the same page |
 | study in uk | /study/uk | **live** |
 | cost of student visa to uk | /study/uk, the funds section | **live**, covered by the same page |
 | cost of student visa to canada | /study/canada | **live** |
@@ -29,9 +31,18 @@ a calculator attached.
 | study in australia | /study/australia | **live** |
 | cost of student visa to new zealand | /study/new-zealand | **live** |
 | study in new zealand | /study/new-zealand | **live** |
-| cost of student visa to ireland | /study/ireland/cost | todo |
-| study in ireland | /study/ireland | todo |
 
+
+## Ireland is the one unblocked page, week of 29 September 2026
+
+`src/modules/cost/data.ts` already holds Ireland under `IE`: tuition, living,
+the EUR 60 visa fee, health cover, and a funds requirement of EUR 10,000 with
+the Irish Immigration Service as its source and the holding period written
+down. Nothing has to be looked up, which matters this week because outbound
+network access is blocked and no other queued page can have its figures
+sourced.
+
+The two Ireland rows are now one page, for the reason the next section gives.
 
 ## A note on the first one
 
@@ -72,7 +83,13 @@ OfficeYak already does these. Nothing on the site says so to a searcher.
 
 | Keyword | Page to build | Status |
 | --- | --- | --- |
-| ai ielts preparation | /tools/ielts-practice | todo |
-| ai pte preparation | /tools/pte-practice | todo |
-| ai mock interview | /tools/ai-visa-interview | todo |
-| ai visa interview practice | same page, variant | todo |
+| ai ielts preparation | /tools/ielts-practice | **blocked**, no API key |
+| ai pte preparation | /tools/pte-practice | **blocked**, no API key |
+| ai mock interview | /tools/ai-visa-interview | **blocked**, no API key |
+| ai visa interview practice | same page, variant | **blocked**, no API key |
+
+**Do not take these off the queue yet.** The tools answer with sample text
+until `OFFICEYAK_AI_PROVIDER` is set to `anthropic-api` with a key behind it.
+A page that sells an AI IELTS examiner and returns canned text is a refund
+request. The moment the key exists these become the next three to write, and
+they carry more search volume than anything else left in this file.

@@ -94,6 +94,36 @@ frame it is winnable and the visitor is the right person.
 
 ---
 
+## Found 29 September 2026, not yet writable
+
+The B2B queue has no unblocked `todo` left in it. Every row in all three tiers
+above is `live`, so the brief's rule to alternate between this file and
+`student-queue.md` cannot be honoured this week. This is the gap that was
+found instead, and it is genuinely the most urgent question this site's B2B
+buyer has.
+
+| Keyword | Page to build | Status |
+| --- | --- | --- |
+| educational consultancy registration nepal 2083 | a guide, `content/blog/` | **blocked**, needs an official source |
+| consultancy license renewal nepal | same page, variant | **blocked**, same |
+| education consultancy rules nepal 2026 | same page, variant | **blocked**, same |
+
+The Government of Nepal has a new Educational Consultancy Service Regulation,
+2083 (2026), covering registration, licensing, financial security,
+infrastructure, counsellor qualifications and penalties. Consultancy blogs
+across the Nepali web are already writing about it. `start-education-consultancy-nepal.md`
+predates it and does not mention it.
+
+**Do not write this from those blog posts.** Every claim would be a licensing
+rule that a reader acts on legally, and the versions circulating do not agree
+with each other. The page needs the regulation itself, from an official
+government publication, and outbound network access is blocked, so it could
+not be read on 29 September. Unblock the network, read the source, then write
+it. Until then this row stays `blocked` rather than `todo`, so the daily run
+does not pick it up and guess.
+
+---
+
 ## Do not chase these
 
 They appeared in the same data and they are traps.
