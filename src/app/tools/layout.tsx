@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StrawBadge } from "@/components/StrawBadge";
 import { Logo } from "@/components/Logo";
 import { Icon } from "@/components/Icon";
 import { LinkButton } from "@/components/ui";
@@ -74,6 +75,7 @@ export default async function ToolsLayout({ children }: { children: React.ReactN
                 Free tools for Nepali students, and the platform consultancies run them on.
                 No account needed for anything on this page.
               </p>
+              <StrawBadge className="mt-3" />
             </div>
             <nav className="flex flex-wrap gap-x-8 gap-y-2 text-[13px]">
               <div className="flex flex-col gap-2">

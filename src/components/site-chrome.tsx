@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { StrawBadge } from "@/components/StrawBadge";
 import Link from "next/link";
 import { Logo, Ridge } from "@/components/Logo";
 import { BRAND } from "@/lib/brand";
@@ -100,6 +101,7 @@ export function SiteFooter() {
             <p className="max-w-[260px] text-[14px] leading-[1.5] text-[#B9B8CC]">
               The AI-powered operating system for education consultancies. Built in Nepal.
             </p>
+            <StrawBadge onDark className="mt-1" />
           </div>
           {COLUMNS.map((col) => (
             <div key={col.head} className="flex flex-col gap-2.5">

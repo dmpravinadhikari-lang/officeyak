@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StrawBadge } from "@/components/StrawBadge";
 import type { ReactNode } from "react";
 import { Logo } from "@/components/Logo";
 import { Icon } from "@/components/Icon";
@@ -108,7 +109,10 @@ export function LegalPage({
           <Link href="/privacy" className="hover:text-brand-600">Privacy</Link>
           <Link href="/terms" className="hover:text-brand-600">Terms</Link>
           <Link href="/" className="hover:text-brand-600">Home</Link>
-          <span className="ml-auto">© {new Date().getFullYear()} {BRAND.name}</span>
+          <span className="ml-auto flex items-center gap-4">
+            <StrawBadge />
+            <span>© {new Date().getFullYear()} {BRAND.name}</span>
+          </span>
         </footer>
       </div>
     </main>
