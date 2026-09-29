@@ -19,7 +19,7 @@ import { SOFTWARE_PAGES } from "@/modules/software/pages";
 export const metadata: Metadata = {
   title: `Software for education consultancies | ${BRAND.name}`,
   description:
-    "One system for a consultancy: enquiries, student files, class registers, staff attendance and payroll. Free to start, unlimited staff accounts.",
+    "One system for a consultancy: enquiries, student files, class registers, staff attendance and payroll. Free to start, and never a charge for having more students.",
   alternates: { canonical: "/software" },
 };
 
@@ -60,7 +60,7 @@ export default function SoftwareIndex() {
             </Link>
           </div>
           <p className="mt-3.5 text-[14px] text-muted">
-            No card, no demo call, unlimited staff accounts on every plan.
+            No card, no demo call, and unlimited students on every plan.
           </p>
         </div>
         <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0">

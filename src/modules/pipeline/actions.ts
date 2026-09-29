@@ -41,16 +41,17 @@ export async function addStudent(_prev: PipelineState, formData: FormData): Prom
     return { ok: false, message: "Someone already has an account with that email." };
   }
 
-  // The plan's student limit is a real limit, not a suggestion.
+  /*
+   * No student limit any more, deliberately.
+   *
+   * This used to refuse the twenty-sixth student on the Starter plan and tell
+   * the consultancy to move somebody out of the active stages or pay more.
+   * That is a charge for being good at the job, and the cheapest way around
+   * it was to stop entering students, which quietly breaks the pipeline, the
+   * reports and the consultancy's own numbers. Plans count staff accounts and
+   * offices now, so every student a consultancy has can go on the system.
+   */
   const tenant = one<{ plan: string; name: string }>("SELECT plan, name FROM tenants WHERE id = ?", scope.tenantId);
-  const plan = planOf(tenant?.plan ?? "starter");
-  const active = activeStudentCount(scope.tenantId);
-  if (active >= plan.maxStudents) {
-    return {
-      ok: false,
-      message: `The ${plan.label} plan covers ${plan.maxStudents} active students and you have ${active}. Move a departed student out of the active stages, or upgrade the plan.`,
-    };
-  }
 
   const password = tempPassword();
   const studentId = uid();

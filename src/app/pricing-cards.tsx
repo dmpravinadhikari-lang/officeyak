@@ -83,7 +83,11 @@ export function PricingCards({ rows }: { rows: Row[] }) {
             <p className={`relative mt-2 text-[14px] leading-relaxed ${row.featured ? "text-white/70" : "text-ink-2"}`}>{row.for}</p>
             <p className={`mt-2 text-[12.5px] ${row.featured ? "text-white/55" : "text-muted"}`}>
               {code === "NPR"
-                ? "The whole office, not per counsellor."
+                /* This used to read "the whole office, not per counsellor",
+                   which was true when a plan counted students. It counts staff
+                   accounts now, so the old line contradicted the list directly
+                   underneath it. */
+                ? "One flat price. Students never count towards it."
                 : `Invoiced in NPR ${row.npr.toLocaleString("en-IN")}. Conversion is indicative.`}
             </p>
 

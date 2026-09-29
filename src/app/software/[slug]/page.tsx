@@ -122,7 +122,7 @@ export default async function SoftwarePage({
             </Link>
           </div>
           <p className="mt-3.5 text-[14px] text-muted">
-            No card, no demo call, unlimited staff accounts on every plan.
+            No card, no demo call, and unlimited students on every plan.
           </p>
         </div>
         <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0">

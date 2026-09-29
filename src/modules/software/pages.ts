@@ -124,8 +124,8 @@ export const SOFTWARE_PAGES: SoftwarePage[] = [
         a: "A sales CRM models an opportunity that opens, progresses and closes in weeks. A student file runs for a year or more, changes destination partway, carries documents that expire, and involves a parent who is paying but is not the applicant. You can build that in custom fields, and offices that do spend six months configuring software and still cannot say who was promised a call this week.",
       },
       {
-        q: "Do we pay per counsellor?",
-        a: "No. Staff accounts are unlimited on every plan. Charging per seat makes an owner ration logins, and a counsellor without a login writes on paper, and the paper is not in the system.",
+        q: "Do we pay per student?",
+        a: "No. Students are unlimited on every plan, so a good year never costs you more and nobody has to delete a file to make room. A plan is counted in staff accounts and offices instead, which is what actually decides how much of the system you are using.",
       },
       {
         q: "Can we try it before paying?",

@@ -5,40 +5,54 @@
  *
  * No payment gateway yet, you set a consultancy's plan in the admin panel and
  * invoice them by hand. The limits below are enforced regardless.
+ *
+ * What a plan counts changed, and the reason is worth keeping.
+ *
+ * It used to count active students. That charges a consultancy for being
+ * good at its job: the month they enrol thirty families instead of twenty is
+ * the month the software asks for more money, and the obvious way out is to
+ * stop recording students, which breaks the product and the customer's own
+ * numbers at the same time. It also does not match the work. Nothing costs
+ * more to run because a file exists; it costs more because another person
+ * logs in all day.
+ *
+ * So plans now count staff accounts and offices, which is what every CRM in
+ * this category charges on, and a consultancy can put every student it has on
+ * the system without being punished for it.
  */
 export const PLANS = {
   starter: {
     label: "Starter",
     audience: "consultancy",
     priceNpr: 4999,
-    maxStudents: 25,
+    maxUsers: 5,
     maxBranches: 1,
     monthlyCredits: 300,
-    blurb: "Single branch getting started",
+    blurb: "One office, a small team",
   },
   growth: {
     label: "Growth",
     audience: "consultancy",
     priceNpr: 12999,
-    maxStudents: 100,
+    maxUsers: 15,
     maxBranches: 3,
     monthlyCredits: 1500,
-    blurb: "Established consultancy",
+    blurb: "A few offices, a growing team",
   },
   pro: {
     label: "Pro",
     audience: "consultancy",
     priceNpr: 29999,
-    maxStudents: Number.POSITIVE_INFINITY,
+    maxUsers: Number.POSITIVE_INFINITY,
     maxBranches: Number.POSITIVE_INFINITY,
     monthlyCredits: 5000,
-    blurb: "Multi-branch or franchise",
+    blurb: "Any number of offices and staff",
   },
   student_free: {
     label: "Student Free",
     audience: "student",
     priceNpr: 0,
-    maxStudents: 1,
+    maxUsers: 1,
     maxBranches: 1,
     monthlyCredits: 15,
     blurb: "Direct student, free tier",
@@ -47,7 +61,7 @@ export const PLANS = {
     label: "Student Premium",
     audience: "student",
     priceNpr: 999,
-    maxStudents: 1,
+    maxUsers: 1,
     maxBranches: 1,
     monthlyCredits: 120,
     blurb: "Direct student, full access",

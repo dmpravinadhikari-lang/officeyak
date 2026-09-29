@@ -22,7 +22,7 @@ export function ConsultancyCard({
 }: {
   tenant: Tenant;
   domain: string;
-  plan: { label: string; priceNpr: number; maxStudents: number; maxBranches: number; monthlyCredits: number };
+  plan: { label: string; priceNpr: number; maxUsers: number; maxBranches: number; monthlyCredits: number };
   usage: { students: number; offices: number; staff: number; credits: { used: number; allowance: number } };
 }) {
   const [state, action, pending] = useActionState(saveConsultancy, initial);
@@ -73,7 +73,7 @@ export function ConsultancyCard({
 
         <div className="mt-4 grid gap-5 sm:grid-cols-3">
           {[
-            { label: "Active students", used: usage.students, max: plan.maxStudents },
+            { label: "Staff accounts", used: usage.staff, max: plan.maxUsers },
             { label: "Offices", used: usage.offices, max: plan.maxBranches },
             { label: "AI credits this month", used: usage.credits.used, max: usage.credits.allowance },
           ].map((row) => (
@@ -97,7 +97,7 @@ export function ConsultancyCard({
 
         <p className="mt-4 flex flex-wrap items-center gap-2 border-t border-line pt-4 text-[13px] text-muted">
           <Icon name="alert" size={15} className="text-brand-600" />
-          Staff accounts are unlimited on every plan. You have {usage.staff}.
+          Students are unlimited on every plan. You have {usage.students} on the system.
           <a
             href="/#pricing"
             className="inline-flex min-h-[32px] items-center rounded-full px-2 font-medium text-brand-600 hover:bg-brand-50"

@@ -89,9 +89,9 @@ export async function saveBranch(_prev: BranchState | null, formData: FormData):
       id, scope.tenantId,
     );
   } else {
-    // The plan's office limit is a real limit, the same way the student limit
-    // is. Checked on the way in rather than shown as a greyed out button,
-    // because a form that arrives by POST has no button.
+    // The plan's office limit is a real limit, the same way the staff account
+    // limit is. Checked on the way in rather than shown as a greyed out
+    // button, because a form that arrives by POST has no button.
     const tenant = one<{ plan: string }>("SELECT plan FROM tenants WHERE id = ?", scope.tenantId);
     const plan = planOf(tenant?.plan ?? "starter");
     const offices = scalar(

@@ -131,10 +131,10 @@ const SECURITY: Array<{ icon: IconName; name: string; blurb: string }> = [
 const cap = (n: number) => (n === Number.POSITIVE_INFINITY ? "Unlimited" : String(n));
 
 const COMPARE: Array<{ label: string; note?: string; value: (id: "starter" | "growth" | "pro") => string | boolean }> = [
-  { label: "Active students", note: "Departed and lost files do not count", value: (id) => cap(PLANS[id].maxStudents) },
+  { label: "Staff accounts", note: "Counsellors, admins, everyone with a login", value: (id) => cap(PLANS[id].maxUsers) },
   { label: "Offices", value: (id) => cap(PLANS[id].maxBranches) },
+  { label: "Students on the system", note: "However many you have", value: () => "Unlimited" },
   { label: "AI credits a month", value: (id) => PLANS[id].monthlyCredits.toLocaleString("en-US") },
-  { label: "Staff accounts", note: "Counsellors, admins, everyone", value: () => "Unlimited" },
   { label: "Student board, tasks, documents", value: () => true },
   { label: "Attendance with a geofence", value: () => true },
   { label: "Payroll", value: (id) => id !== "starter" },
@@ -145,16 +145,17 @@ const COMPARE: Array<{ label: string; note?: string; value: (id: "starter" | "gr
 ];
 
 const FAQ = [
-  { q: "What happens when we pass the student limit?", a: "Nothing breaks and nothing is deleted. Adding the next student asks you to move up a plan, and moving a departed student on frees a place, because only active files count." },
-  { q: "Do we pay per counsellor?", a: "No. Staff accounts are unlimited on every plan. You pay for the office, not for seats, because charging per seat makes an owner ration logins." },
+  { q: "Is there a limit on students?", a: "No. Put every family you are working with on the system, on any plan. You are never charged more for having a good year, and nobody has to delete a file to make room." },
+  { q: "What counts as a staff account?", a: "Anybody with their own login: counsellors, the front desk, documentation, accounts, you. Students and parents are not staff and never count." },
+  { q: "What happens when we pass the staff limit?", a: "Nothing breaks and nobody is locked out. Adding the next person asks you to move up a plan, and switching off somebody who has left frees a place." },
   { q: "Which currency are we billed in?", a: "Invoices are raised in Nepali rupees. The other currencies here exist so a partner or an investor reading this page does not have to do the arithmetic." },
   { q: "What if we run out of credits?", a: "The AI tools pause until the first of the month. The board, attendance, documents, payroll and reports do not use credits and keep working." },
 ];
 
 const PLAN_ROWS = [
-  { id: "starter", for: "Single branch getting started", lines: ["25 active students, one office", "Board, tasks and documents", "Attendance with a geofence", "Unlimited staff accounts"] },
-  { id: "growth", for: "Established consultancy", featured: true, lines: ["100 active students, three offices", "Everything in Starter", "Payroll by the Nepali month", "Market research", "Partners and commission"] },
-  { id: "pro", for: "Multi-branch or franchise", lines: ["Unlimited students and offices", "Everything in Growth", "Office comparison for head office", "Priority support"] },
+  { id: "starter", for: "One office, a small team", lines: ["5 staff accounts, one office", "Unlimited students", "Board, tasks and documents", "Attendance with a geofence"] },
+  { id: "growth", for: "A few offices, a growing team", featured: true, lines: ["15 staff accounts, three offices", "Unlimited students", "Everything in Starter", "Payroll by the Nepali month", "Market research", "Partners and commission"] },
+  { id: "pro", for: "Any number of offices and staff", lines: ["Unlimited staff and offices", "Unlimited students", "Everything in Growth", "Office comparison for head office", "Priority support"] },
 ] as const;
 
 // Kept in step with the NAV in site-chrome.tsx by hand, because the homepage

@@ -56,7 +56,8 @@ export default function TermsPage() {
           <p>
             One person, one login. Sharing a login between a desk defeats every record in the
             product: the trail of who did what becomes worthless, and so does anything built on it.
-            Staff accounts are unlimited on every plan, so there is no reason to share one.
+            A shared login is also the one thing that makes the record of who did what useless,
+            which is why a plan counts accounts rather than people at a desk.
           </p>
           <p>
             You are responsible for what happens under your logins. Tell us at{" "}
@@ -78,14 +79,14 @@ export default function TermsPage() {
           </p>
           <div className="mt-1">
             <Row label={`${PLANS.starter.label}, ${npr(PLANS.starter.priceNpr)} a month`}>
-              {PLANS.starter.maxStudents} active students and one office.
+              {PLANS.starter.maxUsers} staff accounts and one office.
             </Row>
             <Row label={`${PLANS.growth.label}, ${npr(PLANS.growth.priceNpr)} a month`}>
-              {PLANS.growth.maxStudents} active students and up to {PLANS.growth.maxBranches}{" "}
+              {PLANS.growth.maxUsers} staff accounts and up to {PLANS.growth.maxBranches}{" "}
               offices, with payroll, market research, and partners and commission.
             </Row>
             <Row label={`${PLANS.pro.label}, ${npr(PLANS.pro.priceNpr)} a month`}>
-              Unlimited students and offices, and everything in {PLANS.growth.label}.
+              Unlimited staff accounts and offices, and everything in {PLANS.growth.label}.
             </Row>
           </div>
           <p>
@@ -316,7 +317,7 @@ export default function TermsPage() {
       summary={[
         "Set up and use it before paying anything. No card on file, and nothing is charged until you ask to be invoiced.",
         "Your data is yours. Ask and we export all of it within seven days, and you can leave with no fee and no notice.",
-        "Staff accounts are unlimited on every plan, so nobody needs to share a login.",
+        "Plans are counted in staff accounts and offices. Students are unlimited on every plan.",
         "The practice tools are practice. Nothing here is immigration advice, and no score predicts a visa decision.",
         "Sixty days' notice by email before a price rises or something you rely on changes.",
       ]}

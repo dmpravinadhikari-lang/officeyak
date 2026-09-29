@@ -74,7 +74,7 @@ export default async function ProfilePage({
             plan={{
               label: planOf(user.tenantPlan).label,
               priceNpr: planOf(user.tenantPlan).priceNpr,
-              maxStudents: planOf(user.tenantPlan).maxStudents,
+              maxUsers: planOf(user.tenantPlan).maxUsers,
               maxBranches: planOf(user.tenantPlan).maxBranches,
               monthlyCredits: planOf(user.tenantPlan).monthlyCredits,
             }}

@@ -8,6 +8,7 @@ import { can } from "@/lib/auth/access";
 import { hashPassword } from "@/lib/auth/password";
 import { all, now, one, run, uid } from "@/lib/db";
 import { isPosition, positionOf } from "@/lib/auth/positions";
+import { planOf } from "@/lib/plans";
 
 export type StaffState = { ok: boolean; message?: string; password?: string };
 
@@ -85,6 +86,31 @@ export async function addStaffMember(_prev: StaffState, formData: FormData): Pro
   }
   if (branchId && !one("SELECT 1 FROM branches WHERE id = ? AND tenant_id = ?", branchId, scope.tenantId)) {
     return { ok: false, message: "Choose one of your own offices." };
+  }
+
+  /*
+   * The plan's staff limit, which is now the limit that means anything.
+   *
+   * Plans used to count active students, so a consultancy was charged for
+   * being good at its job and could hire freely. That is the wrong way round:
+   * a student file sitting in the database costs nothing, and a person logged
+   * in all day is the thing actually using the system. The count is of live
+   * accounts, so switching somebody off when they leave frees their place
+   * without deleting the record of what they did.
+   */
+  const tenantPlan = one<{ plan: string }>("SELECT plan FROM tenants WHERE id = ?", scope.tenantId);
+  const plan = planOf(tenantPlan?.plan ?? "starter");
+  const inUse = Number(
+    one<{ n: number }>(
+      "SELECT COUNT(*) AS n FROM users WHERE tenant_id = ? AND role != 'student' AND active = 1",
+      scope.tenantId,
+    )?.n ?? 0,
+  );
+  if (inUse >= plan.maxUsers) {
+    return {
+      ok: false,
+      message: `The ${plan.label} plan covers ${plan.maxUsers} staff accounts and you are using all ${inUse}. Switch off somebody who has left, or move up a plan.`,
+    };
   }
 
   const password = tempPassword();

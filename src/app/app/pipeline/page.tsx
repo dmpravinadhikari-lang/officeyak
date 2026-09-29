@@ -85,7 +85,6 @@ export default async function PipelinePage({
   /* Counted for the office being looked at, like every other tile here. */
   const inOffice = new Set(inScope.map((r) => r.student_id));
   const stalledCount = stuck.filter((f) => inOffice.has(f.student_id)).length;
-  const cap = plan.maxStudents === Number.POSITIVE_INFINITY ? "unlimited" : plan.maxStudents;
 
   return (
     <div className="flex flex-col gap-6">
@@ -123,12 +122,13 @@ export default async function PipelinePage({
       )}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {/* No plan limit to warn about here any more: students are unlimited on
+            every plan, so this tile is a count rather than a meter. */}
         <StatTile
-          label="Active students" value={visibleActive}
-          tone={scope.allBranches && active >= Number(cap) ? "danger" : "brand"}
+          label="Active students" value={visibleActive} tone="brand"
           sub={
             officeName ? `in ${officeName}, ${active} across the consultancy`
-            : scope.allBranches ? `${cap} on the ${plan.label} plan`
+            : scope.allBranches ? `${active} across the consultancy`
             : `in ${user.branchName ?? "your office"}, ${active} across the consultancy`
           }
         />
@@ -341,7 +341,9 @@ export default async function PipelinePage({
       )}
 
       <p className="text-[12.5px] leading-relaxed text-muted">
-        Your plan counts active students. Moving someone to {stageOf("departed").label} or {stageOf("lost").label} frees a place.
+        Students are unlimited on every plan, so put everyone on here.{" "}
+        {stageOf("departed").label} and {stageOf("lost").label} keep a file without it
+        cluttering the board.
       </p>
     </div>
   );
