@@ -61,11 +61,38 @@ mkdir -p .next-build
 if [ -d .next/cache ]; then
   cp -r .next/cache .next-build/cache
 fi
-if ! OFFICEYAK_DIST_DIR=.next-build npm run build >>"$LOG" 2>&1; then
-  echo "!!  build failed. The site is still on the old version. Last of $LOG:"
-  tail -30 "$LOG"
+build_once() {
+  OFFICEYAK_DIST_DIR=.next-build npm run build >>"$LOG" 2>&1
+}
+
+if ! build_once; then
+  # One retry, because the failure this guards against is a network one and it
+  # is transient.
+  #
+  # On a cold cache next/font fetches the Google Fonts during the build. When
+  # that fetch comes back empty or truncated the build dies parsing it, with
+  # "Unexpected end of JSON input" and no stack trace into our own code, and
+  # then next-font-manifest.json is missing because the build never got that
+  # far. The cache carried across above is what normally stops this happening
+  # at all; this is for the deploy where there was no cache to carry.
+  #
+  # Retrying costs a minute on a genuinely broken build and saves a deploy
+  # that would otherwise have failed for a reason nothing in the repository
+  # is wrong about. The durable fix is to self host the fonts so the build
+  # reaches the network zero times, which is a change to the font pipeline
+  # rather than to this script.
+  echo "!!  build failed, retrying once in case it was the font fetch"
   rm -rf .next-build
-  exit 1
+  mkdir -p .next-build
+  [ -d .next/cache ] && cp -r .next/cache .next-build/cache
+
+  if ! build_once; then
+    echo "!!  build failed twice. The site is still on the old version. Last of $LOG:"
+    tail -30 "$LOG"
+    rm -rf .next-build
+    exit 1
+  fi
+  echo "    the retry succeeded, so the first failure was transient"
 fi
 grep -E "✓ Compiled|✓ Generating" "$LOG" | tail -2
 
