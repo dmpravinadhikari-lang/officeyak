@@ -1316,3 +1316,81 @@ CREATE TABLE IF NOT EXISTS class_attendance (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS idx_classatt_unique ON class_attendance(class_id, student_id, on_date);
 CREATE INDEX IF NOT EXISTS idx_classatt_student ON class_attendance(student_id, on_date);
+
+
+-- ===========================================================================
+-- The subscription: what a consultancy owes Straw Holdings for OfficeYak
+--
+-- Read the name of this section twice, because the product already has a
+-- billing system and it is not this one. student_charges and student_payments
+-- are a consultancy charging its own families. These two tables are the other
+-- direction entirely: Straw Holdings charging the consultancy for the
+-- software. Confusing the two would put OfficeYak's own revenue on a family's
+-- invoice, so they are named so that cannot happen by accident.
+--
+-- Until now none of this existed. A consultancy got a plan on the day it
+-- signed up, the plan was enforced properly, and nothing anywhere recorded
+-- when the account started, what it was worth, whether anyone had ever paid,
+-- or when they were next due. The website said "Start free" and meant it
+-- permanently.
+
+-- One row per consultancy. Created when they sign up.
+CREATE TABLE IF NOT EXISTS subscriptions (
+  tenant_id     TEXT PRIMARY KEY REFERENCES tenants(id),
+  -- trial     inside the free period, nothing owed yet
+  -- active    paying, and the last invoice is settled
+  -- overdue   an invoice has passed its due date
+  -- lapsed    the trial ended or an invoice went unpaid long enough to give up on
+  -- cancelled they left, and said so
+  status        TEXT NOT NULL DEFAULT 'trial',
+  -- The last day of the free period. Null once they are paying.
+  trial_ends_on TEXT,
+  -- The first day of the next period they will be billed for.
+  renews_on     TEXT,
+  cycle         TEXT NOT NULL DEFAULT 'monthly',   -- monthly | yearly
+  -- What was agreed, when it differs from the list price. A consultancy
+  -- talked down from 12,999 to 9,999 is a normal thing to happen and the
+  -- invoice has to say 9,999 every month, not once.
+  agreed_npr    INTEGER,
+  note          TEXT,
+  started_at    TEXT NOT NULL,
+  updated_at    TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_subs_status ON subscriptions(status, renews_on);
+
+-- One row per bill sent. Kept for ever, including the unpaid ones, because
+-- "we never received an invoice" is the most common thing a late payer says
+-- and the only useful answer is the date it was issued.
+CREATE TABLE IF NOT EXISTS subscription_invoices (
+  id          TEXT PRIMARY KEY,
+  tenant_id   TEXT NOT NULL REFERENCES tenants(id),
+  -- The reference a consultancy quotes in a bank transfer, e.g. OY-2026-0007.
+  -- Unique, sequential and never reused, because an accountant will reconcile
+  -- against it and a repeated number is a fortnight of email.
+  number      TEXT NOT NULL UNIQUE,
+  plan        TEXT NOT NULL,
+  period_from TEXT NOT NULL,
+  period_to   TEXT NOT NULL,
+  amount_npr  INTEGER NOT NULL DEFAULT 0,
+  issued_on   TEXT NOT NULL,
+  due_on      TEXT NOT NULL,
+  -- Null until the money arrives. This single column is the difference
+  -- between running a business and hoping.
+  paid_on     TEXT,
+  method      TEXT,        -- bank | esewa | khalti | cash | waived
+  reference   TEXT,        -- what the bank statement calls it
+  note        TEXT,
+  created_at  TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_subinv_tenant ON subscription_invoices(tenant_id, issued_on);
+CREATE INDEX IF NOT EXISTS idx_subinv_unpaid ON subscription_invoices(paid_on, due_on);
+
+-- Consultancies that existed before any of this was written get a trial
+-- starting the day the billing tables first appeared, not a backdated one
+-- that would report them as lapsed the moment they were counted. INSERT OR
+-- IGNORE makes this a one-time backfill even though the schema runs on every
+-- boot: once a row exists, it is theirs and nothing here touches it again.
+INSERT OR IGNORE INTO subscriptions
+  (tenant_id, status, trial_ends_on, renews_on, cycle, started_at, updated_at)
+SELECT id, 'trial', date('now', '+30 days'), NULL, 'monthly', created_at, datetime('now')
+  FROM tenants;

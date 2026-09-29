@@ -10,6 +10,7 @@ import { consultancyUsage, otherSessionCount } from "@/modules/account/actions";
 import { allowanceFor } from "@/lib/usage";
 import { planOf } from "@/lib/plans";
 import { BRAND } from "@/lib/brand";
+import { BillingCard } from "./billing-card";
 import { one } from "@/lib/db";
 import { PinSettings } from "./pin";
 import { hasPin } from "@/modules/kiosk/actions";
@@ -83,6 +84,9 @@ export default async function ProfilePage({
             }}
           />
         )}
+        {/* What they pay and what they have paid, which the product could not
+            previously answer at all. */}
+        {admin && <BillingCard tenantId={user.tenantId} plan={user.tenantPlan} />}
       </div>
     );
   }

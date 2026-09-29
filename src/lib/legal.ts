@@ -10,10 +10,22 @@
  * one before launch, and change it here the day any of it changes.
  */
 export const LEGAL = {
-  /** The name OfficeYak trades under, until the company is registered. */
-  entity: "OfficeYak",
-  /** Where the company is run from. */
-  place: "Kathmandu, Nepal",
+  /**
+   * The company a consultancy is actually contracting with.
+   *
+   * OfficeYak is the product; Straw Holdings is the registered company behind
+   * it, and the one whose name belongs on the agreement, on an invoice and on
+   * the answer to "who is holding our students' passports". This said
+   * "OfficeYak, until the company is registered" for longer than it was true.
+   */
+  entity: "Straw Holdings Pvt. Ltd.",
+  /** Where the company is run from, and its registered address. */
+  place: "Jwagal-10, Lalitpur, Nepal",
+  /**
+   * The tax number. Published because a Nepali business checks it before it
+   * pays anyone, and because every invoice this company issues must carry it.
+   */
+  pan: "621379271",
 
   /**
    * Where the data actually sits.

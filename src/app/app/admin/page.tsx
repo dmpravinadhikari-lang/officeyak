@@ -13,7 +13,9 @@ import { tenantSummary } from "@/modules/reports/data";
 import { ROLES, ROLE_LABEL } from "@/lib/auth/roles";
 import { CAPABILITIES, CAPABILITY_GROUPS, CROSS_TENANT, can } from "@/lib/auth/permissions";
 import { setTenantPlan, setTenantActive } from "./actions";
+import { revenueSummary } from "@/modules/billing/data";
 import { Alert, Card, Chip, PageHeader, ScrollHint, Th } from "@/components/ui";
+import { Icon } from "@/components/Icon";
 import { platformAnalytics } from "@/lib/analytics/platform";
 import { toolStats, readTool } from "@/lib/analytics/tools";
 import { VERDICT_STYLE } from "@/lib/analytics/metric";
@@ -42,9 +44,17 @@ export default async function AdminPage() {
   const emailsSent = scalar("SELECT COUNT(*) FROM notifications WHERE status = 'sent'");
   const emailsFailed = scalar("SELECT COUNT(*) FROM notifications WHERE status = 'failed'");
 
-  const mrr = tenants
-    .filter((t) => t.kind === "consultancy")
-    .reduce((sum, t) => sum + planOf(t.plan).priceNpr, 0);
+  /*
+   * What is actually being paid, not what would be paid if everyone did.
+   *
+   * This used to sum the list price of every consultancy on the system,
+   * trials and non-payers included, and put the total on the dashboard under
+   * "Contracted a month". Since nobody had ever been invoiced, the number was
+   * the sum of a wish. It now counts only accounts with a settled or issued
+   * invoice behind them, and says separately how much is owed.
+   */
+  const revenue = revenueSummary();
+  const mrr = revenue.monthly;
 
   const ai = activeProvider();
   const aiHealth = await Promise.all(
@@ -144,8 +154,10 @@ export default async function AdminPage() {
             <Kpi
               tone="dark" peak="grow" size={34}
               value={`NPR ${mrr.toLocaleString("en-IN")}`}
-              label="Contracted a month"
-              sub={`${consultancies.length} ${consultancies.length === 1 ? "consultancy" : "consultancies"} on a plan`}
+              label="Being paid a month"
+              sub={revenue.paying === 0
+                ? `Nobody is paying yet. ${revenue.trials} on trial.`
+                : `${revenue.paying} paying, ${revenue.trials} on trial`}
             />
             <Kpi
               tone="dark" peak="prepare" size={34}
@@ -160,6 +172,22 @@ export default async function AdminPage() {
               sub={`NPR ${kept.toLocaleString("en-IN")} of it, at roughly NPR ${usdToNpr} to the dollar`}
             />
           </div>
+        </div>
+        {/*
+          The way into the invoices. The card above says what is being paid;
+          the question it immediately raises is who has not, and until now
+          there was nowhere to go and find out.
+        */}
+        <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-white/15 pt-4">
+          <Link href="/app/admin/billing" className="oy-press inline-flex min-h-[40px] items-center gap-2 rounded-[10px] bg-white/10 px-4 text-[13.5px] font-semibold text-white hover:bg-white/20">
+            <Icon name="wallet" size={16} /> Bills and who owes
+          </Link>
+          {revenue.owed > 0 && (
+            <span className="text-[13px] text-white/80">
+              NPR {revenue.owed.toLocaleString("en-IN")} invoiced and unpaid
+              {revenue.chasing > 0 && `, ${revenue.chasing} to chase`}
+            </span>
+          )}
         </div>
       </NavyCard>
 

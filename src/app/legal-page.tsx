@@ -47,7 +47,7 @@ export function LegalPage({
           <h1 className="display text-[34px] leading-tight">{title}</h1>
           <p className="mt-3 text-[15.5px] leading-relaxed text-ink-2">{intro}</p>
           <p className="mt-3 text-[13px] text-muted">
-            In force from {LEGAL.updated}. {LEGAL.entity}, {LEGAL.place}.
+            In force from {LEGAL.updated}. {LEGAL.entity}, {LEGAL.place}. PAN {LEGAL.pan}.
           </p>
         </div>
 

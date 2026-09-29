@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { now, one, run, uid } from "@/lib/db";
+import { startTrial } from "@/modules/billing/data";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { endSession, startSession } from "@/lib/auth/session";
 import { ensureProfile } from "@/lib/profile";
@@ -131,6 +132,17 @@ export async function signup(_prev: AuthState, formData: FormData): Promise<Auth
      VALUES (?,?,?,'starter','consultancy','#07717F',?,1,?)`,
     tenantId, slug, orgName, email, now(),
   );
+
+  /*
+   * The clock starts here.
+   *
+   * Before this there was no clock at all: an account was created on the
+   * Starter plan and nothing ever recorded when it began, what it was worth
+   * or when a bill was due, so "Start free" on the pricing page described the
+   * business model exactly. A trial with an end date is the smallest thing
+   * that turns a signup into a customer who can be invoiced.
+   */
+  startTrial(tenantId);
 
   /*
    * The consultancy gets an office in the same breath as the account.

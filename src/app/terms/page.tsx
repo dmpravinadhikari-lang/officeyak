@@ -31,8 +31,8 @@ export default function TermsPage() {
       body: (
         <>
           <p>
-            This is the agreement between {LEGAL.entity}, of {LEGAL.place}, and the consultancy that
-            opens an account. Using {BRAND.name} means accepting it. If you are accepting it for a
+            This is the agreement between {LEGAL.entity}, of {LEGAL.place}, which makes {BRAND.name},
+            and the consultancy that opens an account. Using {BRAND.name} means accepting it. If you are accepting it for a
             consultancy, you are saying you are allowed to.
           </p>
           <p>
