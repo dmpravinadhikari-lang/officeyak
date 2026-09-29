@@ -23,9 +23,23 @@ wrong that they can see was avoidable: a student who was never called back, a
 visa deadline missed, a counsellor who resigned and took their list with them,
 or a month where nobody could say how many students were at offer stage.
 
-They are price sensitive in a specific way: they will not pay per seat, because
-paying per seat makes them ration logins, and a counsellor without a login
-writes on paper.
+They are price sensitive in a specific way, and the specifics changed in
+September 2026, so check `src/lib/plans.ts` before writing anything about
+price. Plans now count **staff accounts and offices**, not students: Starter is
+5 staff and 1 office, Growth is 15 and 3, Pro is unlimited on both. Students
+are unlimited on every plan.
+
+What that means for the writing. The thing this buyer genuinely fears is a
+price that makes them ration logins, because the counsellor left without an
+account writes on paper and the paper is not in the system. We are not outside
+that concern now, we sit inside it with a ceiling, so never write that OfficeYak
+has unlimited staff accounts, and never write that it does not charge per seat.
+Both were true before September and are false now. What is true and worth
+saying is that no plan charges by student, so a consultancy is never billed for
+a good intake, and that the ceilings are published rather than negotiated.
+
+Anything already published that contradicts this is a defect to report, not a
+page to leave alone.
 
 ## Who else reads the site
 

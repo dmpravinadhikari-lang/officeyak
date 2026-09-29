@@ -14,7 +14,7 @@ author: "The OfficeYak team"
 authorRole: "Written for consultancy owners"
 reviewedBy: ""
 reviewedOn: "2026-09-26"
-updatedOn: "2026-09-26"
+updatedOn: "2026-09-29"
 readingTime: "7 min"
 featuredImage: /blog/education-consultancy-software-what-matters.svg
 featuredImageAlt: "OfficeYak guide to choosing software for an education consultancy"
@@ -76,7 +76,11 @@ You can build all of that in custom fields. Offices that do find they have spent
 
 **A demo with clean data.** Ask to see it with three hundred students, half of them stalled, and two counsellors on leave. That is your office.
 
-**Anything priced per counsellor.** Per seat pricing makes an owner ration logins, and the counsellor without a login writes on paper, and the paper is not in the system. You end up paying for software and keeping a parallel set of records.
+**A price that makes you ration logins.** Almost every system in this category prices on staff accounts, and that is defensible: a file sitting in a database costs nobody anything, while another person working in the system all day does. The failure is not the model, it is the ceiling. The moment the limit sits below your actual headcount you start deciding who gets an account, the person left out writes on paper, and the paper is not in the system. You are then paying for software and keeping a parallel set of records beside it.
+
+So the question is not whether a plan counts staff. It is whether its limit is comfortably above the number of people who touch a student file, today and after the hiring you already know is coming. Ask what happens at the ceiling and what the next tier costs, before you sign rather than in the month you outgrow it.
+
+**A price that counts students.** This one is worth avoiding outright. Charging by active student means the month you enrol thirty families instead of twenty is the month the software asks for more money, and the cheapest way out is to stop recording students, which breaks the product and your own numbers together. A system should not bill you for being good at your job.
 
 ## The honest test
 

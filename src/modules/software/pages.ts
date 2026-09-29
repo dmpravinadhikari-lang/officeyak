@@ -129,7 +129,7 @@ export const SOFTWARE_PAGES: SoftwarePage[] = [
       },
       {
         q: "Can we try it before paying?",
-        a: "Yes. There is a free tier, you set up your own subdomain, and nothing is charged until you ask to be invoiced. There is no card on file.",
+        a: "Yes. You get thirty days free on Starter, with your own subdomain and your own real students rather than a demo with clean data. There is no card on file and there is no payment gateway, so nothing can be charged to you by accident: when the month ends we invoice you and you decide.",
       },
       {
         q: "What happens to our data if we leave?",
@@ -338,7 +338,7 @@ export const SOFTWARE_PAGES: SoftwarePage[] = [
       },
       {
         q: "Is there a free version?",
-        a: "There is a free tier that includes attendance with a geofence, so you can run a real office on it before paying anything. Nothing is charged until you ask to be invoiced.",
+        a: "Not permanently, and it is better to say so plainly than to let you find out in week five. You get thirty days free on Starter, with attendance and the geofence included, so you can run a real office on it before paying anything. There is no card on file and no payment gateway, so nothing is charged by accident: we invoice you at the end and you decide. One thing to know before you plan around it: attendance is on every plan, and payroll begins at Growth.",
       },
       {
         q: "Does attendance connect to payroll?",
