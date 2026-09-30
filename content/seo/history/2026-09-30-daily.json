@@ -1,31 +1,83 @@
 {
-  "runAt": "2026-09-30T00:18:07Z",
+  "runAt": "2026-09-30T05:10:20Z",
   "kind": "daily",
   "site": {
     "up": true,
-    "unreachable": "officeyak.com was refused by the environment's egress proxy (CONNECT to officeyak.com:443 answered 403, policy denial), before any request reached the site."
+    "status": 200,
+    "sitemapUrls": 39
   },
-  "skipped": [
+  "audit": {
+    "pagesChecked": 39,
+    "findings": [
+      {
+        "url": "https://officeyak.com/tools/compare",
+        "kind": "heading-order",
+        "detail": "H1 jumped straight to H3 for the two country cards and the closing callout, skipping H2. Promoted all three to H2; they already had explicit font-size classes, so nothing looks different.",
+        "severity": "warning",
+        "fixed": true
+      },
+      {
+        "url": "https://officeyak.com/tools/cv-maker",
+        "kind": "missing-from-sitemap",
+        "detail": "A real page with its own title and canonical, live and linked, but absent from sitemap.ts. Added.",
+        "severity": "warning",
+        "fixed": true
+      },
+      {
+        "url": "https://officeyak.com/tools/scholarships/*",
+        "kind": "missing-from-sitemap",
+        "detail": "All 11 individual scholarship pages (each with its own title and canonical) were missing from sitemap.ts, which only listed the /tools/scholarships index. Added, generated from the same SCHOLARSHIPS data the finder reads, so a new scholarship added later is never missing from here again.",
+        "severity": "warning",
+        "fixed": true
+      },
+      {
+        "url": "https://officeyak.com/software",
+        "kind": "meta-description-length",
+        "detail": "Meta description was 162 characters. Shortened to 158. This one is meta-only, not shown on any page, so it was safe to edit.",
+        "severity": "note",
+        "fixed": true
+      }
+    ]
+  },
+  "published": {
+    "url": "https://officeyak.com/study/ireland",
+    "title": "Studying in Ireland from Nepal",
+    "keyword": "study in ireland",
+    "words": 1030,
+    "kind": "landing"
+  },
+  "suggestions": [
     {
-      "what": "Sitemap and page audit, mechanical fixes",
-      "needs": "network access to officeyak.com for this environment"
+      "title": "Seven of the eight destination pages are orphans",
+      "detail": "Crawling every internal link on all 39 live pages, only /study/uk is linked from anywhere on the site (30 links to it). /study/canada, /study/usa, /study/australia, /study/new-zealand, /study/japan, /study/south-korea and /study/finland are reachable only by URL or via the sitemap, not from any page's prose or navigation. This is the exact failure mode the daily playbook warns about for a page that won't index: nothing links to it. Not fixed today because relinking seven pages properly is the weekly job's scope, not a mechanical one-line fix, but it is likely the single biggest reason any of these pages underperform in search regardless of their content quality.",
+      "why": "An unlinked page is discovered by search engines last and by readers never; this affects seven of the site's highest-intent landing pages at once.",
+      "severity": "warning"
     },
     {
-      "what": "Writing and publishing today's queue page",
-      "needs": "network access to officeyak.com, since the playbook requires fetching the new page live before it is committed"
+      "title": "Two meta descriptions run 1 character over 160 but are also visible page copy",
+      "detail": "/software/enquiry-management-software (161 chars) and the blog post /blog/sop-mistakes-that-get-nepali-students-refused (161 chars) both reuse their metaDescription field as visible card text elsewhere (the /software index and the /blog index), so shortening it for the meta tag would change what a reader sees on those listing pages. Left alone under the rule that a visible change is a suggestion, not a fix.",
+      "severity": "note",
+      "needsYou": "A decision on whether to shorten the visible listing copy (a one-character-over meta tag is a very small cost to leave alone)."
     },
     {
-      "what": "Competitor watch",
-      "needs": "network access to officeyak.com and the competitor domains"
-    },
-    {
-      "what": "Search Console figures",
-      "needs": "a Google Search Console service account added as a user on the officeyak.com property"
-    },
-    {
-      "what": "Analytics figures",
-      "needs": "the same service account added to GA4 property G-GGR6EVR2LR"
+      "title": "The blocked B2B guide on Nepal's 2083 consultancy regulation can now be sourced",
+      "detail": "This row has been blocked since 29 September because outbound network access was unavailable to read the official regulation. That access is present as of today. The row stays blocked in docs/seo/keyword-queue.md until a run actually locates the official text (Nepal Law Commission or a ministry gazette, not a consultancy blog summarising it) and can cite it with a date checked; I did not attempt that today because today's one page came from the student queue in the normal alternation.",
+      "severity": "note"
     }
   ],
-  "summary": "Site: could not check. officeyak.com was refused by the environment's network proxy (403 on CONNECT to officeyak.com:443), which is a policy block, not a site failure; the site may be perfectly healthy.\nAudit and mechanical fixes: skipped, both require reaching the live site.\nPublished: nothing today. Writing a new page still needs a live fetch to check it before commit, so that stayed blocked too.\nBlocked on: allowing this environment to reach officeyak.com. Search Console, GA4 and PageSpeed Insights access are also still missing and were not attempted."
+  "skipped": [
+    {
+      "what": "Indexing check for yesterday's page (playbook section 2)",
+      "needs": "There is no prior successful daily run: the only history file is today's, from an earlier attempt that was blocked at the network policy before publishing anything. Nothing was published yesterday to check."
+    },
+    {
+      "what": "Competitor watch: Hamro CRM (hamrocrm.com)",
+      "needs": "hamrocrm.com was refused by this environment's egress proxy (CONNECT failed, 502, organization policy), on two attempts. This is a proxy policy block on that specific host, not officeyak.com being down. Allow hamrocrm.com through the egress policy to restore this check."
+    },
+    {
+      "what": "Competitor watch: Agentcis new-post detection",
+      "needs": "agentcis.com/blog was reachable (200) but renders its post list client-side; a plain fetch returns no titles or dates to compare. Checking it properly needs a JS-capable fetch."
+    }
+  ],
+  "summary": "Site: up, 200, sitemap valid with 39 URLs.\nAudit: fixed a skipped H2 on /tools/compare, and added /tools/cv-maker plus all 11 scholarship pages to the sitemap, none of which were in it. Shortened one over-length meta description that was safe to touch.\nPublished: /study/ireland, targeting \"study in ireland\", live now; linked into it from three related guides.\nBlocked: Hamro CRM's competitor check, refused by this environment's egress policy (hamrocrm.com specifically, officeyak.com itself is fine).\nWorth a look: seven of the eight destination pages have no internal links pointing at them at all, only /study/uk does. That is the classic reason a good page never gets indexed."
 }

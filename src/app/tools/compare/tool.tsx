@@ -181,7 +181,7 @@ export function CompareTool() {
               <div key={code} className="bg-panel px-4 py-4 sm:px-6 sm:py-5">
                 <div className="flex items-center gap-2">
                   <span className="text-[22px] leading-none" aria-hidden>{COUNTRIES[code].flag}</span>
-                  <h3 className="h-tight min-w-0 text-[17px] sm:text-[19px]">{COUNTRIES[code].name}</h3>
+                  <h2 className="h-tight min-w-0 text-[17px] sm:text-[19px]">{COUNTRIES[code].name}</h2>
                 </div>
                 <div className="num mt-3 text-[clamp(22px,4vw,30px)] font-semibold leading-none text-ink">
                   {npr(f.total)}
@@ -285,7 +285,7 @@ export function CompareTool() {
       </div>
 
       <Card className="border-brand-200 bg-brand-50/60 p-5">
-        <h3 className="h-tight text-[16px]">Cost is rarely the thing that decides it</h3>
+        <h2 className="h-tight text-[16px]">Cost is rarely the thing that decides it</h2>
         <p className="mt-1.5 max-w-2xl text-[14.5px] leading-relaxed text-ink-2">
           Work rights, whether a partner can come, and whether the course qualifies for the
           post-study visa matter more to most families than a few lakh of tuition. Check those

@@ -19,7 +19,7 @@ import { SOFTWARE_PAGES } from "@/modules/software/pages";
 export const metadata: Metadata = {
   title: `Software for education consultancies | ${BRAND.name}`,
   description:
-    "One system for a consultancy: enquiries, student files, class registers, staff attendance and payroll. Free to start, and never a charge for having more students.",
+    "One system for a consultancy: enquiries, student files, class registers, staff attendance and payroll. Free to start, never a charge for having more students.",
   alternates: { canonical: "/software" },
 };
 

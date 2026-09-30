@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { allPosts } from "@/lib/blog";
 import { destinationSlugs } from "@/modules/study/destinations";
 import { softwareSlugs } from "@/modules/software/pages";
+import { SCHOLARSHIPS } from "@/modules/finder/scholarships";
 import { BRAND } from "@/lib/brand";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || `https://${BRAND.domain}`;
@@ -23,12 +24,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const tools = [
     "/tools", "/tools/eligibility", "/tools/cost", "/tools/loan",
     "/tools/checklist", "/tools/document-checklist", "/tools/universities",
-    "/tools/scholarships", "/tools/compare",
+    "/tools/scholarships", "/tools/compare", "/tools/cv-maker",
   ].map((path) => ({
     url: `${SITE}${path}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: path === "/tools" ? 0.9 : 0.8,
+  }));
+
+  // Each scholarship has its own page, with its own title and canonical,
+  // separate from the finder that lists them. Built from the same data the
+  // finder reads, so a new scholarship's page is never missing from here.
+  const scholarships = SCHOLARSHIPS.map((s) => ({
+    url: `${SITE}/tools/scholarships/${s.id}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
   }));
 
   // A destination page answers "study in the UK" and "cost of a UK student
@@ -56,6 +67,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...destinations,
     { url: `${SITE}/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     ...tools,
+    ...scholarships,
     ...posts,
   ];
 }
