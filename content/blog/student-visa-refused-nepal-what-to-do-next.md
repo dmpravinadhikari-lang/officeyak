@@ -102,6 +102,8 @@ Moving from Australia to Canada, or the UK to the USA, after a refusal is a legi
 
 If you were refused for weak financial evidence, every destination will look at the same evidence. If you were refused for a course choice that made no sense, the next country will notice too. The problems travel. Change destination for a reason about the destination, not to escape a file you have not repaired.
 
+Some destinations are more specific about financial evidence than others. Anyone weighing [study in Ireland](/study/ireland) after a finance-related refusal elsewhere should read how bluntly the Irish embassy states its own rule: money spread across several accounts and sponsors is treated as a reason to refuse, not just a presentation choice.
+
 ## Where to start, concretely
 
 Work out which of the four failures was yours, then attack it directly.

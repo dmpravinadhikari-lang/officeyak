@@ -103,6 +103,8 @@ Your statement says your sponsor earns NPR 50 lakh. The tax clearance says 42. Y
 
 **Write instead:** the number on the document. Every time. Check your statement against your papers line by line before you submit. This is the cheapest hour you will spend.
 
+This matters even more for an application to [study in Ireland](/study/ireland), where visa officers look hard at the link between your finances and your file, and treat inconsistent figures the same way they treat money spread thinly across too many sponsors: as a reason to refuse.
+
 ## 8. Language that is not yours
 
 If your statement reads like a policy paper and your visa interview does not, the mismatch is obvious and damaging, particularly for the UK, where the credibility interview and the statement are assessed together.

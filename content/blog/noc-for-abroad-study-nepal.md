@@ -101,6 +101,8 @@ The NOC is not the first step and it is not the last. In practice:
 
 Because it gates the money, it should be started the moment your offer and your intake are firm. Not once everything else is done.
 
+Where in the sequence it sits does not change by destination, only what comes after it does. An application to [study in Ireland](/study/ireland), for instance, is processed by the New Delhi Visa Office rather than a mission in Kathmandu, so the NOC and the visa timeline run on different clocks and need planning separately.
+
 ## Before you apply
 
 Get your documents in order first; almost every delay is a document problem rather than a Ministry problem. OfficeYak's [document checklist](/tools/document-checklist) shows exactly what your destination expects at your stage, flags what is missing, and tells you which papers your bank will separately want for the remittance.

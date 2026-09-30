@@ -117,10 +117,13 @@ predates it and does not mention it.
 **Do not write this from those blog posts.** Every claim would be a licensing
 rule that a reader acts on legally, and the versions circulating do not agree
 with each other. The page needs the regulation itself, from an official
-government publication, and outbound network access is blocked, so it could
-not be read on 29 September. Unblock the network, read the source, then write
-it. Until then this row stays `blocked` rather than `todo`, so the daily run
-does not pick it up and guess.
+government publication. Network access to reach that source is present as of
+30 September (see the client brief), so the block is now finding and reading
+the regulation itself, not reaching the internet. This row stays `blocked`
+rather than `todo` until a run has actually located the official text (the
+Nepal Law Commission or a ministry gazette, not a consultancy blog summarising
+it) and can cite it with a date checked. Whoever picks this up next should
+spend the budget on that search before writing anything.
 
 ---
 

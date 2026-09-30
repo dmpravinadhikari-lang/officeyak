@@ -551,6 +551,107 @@ export const DESTINATIONS: Destination[] = [
       { href: "/tools/scholarships", label: "Find a scholarship" },
     ],
   },
+  {
+    code: "IE",
+    slug: "ireland",
+    h1: "Studying in Ireland from Nepal",
+    metaTitle: "Study in Ireland from Nepal: cost, visa and funds",
+    metaDescription:
+      "What studying in Ireland costs from Nepal, the €10,000 funds figure the embassy asks you to show, and why spread finances get files refused.",
+    opening:
+      "There is no Irish embassy in Kathmandu, and that shapes the whole application: a Nepali student's visa is processed by the New Delhi Visa Office, part of the Irish Embassy in India, over an online portal called AVATS. Ireland's own one year masters keeps the total cost close to the UK's. What is different, and what the embassy is unusually blunt about in its own guidance, is how strict it is about where the money sits and how tidily it can be traced, rather than simply how much of it there is.",
+    refusals: [
+      {
+        title: "Applying before the offer is unconditional",
+        body:
+          "The New Delhi Visa Office only processes applications from students holding an unconditional offer to study an eligible course. A conditional offer, common while a final transcript or an English score is still pending, is not enough to submit. Wait until every condition on the offer letter is cleared before creating the AVATS application, rather than assuming the visa office will take it provisionally.",
+      },
+      {
+        title: "Finances spread across too many accounts and sponsors",
+        body:
+          "The embassy's own guidance says plainly that spreading finances across multiple sponsors and multiple holdings increases the risk of refusal, because the evidence becomes harder to read as one coherent picture. Six months of the applicant's own bank statements and six months of any sponsor's are asked for. Consolidating into as few accounts as genuinely possible before that window starts is worth more than the same money spread across five.",
+      },
+      {
+        title: "A loan sanction letter with nothing behind it",
+        body:
+          "A bank's sanction letter is treated as a starting point, not proof of a loan. Where property secures it, the deeds have to be submitted. Where the source of funds is the sale of land or a house, the sale itself needs documentary evidence, and the loan amount has to be realistic against the guarantor's existing income, not an income rise that has not happened yet.",
+      },
+      {
+        title: "No English test submitted with the visa application",
+        body:
+          "Submitting an approved English language test is compulsory for every Irish study visa application, separate from whatever the university itself required for admission. The embassy states outright that failing to submit one results in refusal. A student admitted on an institutional waiver still needs a test result in the visa file.",
+      },
+    ],
+    timeline: [
+      {
+        when: "10 to 12 months before",
+        what: "Sit IELTS or PTE, and shortlist",
+        detail:
+          "An approved English test is compulsory for the visa itself, not only for admission, so book one even if a university would waive it. Confirm which test your course accepts.",
+      },
+      {
+        when: "8 to 9 months before",
+        what: "Apply, and wait for an unconditional offer",
+        detail:
+          "The New Delhi Visa Office will not process an application against a conditional offer. Chase the university until every condition, usually the final transcript and the English score, is cleared.",
+      },
+      {
+        when: "6 to 7 months before",
+        what: "Consolidate finances into one or two accounts",
+        detail:
+          "Move money out of scattered holdings now. The six months of statements the embassy asks for have to show a settled position, not a transfer that arrived the week before you apply.",
+      },
+      {
+        when: "5 months before",
+        what: "Submit the AVATS application",
+        detail:
+          "Five months before the course start is the earliest the New Delhi Visa Office accepts an application, and it recommends applying as soon as the offer and supporting documents are ready rather than waiting.",
+      },
+      {
+        when: "4 months before",
+        what: "Pay the fees, book VFS, and get the NOC",
+        detail:
+          "Course fees of up to €6,000 must be paid in full before the visa application; above that, at least €6,000 must be paid. Nepal's own NOC from the Ministry of Education runs alongside, and is what lets your bank remit the rest.",
+      },
+      {
+        when: "On arrival",
+        what: "Register within 90 days for Stamp 2 permission",
+        detail:
+          "Every non-EEA student, visa-required or not, has to register with the immigration authorities to stay beyond 90 days. Registering is what gives you Stamp 2 permission and the right to work part time during term.",
+      },
+    ],
+    faq: [
+      {
+        q: "How much money do I need to show for an Irish student visa?",
+        a: "€10,000 for a course of a year or longer, or €6,665 for an eight month course and €4,998 for six months, on top of your first year's tuition. This is the published cost of living threshold rather than an estimate, so check the current figure on the Irish immigration website before you rely on it.",
+      },
+      {
+        q: "Do I need to submit an English test for the visa itself?",
+        a: "Yes. The embassy requires an approved English language test with every study visa application regardless of what the university asked for at admission, and states that not submitting one results in refusal.",
+      },
+      {
+        q: "Can my sponsor's money be spread across several accounts?",
+        a: "It is safer not to. The embassy's own guidance says spreading finances across multiple sponsors and multiple holdings increases the risk of refusal, because the evidence becomes harder to read clearly. Consolidate into as few accounts as genuinely possible before the six month statement window starts.",
+      },
+      {
+        q: "Do I need an NOC to study in Ireland?",
+        a: "Yes. The No Objection Certificate from Nepal's Ministry of Education is what allows your bank to legally remit tuition abroad. It is a Nepali requirement, separate from anything the Irish visa asks for.",
+      },
+      {
+        q: "Can I work while studying in Ireland?",
+        a: "Once you hold Stamp 2 permission you can work up to 20 hours a week during term and up to 40 hours a week during the standardised holiday periods. Stamp 2A, given for some non-degree courses, does not carry the right to work at all, so check which stamp your course leads to before counting on the income.",
+      },
+      {
+        q: "Can I stay and work after I graduate?",
+        a: "The Third Level Graduate Scheme lets some graduates work in Ireland for up to two years without needing a separate employment permit. Whether your course qualifies depends on its level, so confirm it with your institution before relying on the pathway.",
+      },
+    ],
+    related: [
+      { href: "/blog/noc-for-abroad-study-nepal", label: "The NOC, start to finish" },
+      { href: "/blog/sop-mistakes-that-get-nepali-students-refused", label: "The sentences that sink a statement" },
+      { href: "/blog/student-visa-refused-nepal-what-to-do-next", label: "Refused. What now?" },
+    ],
+  },
 ];
 
 export const destinationSlugs = () => DESTINATIONS.map((d) => d.slug);

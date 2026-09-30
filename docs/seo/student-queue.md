@@ -19,8 +19,8 @@ a calculator attached.
 
 | Keyword | Page to build | Status |
 | --- | --- | --- |
-| study in ireland | /study/ireland | **todo, write this first** |
-| cost of student visa to ireland | /study/ireland, the funds section | **todo**, covered by the same page |
+| study in ireland | /study/ireland | **live** |
+| cost of student visa to ireland | /study/ireland, the funds section | **live**, covered by the same page |
 | study in uk | /study/uk | **live** |
 | cost of student visa to uk | /study/uk, the funds section | **live**, covered by the same page |
 | cost of student visa to canada | /study/canada | **live** |
