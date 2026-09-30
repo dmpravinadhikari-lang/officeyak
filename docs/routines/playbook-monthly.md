@@ -79,7 +79,15 @@ The things too slow to run daily:
 
 - Crawl every page, not just the sitemap, and find anything reachable that is
   not in the sitemap and anything in the sitemap not reachable
-- Core Web Vitals field data, if a key is available, for the top 10 pages
+- Core Web Vitals field data for the ten pages with the most impressions, using
+  `PAGESPEED_API_KEY` from the environment against
+  `https://www.googleapis.com/pagespeedonline/v5/runPagespeed`. Ask for
+  `strategy=mobile` first, because that is what most Nepali visitors are on and
+  what Google ranks by. Report the field data, which is what real visitors
+  experienced, rather than the lab score, which is a simulation on Google's
+  hardware and tells you less than it appears to. A page with too little
+  traffic has no field data at all, and that is a fact to report rather than a
+  gap to fill with the lab number.
 - Check the whole site renders without JavaScript
 - Check every outbound link still resolves
 - Check the structured data across the site still validates, and that nothing

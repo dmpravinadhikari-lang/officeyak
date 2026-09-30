@@ -170,7 +170,7 @@ them onto one page and record which keywords that page is meant to answer.
 | Network access to `officeyak.com` | **present** | The environment is on Full network access as of 30 September. Before that every run stopped at step one. |
 | Google Search Console | **present** | `GOOGLE_SERVICE_ACCOUNT_B64` in the environment: base64 of a service account JSON key. Decode it, do not try to read it as JSON directly. The account is `officeyak-seo-agent@officeyak-seo.iam.gserviceaccount.com` with **Restricted** permission on the `sc-domain:officeyak.com` property, which is read only: it can query performance data and inspect URLs, and it deliberately cannot submit sitemaps or request removals. If something needs those, report it rather than asking for more permission. |
 | Google Analytics 4 | **present** | The same credential. Property `556082656` (account `384997065`), tag `G-GGR6EVR2LR`, role Viewer. |
-| PageSpeed Insights key | missing | Free. Enables Core Web Vitals field data. |
+| PageSpeed Insights key | **present** | `PAGESPEED_API_KEY` in the environment. Restricted to the PageSpeed Insights API alone, so it is useless for anything else even if it leaks. Free, and rate limited rather than billed. |
 | Anthropic API key | missing | Unrelated to SEO, but it is why the AI tools still answer with sample text, which blocks the AI IELTS and AI mock interview pages. |
 
 **How to use the Google credential.** It is one base64 string holding the
