@@ -14,6 +14,29 @@
 # until somebody noticed.
 set -euo pipefail
 
+# One deploy at a time, whoever started it.
+#
+# main auto-deploys from a cron every ten minutes, and people and agents also
+# run this by hand, so two can overlap. They share one scratch directory: the
+# first swaps .next-build away while the second is still writing into it, and
+# the second dies with "ENOENT: .next-build/BUILD_ID", a failure with nothing
+# wrong in it. That has already happened at least once.
+#
+# The lock lives on a file descriptor rather than in a pid file, so the kernel
+# drops it when this process ends, including when it is killed or an ssh
+# connection dies. A pid file would need cleaning up and would eventually
+# wedge deploys shut, which is a worse failure than the one it prevents.
+#
+# Skipping rather than queueing, and exit 0 rather than 1: a deploy already
+# running is not an error, and anything this run would have picked up is
+# caught by the next one, because the cron compares HEAD against origin/main
+# every ten minutes and a skipped run leaves HEAD where it was.
+exec 9>/var/lock/officeyak-deploy.lock
+if ! flock -n 9; then
+  echo "==> a deploy is already running, leaving it to finish"
+  exit 0
+fi
+
 APP=/srv/officeyak
 cd "$APP"
 
