@@ -193,6 +193,42 @@ export default async function MarketingPage() {
         </Card>
       )}
 
+      {/* ----------------------------------------- did yesterday's page land */}
+      {latest.indexing && (
+        <Card>
+          <h2 className="h-tight text-[16px]">Yesterday&apos;s page, in Google</h2>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <Chip tone={latest.indexing.indexed ? "teal" : "gold"}>
+              {latest.indexing.indexed ? "Indexed" : "Not indexed yet"}
+            </Chip>
+            <span className="mono text-[13px] text-ink-2">{latest.indexing.url}</span>
+            {latest.indexing.ageDays !== undefined && (
+              <span className="text-[13px] text-muted">
+                {latest.indexing.ageDays === 0 ? "published today" : `${latest.indexing.ageDays} days old`}
+              </span>
+            )}
+          </div>
+          {/* A page under a week old and not yet indexed is ordinary, and the
+              screen should not make it look like a problem. */}
+          {!latest.indexing.indexed && (latest.indexing.ageDays ?? 0) < 7 && (
+            <p className="mt-2.5 text-[13.5px] text-muted">
+              Normal at this age. Google is often slow with a new page on a small site, and
+              nothing needs doing unless it is still missing after a week.
+            </p>
+          )}
+          {latest.indexing.note && (
+            <p className="mt-2.5 text-[14px] leading-relaxed text-ink-2">{latest.indexing.note}</p>
+          )}
+          {latest.indexing.googleCanonical && (
+            <p className="mt-2.5 text-[13.5px] text-ink-2">
+              Google chose a different canonical for this page:{" "}
+              <span className="mono text-[12.5px]">{latest.indexing.googleCanonical}</span>. It
+              thinks this duplicates another page of ours, which is worth a look.
+            </p>
+          )}
+        </Card>
+      )}
+
       {/* ------------------------------------------------------- what it wrote */}
       {latest.published && (
         <Card>

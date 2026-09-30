@@ -77,6 +77,22 @@ export type SearchData = {
   poorCtr?: { query: string; page: string; impressions: number; ctr: number }[];
 };
 
+/**
+ * Whether the page published yesterday has been indexed. Absent means the
+ * check was not run, which is not the same as "not indexed" and must not be
+ * drawn as one.
+ */
+export type Indexing = {
+  url: string;
+  indexed: boolean;
+  /** How old the page is. A day is normal; a week is a signal. */
+  ageDays?: number;
+  /** When Google chose a different canonical, the one it chose. */
+  googleCanonical?: string;
+  /** The agent's reading of why, when it is not indexed and old enough to matter. */
+  note?: string;
+};
+
 export type Report = {
   /** ISO. When the run finished. */
   runAt: string;
@@ -91,6 +107,8 @@ export type Report = {
   };
   audit?: { pagesChecked: number; findings: Finding[] };
   published?: Published;
+  /** Yesterday's page, and whether Google has it yet. */
+  indexing?: Indexing;
   competitors?: CompetitorMove[];
   search?: SearchData;
   suggestions?: Suggestion[];

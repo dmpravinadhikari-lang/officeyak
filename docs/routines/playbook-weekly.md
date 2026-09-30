@@ -9,7 +9,7 @@ because nothing downstream is waiting on it.
 
 ---
 
-## 1. Search Console, if it is connected
+## 1. Search Console
 
 The credential is in the environment as `GOOGLE_SERVICE_ACCOUNT_B64`, base64
 of a service account JSON key. Decode it to a temporary file, point
@@ -51,7 +51,7 @@ whole query's volume moved.
 **What is in the index that should not be, and what is missing that should be?**
 Coverage and excluded pages, with reasons.
 
-## 2. Analytics, if it is connected
+## 2. Analytics
 
 Same credential as section 1, scope
 `https://www.googleapis.com/auth/analytics.readonly`. GA4 property `556082656`.

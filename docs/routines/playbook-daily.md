@@ -31,7 +31,39 @@ rather than a site failure, say exactly that and name the host that was
 refused. Do not report it as an outage. They are different problems with
 different fixes and confusing them wastes the owner's morning.
 
-## 2. Crawl what is published
+## 2. Did yesterday's page land
+
+One Search Console check belongs in a daily run and this is it. Everything else
+about position and clicks is in the weekly run, because it does not change
+overnight and looking at it daily produces noise that tempts you into editing
+pages that were working.
+
+Take the page this routine published yesterday, from yesterday's report in
+`content/seo/history/`. Ask the URL Inspection API whether Google has indexed
+it, using the same credential the weekly playbook's section 1 describes.
+
+What to do with the answer:
+
+- **Indexed.** Say so in one clause and move on. This is the normal case and it
+  does not deserve a paragraph.
+- **Not indexed, and the page is under a week old.** Also normal. Google is
+  often slow with a new page on a small site. Note it without alarm and do not
+  act.
+- **Not indexed after a week.** Now it means something. Check the obvious
+  causes in this order and report which one it is: the page is not in the
+  sitemap, it is blocked by robots.txt, its canonical points somewhere else, or
+  nothing on the site links to it. The last of those is the most common and the
+  easiest to miss, which is why section 5 asks you to link into every new page
+  as you publish it.
+- **Indexed but with a different canonical than its own address.** Google has
+  decided this page duplicates another one of ours. That is worth a line in the
+  report and a look at whether the two pages should be one page.
+
+Do not request indexing. The service account has Restricted permission and
+cannot, deliberately. Fix the cause instead: a page that needs to be begged
+into the index every time has a problem that begging does not solve.
+
+## 3. Crawl what is published
 
 Read every URL in the sitemap. For each one record:
 
@@ -53,7 +85,7 @@ Also check, once, across the site:
 - no page in the sitemap returns anything but 200
 - no internal link anywhere points at a 404
 
-## 3. Fix what is mechanical
+## 4. Fix what is mechanical
 
 Fix these yourself, now, without asking:
 
@@ -75,7 +107,7 @@ the site did not change shape overnight without anyone deciding it should.
 Do not fix anything in the paths the brief forbids, even if it is broken. Note
 it in the report and leave it alone.
 
-## 4. Write and publish one page
+## 5. Write and publish one page
 
 One. Not two.
 
@@ -136,7 +168,7 @@ npx tsc --noEmit
 If that fails, fix it. If you cannot fix it, commit nothing, and make the
 failure the report.
 
-## 5. Commit and publish
+## 6. Commit and publish
 
 Commit the page and the mechanical fixes **separately**. Two commits, because
 they are two different kinds of change and someone reading the history later
@@ -151,7 +183,7 @@ to be in the working tree, including other people's unfinished work.
 
 Update the queue file: change that row's status from `todo` to `live`.
 
-## 6. Watch the competitors, briefly
+## 7. Watch the competitors, briefly
 
 For each competitor the brief marks as competing on content, fetch their blog
 index or sitemap and note anything published since yesterday. Title and URL is
@@ -160,7 +192,7 @@ decides what to do about it.
 
 If none published anything, say nothing about it in the report.
 
-## 7. Write the machine readable report
+## 8. Write the machine readable report
 
 The owner has a Marketing tab in the admin console that reads this. It is the
 only way anything you did today reaches a screen, so it is not optional and it
@@ -190,10 +222,17 @@ Put anything you were not allowed to fix into `suggestions`, and set `needsYou`
 on the ones only a person can clear: a credential, a decision, a fact you do
 not have. Those are pulled to the top of the tab under "Waiting on you".
 
+Section 2's answer goes in the `indexing` block. Omit the block entirely if you
+did not run the check, because the tab treats a missing block as "not measured"
+and an `indexed: false` as "Google does not have it", and those are different
+things. Set `ageDays` whenever you know it: the tab uses it to say that a page
+under a week old is ordinarily not indexed yet, so the owner is not told a
+normal thing looks broken.
+
 Commit this with the fixes, not with the page. It describes the run, not the
 content.
 
-## 8. Report
+## 9. Report
 
 Four lines on a normal day, in this order:
 

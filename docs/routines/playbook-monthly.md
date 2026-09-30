@@ -30,7 +30,8 @@ world moved underneath them.
 
 ## 2. Find what is not working
 
-From Search Console, if connected:
+From Search Console, using `GOOGLE_SERVICE_ACCOUNT_B64` exactly as the weekly
+playbook's section 1 describes:
 
 - **Every page with zero clicks in 90 days.** For each, decide: improve it,
   merge it into a better page, or remove it. Removing is allowed and is often
@@ -44,6 +45,14 @@ From Search Console, if connected:
 Do the merges and removals for content pages. Put redirects in place for
 anything removed. Do not remove a page that has inbound links from other sites
 without saying so in the report first.
+
+One thing you cannot do, by design: the service account has Restricted
+permission, so it cannot submit a sitemap or request a removal through Search
+Console. It does not need to. A page deleted from the repository disappears
+from the sitemap on the next deploy and Google drops it in its own time, and a
+redirect does the work in the meantime. If something genuinely needs a removal
+request, for example a page that leaked something, put it in the report as
+needing the owner rather than asking for wider permission.
 
 ## 3. The queue, re-ranked
 
