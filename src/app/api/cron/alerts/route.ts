@@ -3,6 +3,7 @@ import { timingSafeEqual } from "node:crypto";
 import { sweepDeadlines } from "@/modules/checklist/alerts";
 import { flushQueue } from "@/lib/email/queue";
 import { runAutomations, type Cadence } from "@/lib/email/rules";
+import { billingReminders } from "@/modules/billing/reminders";
 
 /**
  * The scheduled job: reminders out, post flushed.
@@ -44,7 +45,16 @@ export async function GET(request: Request) {
   // Deadlines first: a reminder written now goes out in this same run rather
   // than sitting in the queue until tomorrow.
   const swept = run === "daily" ? sweepDeadlines() : null;
+  /*
+   * Billing reminders sit beside the automations rather than inside them.
+   *
+   * runAutomations is the consultancy's own post, and every rule in it has a
+   * switch on their settings page. An unpaid invoice notice is the other
+   * direction entirely, from Straw Holdings to the consultancy, and a bill
+   * the debtor can silence from inside the product is not a bill.
+   */
+  const billing = run === "daily" ? billingReminders() : null;
   const automations = runAutomations(run as Cadence);
   const flushed = await flushQueue(200);
-  return NextResponse.json({ ok: true, run, swept, automations, flushed });
+  return NextResponse.json({ ok: true, run, swept, billing, automations, flushed });
 }
