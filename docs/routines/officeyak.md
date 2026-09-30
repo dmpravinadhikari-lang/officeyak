@@ -167,11 +167,23 @@ them onto one page and record which keywords that page is meant to answer.
 
 | What | Status | Notes |
 | --- | --- | --- |
-| Network access to `officeyak.com` | **missing** | The environment's egress policy blocks it. Until this is fixed every run stops at step one. This is the blocker for everything else. |
-| Google Search Console | missing | Needs a service account added as a user on the `officeyak.com` property. Without it the agent is guessing at what to write next instead of reading it. |
-| Google Analytics 4 | missing | Property `G-GGR6EVR2LR`. Same service account, added to the property. |
+| Network access to `officeyak.com` | **present** | The environment is on Full network access as of 30 September. Before that every run stopped at step one. |
+| Google Search Console | **present** | `GOOGLE_SERVICE_ACCOUNT_B64` in the environment: base64 of a service account JSON key. Decode it, do not try to read it as JSON directly. The account is `officeyak-seo-agent@officeyak-seo.iam.gserviceaccount.com` with **Restricted** permission on the `sc-domain:officeyak.com` property, which is read only: it can query performance data and inspect URLs, and it deliberately cannot submit sitemaps or request removals. If something needs those, report it rather than asking for more permission. |
+| Google Analytics 4 | **present** | The same credential. Property `556082656` (account `384997065`), tag `G-GGR6EVR2LR`, role Viewer. |
 | PageSpeed Insights key | missing | Free. Enables Core Web Vitals field data. |
 | Anthropic API key | missing | Unrelated to SEO, but it is why the AI tools still answer with sample text, which blocks the AI IELTS and AI mock interview pages. |
+
+**How to use the Google credential.** It is one base64 string holding the
+whole service account JSON. Decode it to a temporary file, use it as
+`GOOGLE_APPLICATION_CREDENTIALS`, and delete the file before the run ends.
+Never print it, never commit it, never write any part of it into a report or a
+page. The scopes you need are
+`https://www.googleapis.com/auth/webmasters.readonly` and
+`https://www.googleapis.com/auth/analytics.readonly`.
+
+If the credential is absent or a call is refused, that is a skipped section and
+a line in the report, exactly as before. Do not fall back to guessing at
+figures because a credential that used to work has stopped.
 
 A missing credential is never a reason to fail the run. Skip that section,
 carry on, and say in the report that it was skipped and what it needs.

@@ -11,10 +11,22 @@ because nothing downstream is waiting on it.
 
 ## 1. Search Console, if it is connected
 
-The brief says whether credentials exist. If they do not, skip to section 3,
-say in the report that this was skipped and what it needs, and do not
-substitute guesswork for it. Half this playbook is worth nothing without real
-query data and pretending otherwise produces a confident plan built on nothing.
+The credential is in the environment as `GOOGLE_SERVICE_ACCOUNT_B64`, base64
+of a service account JSON key. Decode it to a temporary file, point
+`GOOGLE_APPLICATION_CREDENTIALS` at it, and delete the file before the run
+ends. Never print it and never commit it. The property is
+`sc-domain:officeyak.com` and the scope is
+`https://www.googleapis.com/auth/webmasters.readonly`.
+
+The account has Restricted permission, which is read only on purpose. It can
+query performance data and inspect URLs. It cannot submit a sitemap or request
+a removal, and it is not supposed to: report anything that would need those
+rather than asking for the permission to be widened.
+
+If the credential is missing or a call is refused, skip to section 3, say in
+the report that this was skipped and what it needs, and do not substitute
+guesswork for it. Half this playbook is worth nothing without real query data
+and pretending otherwise produces a confident plan built on nothing.
 
 Pull the last 28 days and the 28 before, and answer these five questions:
 
@@ -41,7 +53,9 @@ Coverage and excluded pages, with reasons.
 
 ## 2. Analytics, if it is connected
 
-Same rule: skip and say so if the credentials are missing.
+Same credential as section 1, scope
+`https://www.googleapis.com/auth/analytics.readonly`. GA4 property `556082656`.
+Same rule as above: skip and say so if it is missing or refused.
 
 - Where sessions came from, by channel, versus last week
 - The landing pages that received them
