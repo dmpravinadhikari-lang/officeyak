@@ -19,6 +19,7 @@ import { VO_LINES as HAPPY_PANDA } from "../video/src/happypanda/script.ts";
 import { VO_LINES as SHILAKSHYA } from "../video/src/shilakshya/script.ts";
 import { VO_LINES as TIPS } from "../video/src/tips/script.ts";
 import { VO_LINES as ALEV } from "../video/src/alev/script.ts";
+import { VO_LINES as OFFICEYAK } from "../video/src/officeyak/script.ts";
 
 /** Which reel to narrate. Each has its own lines, frames and output folder. */
 const REELS = {
@@ -26,6 +27,7 @@ const REELS = {
   shilakshya: { lines: SHILAKSHYA, dir: "video/public/shilakshya/vo", script: "video/src/shilakshya/script.ts", comp: "ShilakshyaReel out/shilakshya-reel.mp4" },
   tips: { lines: TIPS, dir: "video/public/tips/vo", script: "video/src/tips/script.ts", comp: "HouseTipsReel out/house-tips-reel.mp4" },
   alev: { lines: ALEV, dir: "video/public/alev/vo", script: "video/src/alev/script.ts", comp: "AlevReel out/alev-reel.mp4" },
+  officeyak: { lines: OFFICEYAK, dir: "video/public/officeyak/vo", script: "video/src/officeyak/script.ts", comp: "OfficeYakReel out/officeyak-reel.mp4" },
 } as const;
 
 const which = (process.argv[2] ?? "") as keyof typeof REELS;
@@ -56,6 +58,7 @@ const DEFAULT_VOICE = {
   tips: "Ni0cMFVFTW49wbfYsIMa", // the same voice, so the two Nepali reels match
   happypanda: "Xb7hH8MSUJpSbSDYk0k2", // Alice, clear educator
   alev: "JBFqnCBsd6RMkjVDRZzb", // George, warm storyteller
+  officeyak: "Xb7hH8MSUJpSbSDYk0k2", // Alice, clear educator — it is a product pitch
 } as const;
 const VOICE = process.env.ELEVENLABS_VOICE_ID ?? DEFAULT_VOICE[which];
 

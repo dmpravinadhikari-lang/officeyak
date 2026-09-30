@@ -15,6 +15,8 @@ import { TipsReel, REEL_FPS as TIPS_FPS } from "./tips/TipsReel";
 import { tipsSchema, layout as tipsLayout } from "./tips/schema";
 import { AlevReel, REEL_FPS as AL_FPS } from "./alev/AlevReel";
 import { alevSchema, layout as alevLayout } from "./alev/schema";
+import { OfficeYakReel, REEL_FPS as OY_FPS } from "./officeyak/OfficeYakReel";
+import { officeYakSchema, layout as oyLayout } from "./officeyak/schema";
 
 /**
  * Every video in one file.
@@ -216,6 +218,100 @@ export const RemotionRoot: React.FC = () => {
           ).total,
         })}
         fps={AL_FPS}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="OfficeYakReel"
+        component={OfficeYakReel}
+        schema={officeYakSchema}
+        defaultProps={{
+          figures: [
+            { n: "400", of: "student files" },
+            { n: "12", of: "classes" },
+            { n: "3", of: "offices" },
+            { n: "1", of: "inbox that never sleeps" },
+          ],
+          loadLine: "Something has to carry it.",
+
+          markWhat: "AI-powered consultancy OS",
+
+          yakLabel: "Yak says",
+          yakSays:
+            "Call Niraj first. Walk-ins convert 2.1 times more often when they are rung within a day.",
+          yakUnder: "One recommendation per screen, always with the reason behind it.",
+
+          peaksTitle: "Grow. Prepare. Run.",
+          peaks: [
+            {
+              name: "Grow",
+              say: "Walk-ins and calls become leads; leads become files on the board.",
+              chips: ["Student leads", "Students board", "Market", "Scholarship finder"],
+              colour: "#F0407A",
+            },
+            {
+              name: "Prepare",
+              say: "Attendance clocked inside the office. Mocks marked to band tables.",
+              chips: ["Attendance", "Mock tests", "AI interview", "SOP Studio", "Documents"],
+              colour: "#FF7A1A",
+            },
+            {
+              name: "Run",
+              say: "Staff, payroll in the Nepali month, offices side by side on Monday.",
+              chips: ["Staff and teams", "Payroll", "Offices", "Reports"],
+              colour: "#FFC526",
+            },
+          ],
+
+          proofs: [
+            {
+              shot: "officeyak/students.jpg",
+              caption: "Every office in one list",
+              zoom: 1.55,
+              focus: "62% 42%",
+            },
+            {
+              shot: "officeyak/attendance.jpg",
+              caption: "Clock in from inside the office",
+              zoom: 1.5,
+              focus: "58% 22%",
+            },
+            {
+              shot: "officeyak/reports.jpg",
+              caption: "Five offices, side by side",
+              zoom: 1.5,
+              focus: "55% 18%",
+            },
+          ],
+          proofBadges: ["Built in Nepal", "Nepali-month payroll", "Works on mobile data"],
+
+          closeLine: "Every branch, carried like your best branch.",
+          price: "Rs 4,999",
+          trial: "30 days free · no card",
+          site: "officeyak.com",
+
+          music: {
+            file: "",
+            volume: 0.32,
+            fadeIn: 0.5,
+            fadeOut: 1.2,
+            startAt: 0,
+            loop: true,
+          },
+          voice: {
+            file: "",
+            volume: 1,
+            fadeIn: 0.1,
+            fadeOut: 0.3,
+            startAt: 0,
+            loop: false,
+          },
+          timing: { load: 4.2, mark: 2.8, yak: 3.8, peaks: 3.6, proof: 3.4, close: 3.6 },
+        }}
+        calculateMetadata={({ props }) => ({
+          durationInFrames: oyLayout(props.timing, OY_FPS).total,
+        })}
+        fps={OY_FPS}
         width={1080}
         height={1920}
       />

@@ -97,3 +97,23 @@ void loadFont({
 });
 
 export const geometric = `${GEOMETRIC_FAMILY}, ui-sans-serif, system-ui, sans-serif`;
+
+/**
+ * Outfit and JetBrains Mono, for the OfficeYak reel — the two faces their own
+ * site sets. Both ship as variable fonts, so one file covers every weight.
+ */
+void loadFont({
+  family: "Outfit",
+  url: staticFile("fonts/Outfit-Variable-latin.woff2"),
+  weight: "100 900",
+  format: "woff2",
+});
+void loadFont({
+  family: "JetBrains Mono",
+  url: staticFile("fonts/JetBrainsMono-Variable-latin.woff2"),
+  weight: "100 800",
+  format: "woff2",
+});
+
+export const outfit = `Outfit, ui-sans-serif, system-ui, sans-serif`;
+export const mono = `"JetBrains Mono", ui-monospace, Menlo, monospace`;
