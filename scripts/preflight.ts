@@ -129,6 +129,15 @@ if (!remote) {
     "Not set, so every backup stays on this disk and losing the machine loses every consultancy on it.",
   );
 } else {
+  const alertTo = env("OFFICEYAK_ALERT_EMAIL");
+  if (!alertTo) {
+    (production ? fail : warn)(
+      "OFFICEYAK_ALERT_EMAIL",
+      "Not set, so a backup that stops working reports it to nobody.",
+    );
+  } else {
+    ok("OFFICEYAK_ALERT_EMAIL", alertTo);
+  }
   const receipt = join(backupDir, ".last-offsite");
   if (!existsSync(receipt)) {
     warn("Off-site backup", `Set to ${remote}, but no backup has reached it yet. Run: scripts/offsite.sh`);

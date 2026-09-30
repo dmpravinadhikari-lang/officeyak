@@ -13,7 +13,8 @@
     "purge": "node --experimental-strip-types scripts/purge.ts",
     "blog:images": "node --experimental-strip-types scripts/blog-images.ts",
     "backup": "node --experimental-strip-types scripts/backup.ts",
-    "preflight": "node --experimental-strip-types scripts/preflight.ts"
+    "preflight": "node --experimental-strip-types scripts/preflight.ts",
+    "backup:alert": "node --experimental-strip-types scripts/backup-alert.ts"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

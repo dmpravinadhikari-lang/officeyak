@@ -1,0 +1,12 @@
+[Unit]
+Description=OfficeYak backup staleness check, every morning
+
+[Timer]
+# Morning, so a backup that did not happen at 21:45 is in the inbox before
+# the day starts rather than after it.
+OnCalendar=*-*-* 09:00:00
+Persistent=true
+Unit=officeyak-backup-check.service
+
+[Install]
+WantedBy=timers.target

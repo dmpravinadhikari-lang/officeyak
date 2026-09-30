@@ -1,0 +1,19 @@
+# The quiet alarm: nothing failed, and nothing ran either.
+#
+# A failure alert only fires when systemd ran the job and the job broke. It
+# says nothing about a disabled timer, a masked unit, or a machine that was
+# off at 21:45, and those lose backups just as completely while looking
+# perfectly healthy. This reads the receipt the off-site copy leaves behind
+# and complains when it goes stale.
+[Unit]
+Description=OfficeYak backup staleness check
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/srv/officeyak
+EnvironmentFile=/etc/officeyak/officeyak.env
+ExecStart=/usr/bin/npm run backup:alert
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=officeyak-backup-check

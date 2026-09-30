@@ -1,0 +1,17 @@
+# Sent when the backup job fails. Started by OnFailure= on officeyak-backup,
+# never on its own timer: this one is the loud, immediate alarm.
+[Unit]
+Description=OfficeYak backup failure alert
+
+[Service]
+Type=oneshot
+# Root, because the email quotes the last of the journal so the reason is in
+# the message rather than behind an ssh session, and reading another unit's
+# journal needs the privilege. It writes nothing.
+User=root
+WorkingDirectory=/srv/officeyak
+EnvironmentFile=/etc/officeyak/officeyak.env
+ExecStart=/usr/bin/npm run backup:alert -- --failed
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=officeyak-backup-alert

@@ -3,6 +3,9 @@
 [Unit]
 Description=OfficeYak backup
 After=officeyak.service
+# Somebody is told when this fails. Without it the only trace of a broken
+# backup is a red unit on a machine nobody logs into.
+OnFailure=officeyak-backup-alert.service
 
 [Service]
 Type=oneshot
