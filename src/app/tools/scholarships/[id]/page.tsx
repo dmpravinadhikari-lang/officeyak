@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!s) return { title: "Not found" };
   return {
     title: `${s.name} for Nepali students, value, eligibility and deadlines | ${BRAND.name}`,
-    description: `${s.name} from ${s.funder}: what it covers, what it is worth in rupees, who actually wins it, when it closes and how to apply from Nepal.`,
+    description: `${s.name}: what it is worth, who wins it and how Nepali students apply.`,
     alternates: { canonical: `/tools/scholarships/${s.id}` },
   };
 }
