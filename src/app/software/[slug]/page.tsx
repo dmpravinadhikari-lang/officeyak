@@ -6,6 +6,7 @@ import { Ridge } from "@/components/Logo";
 import { Icon } from "@/components/Icon";
 import { Shot, TintTile } from "@/components/brand-ui";
 import { BRAND } from "@/lib/brand";
+import { PLANS } from "@/lib/plans";
 import { SOFTWARE_PAGES, softwareBySlug, softwareSlugs } from "@/modules/software/pages";
 
 /**
@@ -53,16 +54,32 @@ export default async function SoftwarePage({
     "@context": "https://schema.org",
     "@graph": [
       {
-        // The offer says free, because it is: there is a free tier and no card
-        // is taken. Claiming a price here that the pricing page contradicts is
-        // the one structured-data mistake Google acts on.
+        // The offer declares the real entry price for a consultancy, which is
+        // Starter. It used to declare 0 on the grounds that there is a free
+        // tier, but there is not one for this audience: the free tier is the
+        // direct-student plan, and the FAQ on these very pages answers "is
+        // there a free version?" with "not permanently". The homepage already
+        // declares 4,999, 12,999 and 29,999, so a 0 here had the same product
+        // priced two ways on one site. Claiming a price the pricing page
+        // contradicts is the one structured-data mistake Google acts on.
         "@type": "SoftwareApplication",
         name: BRAND.name,
         applicationCategory: "BusinessApplication",
         operatingSystem: "Web",
         description: p.metaDescription,
         url: `https://${BRAND.domain}/software/${p.slug}`,
-        offers: { "@type": "Offer", price: "0", priceCurrency: "NPR" },
+        offers: {
+          "@type": "Offer",
+          price: PLANS.starter.priceNpr,
+          priceCurrency: "NPR",
+          priceSpecification: {
+            "@type": "UnitPriceSpecification",
+            price: PLANS.starter.priceNpr,
+            priceCurrency: "NPR",
+            billingIncrement: 1,
+            unitCode: "MON",
+          },
+        },
       },
       {
         "@type": "FAQPage",

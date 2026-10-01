@@ -151,6 +151,34 @@ The figures already circulating in secondary coverage (a NPR 2.5 million
 security deposit, one-year licences) still need the primary document to
 confirm before they can be cited.
 
+**Progress, the monthly run of 1 October 2026.** Two things were established
+and the row stays blocked.
+
+The transient failure is gone: both listing pages now fetch cleanly, the Law
+Commission page at HTTP 200 and 136 KB and the Ministry page at HTTP 200 and
+158 KB. The retry the last run asked for has been done and the connection
+reset does not reproduce.
+
+The content problem is confirmed rather than transient. Neither page carries
+the regulation. Both were parsed for every `href` ending in `.pdf`, `.doc`,
+`.docx` or `.odt` and for any link containing `download`, `file`, `attach`,
+`document`, `upload`, `storage` or `media`, and there is no such link on
+either page. They publish the title and the gazette date and nothing else.
+The Law Commission page confirms the title and `३२ असार, २०८३` and carries no
+inline text.
+
+**The next lead, for whoever picks this up.** The Law Commission page links to
+their document repository at `https://repository.lawcommission.gov.np/np/`,
+which is the most likely home of the primary text and had not been tried
+before. It could not be reached today: `curl` was reset mid-connection on
+three attempts and the fetch tool returned HTTP 503. That is a separate
+failure from the two listing pages and looks like the repository being down
+rather than blocking us, so it is worth retrying first next run, including a
+site search for `शैक्षिक परामर्श` once it responds.
+
+Status unchanged: **blocked**, now on the repository responding, not on
+network access and not on the listing pages.
+
 ---
 
 ## Do not chase these
@@ -177,3 +205,52 @@ They appeared in the same data and they are traps.
 Each morning it takes the first line marked `todo`, writes the page or the
 guide for it, opens a branch, and changes the status to `drafted` with the
 branch name. Nothing is published without you reading it first.
+
+
+---
+
+## Re-ranked by the monthly run, 1 October 2026
+
+**What the month actually taught us, which is less than the queue assumes.**
+Search Console holds four days of data for this domain, 25 to 28 September,
+one click and five impressions in total. So nothing in this file can honestly
+be promoted or demoted on performance: there is no performance yet. Promoting
+a row because it is "closer than expected" would be reading noise. What
+follows is re-ranked on what was actually observable, which is the competitor
+work and the figure audit.
+
+**Promoted: nothing on data.** Stated explicitly so that a later reader does
+not assume the queue was simply not reviewed.
+
+**Demoted: nothing on data, for the same reason.** The rule about deleting
+anything that has had a page for a month and gone nowhere cannot fire this
+month. Every B2B page went live in September, into a site Google had indexed
+for four days. A page cannot be judged on a month it did not have.
+
+**Changed on evidence: the "nearly uncontested" premise, for the head term
+only.** See `competitors.md`. Four competitors hold a page against "best CRM
+for education consultancy Nepal", and Hamro CRM has refreshed theirs with
+2026 in the slug. The three tiers above stay as they are, but Tier 1 should
+no longer be read as cheap ground. The attendance and enquiry clusters are
+still genuinely uncontested and are still the better value in this file.
+
+**Added, from the competitor work rather than from Search Console.** There
+are no Search Console queries to mine, so these come from observed competitor
+coverage and from gaps in our own:
+
+| Keyword | Page | Status | Why |
+| --- | --- | --- | --- |
+| migrating consultancy data from excel | a guide, `content/blog/` | `todo` | Hamro CRM markets hands-on spreadsheet migration and we say nothing about it. It is the objection the brief's buyer actually has, and we have the import code to write it honestly from (`src/modules/account/import.ts`). |
+
+One row, not eight, and it is the only one the evidence supports.
+
+**Moved to do-not-chase:** nothing new. The existing list stands.
+
+## A note for the next monthly run
+
+The first run that can honestly apply section 2 of the monthly playbook is
+the one that has ninety days of Search Console behind it, which is late
+December 2026 at the earliest. Until then "every page with zero clicks in 90
+days" selects the entire site and the correct action on that selection is to
+do nothing. Do not let a later run read the instruction literally and start
+deleting a site that was never given a chance to rank.

@@ -17,11 +17,26 @@ import { countryCode, type CountryCode } from "@/lib/countries";
  * WHEN FIGURES CHANGE, EDIT THIS FILE. Nothing else needs touching.
  */
 
-export const RATES_AS_OF = "August 2026";
+export const RATES_AS_OF = "1 October 2026";
 
-/** Indicative NPR per unit of foreign currency. Update alongside RATES_AS_OF. */
+/**
+ * Indicative NPR per unit of foreign currency. Update alongside RATES_AS_OF.
+ *
+ * These are Nepal Rastra Bank's published SELLING rates, which is the side a
+ * student pays when a bank sells them foreign currency to remit. The buying
+ * rate is slightly lower and is not the rate that matters here.
+ *
+ * NZD IS NOT VERIFIED. Nepal Rastra Bank publishes no NZD rate at all: its
+ * list runs INR, USD, EUR, GBP, CHF, AUD, CAD, SGD, JPY, CNY, SAR, QAR, THB,
+ * AED, MYR, KRW, SEK, DKK, HKD, KWD, BHD and OMR, and NZD is absent from it.
+ * The figure below is the one carried over from August 2026 and no official
+ * Nepali source confirms it. Every other rate here moved 10 to 19 percent
+ * between August and October 2026, so this one is probably low too, which
+ * makes New Zealand look cheaper than it is beside the others. It needs a
+ * sourcing decision from the owner rather than a guess from a run.
+ */
 export const FX_NPR: Record<string, number> = {
-  AUD: 90, NZD: 82, GBP: 178, EUR: 152, USD: 138, CAD: 98,
+  AUD: 107.12, NZD: 82, GBP: 204.07, EUR: 174.56, USD: 153.64, CAD: 108.35,
 };
 
 export type Level = "diploma" | "bachelors" | "masters";
@@ -49,6 +64,12 @@ export type CountryCost = {
     source: string;
     /** How long the money must have been sitting in the account. */
     holding: string;
+    /**
+     * The date a run last fetched the authority's own page and compared this
+     * figure against it. Not rendered. It exists so the monthly re-verification
+     * leaves a trail in the file rather than only in a report nobody reopens.
+     */
+    checkedOn: string;
   };
 };
 
@@ -66,6 +87,7 @@ export const COST: Record<CountryCode, CountryCost> = {
       formula: "12 months of living costs (AUD 29,710) + 12 months tuition + return travel",
       source: "Department of Home Affairs financial capacity requirement, 2026",
       holding: "Funds should be genuinely available; recent large deposits invite questions.",
+      checkedOn: "2026-10-01",
     },
   },
   NZ: {
@@ -81,6 +103,7 @@ export const COST: Record<CountryCode, CountryCost> = {
       formula: "NZD 20,000 per year of living costs + full tuition for the year",
       source: "Immigration New Zealand, 2026 (NZD 1,667 per month for courses under a year)",
       holding: "Bank statements or an approved scholarship; funds must be verifiable.",
+      checkedOn: "2026-10-01",
     },
   },
   UK: {
@@ -88,7 +111,7 @@ export const COST: Record<CountryCode, CountryCost> = {
     tuition: { diploma: { low: 9000, typical: 12000, high: 16000 }, bachelors: { low: 12000, typical: 17000, high: 26000 }, masters: { low: 14000, typical: 19000, high: 32000 } },
     years: { diploma: 1, bachelors: 3, masters: 1 },
     living: { low: 9500, typical: 12500, high: 18000 },
-    visaFee: 524,
+    visaFee: 558,
     healthCoverPerYear: 776, healthCoverName: "Immigration Health Surcharge",
     oneOff: { flightNpr: 85000, otherNpr: 80000 },
     visaFunds: {
@@ -96,6 +119,7 @@ export const COST: Record<CountryCode, CountryCost> = {
       formula: "£1,171 per month for 9 months outside London (£10,539), or £1,529 in London (£13,761), + unpaid tuition for year one",
       source: "UKVI maintenance requirement, 2025-26 academic year onwards",
       holding: "The money must sit in the account for 28 consecutive days, ending no more than 31 days before you apply.",
+      checkedOn: "2026-10-01",
     },
   },
   IE: {
@@ -109,8 +133,10 @@ export const COST: Record<CountryCode, CountryCost> = {
     visaFunds: {
       living: 10000,
       formula: "€10,000 immediately available for a course over 8 months (€833 per month, or €6,665 for shorter courses) + tuition",
-      source: "Irish Immigration Service, requirement for courses beginning after 1 July 2023",
+      source:
+        "Irish Immigration Service; EUR 10,000 for a course of one year, and the EUR 833 per month structure for shorter stays from 30 June 2025",
       holding: "Bank statements typically covering six months.",
+      checkedOn: "2026-10-01",
     },
   },
   US: {
@@ -126,6 +152,7 @@ export const COST: Record<CountryCode, CountryCost> = {
       formula: "No fixed figure. You must show funds covering the first year's cost of attendance exactly as printed on your I-20, plus the SEVIS fee.",
       source: "US Department of State, the I-20 sets the amount, not a national threshold",
       holding: "Consular officers look at where the money came from as much as how much there is.",
+      checkedOn: "2026-10-01",
     },
   },
   CA: {
@@ -141,6 +168,7 @@ export const COST: Record<CountryCode, CountryCost> = {
       formula: "CAD 23,448 living costs for a single applicant + first year tuition + return travel",
       source: "IRCC cost-of-living threshold, applications from 1 September 2026 (was CAD 22,895)",
       holding: "A GIC is the usual route and satisfies the living-cost portion.",
+      checkedOn: "2026-10-01",
     },
   },
 };

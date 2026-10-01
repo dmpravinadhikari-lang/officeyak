@@ -33,7 +33,15 @@ export type Destination = {
    * thing in rupees or a plain restatement, and is optional because not every
    * country publishes a figure at all.
    */
-  funds?: { headline: string; sub?: string; formula: string; source: string; holding: string };
+  funds?: {
+    headline: string;
+    sub?: string;
+    formula: string;
+    source: string;
+    holding: string;
+    /** When a run last checked this against the authority. Not rendered. */
+    checkedOn: string;
+  };
   /** The URL segment. Reads better than the country code in a search result. */
   slug: string;
   h1: string;
@@ -381,6 +389,7 @@ export const DESTINATIONS: Destination[] = [
         "Immigration Services Agency of Japan and the Ministry of Foreign Affairs set the principle; individual schools set the amount",
       holding:
         "The sponsor's relationship to you, their income and the source of the money are examined at least as closely as the balance. A recently assembled figure with nothing behind it fails here as it does everywhere.",
+      checkedOn: "2026-10-01",
     },
     refusals: [
       {
@@ -444,6 +453,7 @@ export const DESTINATIONS: Destination[] = [
         "Korean immigration requires the university to verify funds; each university publishes its own amount",
       holding:
         "A bank balance certificate is normally required in your own name and dated within about a month of the application, with statements from the preceding three months. Where the source of the money is unclear or it is borrowed, the review becomes markedly stricter.",
+      checkedOn: "2026-10-01",
     },
     refusals: [
       {
@@ -505,7 +515,8 @@ export const DESTINATIONS: Destination[] = [
         "At least EUR 800 a month at your disposal, which for studies lasting a year or longer means EUR 9,600 in the bank account when you submit the application. Where the institution provides support towards your living costs, less may be required, and that support has to be documented with the application.",
       source: "Finnish Immigration Service (Migri) income requirement for students",
       holding:
-        "The account must be in your own name. Shared accounts and sponsorship guarantees are not accepted, which is the opposite of how most applications from Nepal are put together. A bank statement covering the preceding three months is normally submitted with it.",
+        "The account must be in your own name. Shared accounts and sponsorship guarantees are not accepted, which is the opposite of how most applications from Nepal are put together. Migri asks for a bank statement covering the preceding six months, so the money has to be in your account well before you apply.",
+      checkedOn: "2026-10-01",
     },
     refusals: [
       {

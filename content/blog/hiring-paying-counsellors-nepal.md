@@ -23,8 +23,8 @@ internalLinks:
   - /blog/why-student-leads-go-quiet
   - /blog/running-multiple-branches-consultancy
 sources:
-  - label: "Labour Act and social security, Government of Nepal"
-    url: "https://mols.gov.np"
+  - label: "Labour Act 2074 and contribution-based social security, Government of Nepal"
+    url: "https://www.moless.gov.np"
 faq:
   - q: "Should counsellors be paid commission?"
     a: "Usually a blend. Pure commission does not work when the institution pays you a year after the placement, and pure salary removes the incentive to chase a file that has gone quiet. Most workable structures are a salary plus an incentive on a milestone the counsellor controls."
