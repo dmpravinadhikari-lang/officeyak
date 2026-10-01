@@ -10,6 +10,7 @@ import { STUDENT_JOURNEY, perStudent, studentsCovered } from "@/lib/credits-expl
 import { PricingCards } from "./pricing-cards";
 import { Reveal } from "@/components/Reveal";
 import { PEAK, Shot, type Peak } from "@/components/brand-ui";
+import { HeroAnimation } from "@/components/HeroAnimation";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 
 /**
@@ -287,11 +288,10 @@ export default async function Home() {
             </div>
           </div>
 
-          <Shot
-            src="/product/students.png" alt="The student board, every office in one list"
-            ratio="16/11" priority
-            className="shadow-[0_24px_60px_-30px_rgba(21,19,58,0.35)]"
-          />
+          {/* The brand kit's hero animation, rebuilt as markup rather than
+              embedded as a film: it stays sharp at any width, carries the
+              real bell, and reads as one image to a screen reader. */}
+          <HeroAnimation className="shadow-[0_24px_60px_-30px_rgba(21,19,58,0.35)]" />
         </div>
 
         {/* The ridge across the foot of the hero, at full size and full

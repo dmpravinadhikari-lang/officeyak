@@ -478,6 +478,44 @@ button:not(:disabled), [role="button"], summary, select, label[for], input[type=
    movement has asked us too.
 --------------------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------------
+   The hero, building itself.
+
+   Ported from the brand kit's "Website Hero Animation", a 1280x720
+   composition written against the motion tool's own timeline. The timing is
+   kept, the runtime is not: a delay here is the cue it fired on there.
+
+   Everything moves on transform and opacity so the compositor does the work,
+   except the one bar, which animates its width because that is the point of
+   it and it is eight pixels tall.
+--------------------------------------------------------------------------- */
+
+@keyframes oy-hero-panel {
+  from { opacity: 0; transform: translateY(42px) rotate(-2deg); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes oy-hero-pop {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes oy-hero-slide {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes oy-hero-bar  { from { width: 0; } to { width: 72%; } }
+@keyframes oy-hero-says {
+  from { opacity: 0; transform: translateY(28px) scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes oy-hero-caret { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+.oy-hero-panel { animation: oy-hero-panel 0.8s var(--oy-ease) 0.35s both; }
+.oy-hero-pop   { animation: oy-hero-pop   0.6s var(--oy-ease) both; }
+.oy-hero-slide { animation: oy-hero-slide 0.5s var(--oy-ease) both; }
+.oy-hero-bar   { animation: oy-hero-bar   1.2s var(--oy-ease) 1.25s both; }
+.oy-hero-says  { animation: oy-hero-says  0.6s var(--oy-ease) 2.4s both; }
+.oy-hero-caret { animation: oy-hero-caret 1s steps(1) infinite; }
+
 /* The curve the whole product eases on. */
 :root { --oy-ease: cubic-bezier(0.22, 1, 0.36, 1); }
 
@@ -572,9 +610,18 @@ button:not(:disabled), [role="button"], summary, select, label[for], input[type=
   .oy-bell-swing .oy-bell-body,
   .oy-bell-ring .oy-bell-body,
   .oy-bell-ring .oy-bell-arcs,
-  .oy-bob, .oy-sweep, .oy-pop, .oy-rise, .oy-draw, .oy-shimmer, .oy-flash {
+  .oy-bob, .oy-sweep, .oy-pop, .oy-rise, .oy-draw, .oy-shimmer, .oy-flash,
+  .oy-hero-panel, .oy-hero-pop, .oy-hero-slide, .oy-hero-bar, .oy-hero-says,
+  .oy-hero-caret {
     animation: none !important;
   }
+  /* The hero arrives assembled rather than assembling. */
+  .oy-hero-panel, .oy-hero-pop, .oy-hero-slide, .oy-hero-says {
+    opacity: 1; transform: none;
+  }
+  /* The bar still has to show the number it is reporting. */
+  .oy-hero-bar { width: 72%; }
+  .oy-hero-caret { display: none; }
   /* Anything that animates in must still be visible when it does not. */
   .oy-rise, .oy-pop, .oy-flash { opacity: 1; transform: none; }
   .oy-draw { clip-path: none; }
