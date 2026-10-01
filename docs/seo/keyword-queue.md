@@ -125,6 +125,32 @@ Nepal Law Commission or a ministry gazette, not a consultancy blog summarising
 it) and can cite it with a date checked. Whoever picks this up next should
 spend the budget on that search before writing anything.
 
+**Progress, 1 October 2026.** The regulation's correct official title is
+`शैक्षिक परामर्श, भाषा शिक्षण तथा तयारी कक्षा (सञ्‍चालन र व्यवस्थापन)
+नियमावली, २०८३` ("Educational Counselling, Language Teaching and Preparatory
+Classes (Operation and Management) Regulation, 2083"), gazetted असार ३२,
+२०८३ BS. It has a listing page on both sites, but neither exposed a PDF or
+the regulation's full text to an automated fetch today:
+
+- Ministry of Education, Science and Technology:
+  `https://moest.gov.np/content/13641/educational-counselling--language-teaching-and-preparatory-classes/`
+- Nepal Law Commission:
+  `https://lawcommission.gov.np/content/13580/educational-counselling--language-teaching-and-preparatory-classes/`
+
+Both pages show only the title and gazette date, no inline text and no
+visible PDF link in what an automated fetch could read. A direct `curl` to
+the Law Commission host also failed with a mid-connection reset today,
+separate from the content problem and possibly transient; worth a retry.
+Two AI summaries of the same page independently gave different Gregorian
+dates for असार ३२, २०८३ (15 June 2024 and 16 June 2026), neither of which
+looks right by a manual Bikram Sambat conversion (Asar 2083 BS falls around
+June/July 2026), so **do not trust an AI tool's BS-to-AD conversion**; convert
+it by hand or with a dedicated calendar tool before it goes on a page, and
+until then the row stays `blocked` on the primary text, not just the date.
+The figures already circulating in secondary coverage (a NPR 2.5 million
+security deposit, one-year licences) still need the primary document to
+confirm before they can be cited.
+
 ---
 
 ## Do not chase these
