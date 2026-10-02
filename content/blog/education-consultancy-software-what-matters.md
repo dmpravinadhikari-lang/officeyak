@@ -68,7 +68,7 @@ You can build all of that in custom fields. Offices that do find they have spent
 
 **Can head office see every branch without asking anyone?** If a report has to be prepared, it will be prepared favourably.
 
-**Can I get my data out?** Ask before signing. The answer tells you how the relationship will feel in year three.
+**Can I get my data out?** Ask before signing. The answer tells you how the relationship will feel in year three. Ask the same question in reverse too: what [moving your existing spreadsheet in](/blog/migrating-consultancy-data-from-excel) actually involves, because a system that cannot take your current records without a week of retyping is asking you to start over rather than switch.
 
 ## What to ignore
 

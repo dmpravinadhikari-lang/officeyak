@@ -240,7 +240,7 @@ coverage and from gaps in our own:
 
 | Keyword | Page | Status | Why |
 | --- | --- | --- | --- |
-| migrating consultancy data from excel | a guide, `content/blog/` | `todo` | Hamro CRM markets hands-on spreadsheet migration and we say nothing about it. It is the objection the brief's buyer actually has, and we have the import code to write it honestly from (`src/modules/account/import.ts`). |
+| migrating consultancy data from excel | `/blog/migrating-consultancy-data-from-excel` | **live**, 2 October 2026 | Hamro CRM markets hands-on spreadsheet migration and we say nothing about it. It is the objection the brief's buyer actually has, and we have the import code to write it honestly from (`src/modules/account/import.ts`). |
 
 One row, not eight, and it is the only one the evidence supports.
 

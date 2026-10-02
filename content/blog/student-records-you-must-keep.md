@@ -93,7 +93,7 @@ This is good practice regardless of which rule you are reading, and in a dispute
 
 Three things, in order.
 
-**Find out where the documents actually are.** Usually more places than the owner thinks: a shared drive, two laptops, a WhatsApp backup, a filing cabinet.
+**Find out where the documents actually are.** Usually more places than the owner thinks: a shared drive, two laptops, a WhatsApp backup, a filing cabinet. If the names and numbers themselves are still sitting in a spreadsheet rather than one system, that is worth fixing at the same time, and it does not mean [retyping every family by hand](/blog/migrating-consultancy-data-from-excel).
 
 **Pick a retention period and apply it once, retrospectively.** Departed students from more than a year ago: destroy the sensitive copies, keep the record of the work.
 
