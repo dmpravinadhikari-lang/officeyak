@@ -179,6 +179,14 @@ site search for `शैक्षिक परामर्श` once it responds.
 Status unchanged: **blocked**, now on the repository responding, not on
 network access and not on the listing pages.
 
+**Progress, the daily run of 3 October 2026.** Retried the repository as
+asked: `https://repository.lawcommission.gov.np/np/` still resets
+mid-connection (`curl: (35) Recv failure: Connection reset by peer`), same
+failure mode as before, not the earlier proxy-level block. Both queue files
+have zero `todo` rows today, this row included, so no page was published in
+this run; see the daily report for 3 October. Still **blocked** on the
+repository.
+
 ---
 
 ## Do not chase these
