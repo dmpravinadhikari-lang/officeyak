@@ -187,6 +187,15 @@ have zero `todo` rows today, this row included, so no page was published in
 this run; see the daily report for 3 October. Still **blocked** on the
 repository.
 
+**Progress, the daily run of 4 October 2026.** Retried again: same result,
+`https://repository.lawcommission.gov.np/np/` still resets mid-connection
+(`curl: (35) Recv failure: Connection reset by peer`). The CONNECT tunnel to
+the host succeeds (HTTP 200) and the reset happens during the TLS handshake
+itself, so this looks like the repository's own TLS stack rather than this
+environment's egress policy. Still **blocked** on the repository, three runs
+running now. Both queue files remain at zero `todo` rows; see the daily
+report for 4 October.
+
 ---
 
 ## Do not chase these
